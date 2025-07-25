@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, FlatList, Alert } from 'react-native'
+import { View, Text, FlatList, Alert, TouchableOpacity } from 'react-native'
 import { SignOutButton } from '@/components/SignOutButton'
 import PageLoader from '../../components/PageLoader'
 import { DashboardItem } from '../../components/DashboardItem'
@@ -46,6 +46,20 @@ const Dashboard = () => {
   return (
     <View style={{ flex: 1, padding: 16 }}>
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 30 }}>Dashboard</Text>
+      
+      <View style={styles.pillList}>
+        <TouchableOpacity
+              style={styles.pill}
+        >
+          <Text style={styles.pillText}>In progress</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+              style={styles.pill}
+        >
+          <Text style={styles.pillText}>Past</Text>
+        </TouchableOpacity>
+      </View>
+
       <FlatList
         style={styles.transactionsList}
         contentContainerStyle={styles.transactionsListContent}

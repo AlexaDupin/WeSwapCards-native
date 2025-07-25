@@ -37,8 +37,6 @@ export const DashboardItem = ({ item, onDelete }) => {
               width: 70,
               marginBottom: 10,
               alignSelf: 'stretch',
-            //   borderTopRightRadius: 12,
-            //   borderBottomRightRadius: 12,
           }}
           onPress={() => {
             onDelete(item.db_id);
@@ -49,10 +47,32 @@ export const DashboardItem = ({ item, onDelete }) => {
           </TouchableOpacity></>
     );
 
+  const renderLeftActions = () => (
+      <TouchableOpacity
+          style={{
+              backgroundColor: "blue",
+              justifyContent: "center",
+              alignItems: "center",
+              width: 70,
+              marginBottom: 10,
+              alignSelf: 'stretch',
+              borderTopLeftRadius: 12,
+              borderBottomLeftRadius: 12,
+          }}
+          onPress={() => {
+              onDelete(item.db_id); 
+              swipeableRef.current?.close();
+          }}
+      >
+          <Ionicons name="mail-unread-outline" size={24} color="white" />
+      </TouchableOpacity>
+  )
+
   return (
     <Swipeable 
         ref={swipeableRef}
         renderRightActions={renderRightActions}
+        renderLeftActions={renderLeftActions}
         onSwipeableOpen={() => setIsSwipeOpen(true)}
         onSwipeableClose={() => setIsSwipeOpen(false)}
     >

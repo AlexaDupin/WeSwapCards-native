@@ -2,6 +2,33 @@ import { StyleSheet } from "react-native";
 import { Colors } from "../../constants/Colors";
 
 export const styles = StyleSheet.create({
+    chapterTitle: {
+        fontFamily: 'Lobster_400Regular',
+        fontSize: 28,
+        textShadowColor: 'rgba(0,0,0,0.2)',
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 1,
+        marginBottom: 10,
+    },
+    cardsList: {
+        flex: 1,
+        flexDirection: "row"
+    },
+      transactionsListContent: {
+        paddingBottom: 20,
+    },
+    cardItem: {
+        width: 30,
+        height: 60,
+        borderRadius: 6,
+        backgroundColor: "#dedcd7",
+        justifyContent: "center",
+        alignItems: "center",
+        marginRight: 10,
+      },
+
+
+
   transactionCard: {
     backgroundColor: "white",
     borderRadius: 12,
@@ -17,21 +44,8 @@ export const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 2,
   },
-  transactionContent: {
-    flex: 1,
-    flexDirection: "row",
-    padding: 15,
-    alignItems: "center",
-  },
-  categoryIconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: "#F5F5F5",
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: 12,
-  },
+
+  
   transactionLeft: {
     flex: 1,
   },
@@ -125,12 +139,7 @@ export const styles = StyleSheet.create({
     marginBottom: 10,
     paddingBottom: 5,
   },
-  transactionsList: {
-    flex: 1,
-  },
-  transactionsListContent: {
-    paddingBottom: 20,
-  },
+
   pillList: {
     flexDirection: "row",
     alignItems: "center",

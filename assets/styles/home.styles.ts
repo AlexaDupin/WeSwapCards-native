@@ -35,10 +35,5 @@ export const homeStyles = StyleSheet.create({
         fontSize: 18,
         marginBottom: 20,
     },
-    
-    // image: {
-    //     marginTop: 20, 
-    //     alignSelf: 'center',
-    // }
 })
 
