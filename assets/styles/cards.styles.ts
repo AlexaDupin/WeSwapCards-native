@@ -17,16 +17,37 @@ export const styles = StyleSheet.create({
       transactionsListContent: {
         paddingBottom: 20,
     },
+    cardItemWrapper: {
+      position: 'relative',
+      overflow: 'visible',
+      paddingTop: 10
+    },
     cardItem: {
-        width: 30,
-        height: 60,
-        borderRadius: 6,
-        backgroundColor: "#dedcd7",
-        justifyContent: "center",
-        alignItems: "center",
-        marginRight: 10,
-      },
-
+      width: 30,
+      height: 60,
+      borderRadius: 6,
+      backgroundColor: "#dedcd7",
+      justifyContent: "center",
+      alignItems: "center",
+      marginRight: 10,
+    },
+    cardItemSelected: {
+      borderWidth: 2,
+      borderColor: '#16bc90', // green border
+    },
+    cardNumber: {
+      fontSize: 18,
+      fontWeight: '400',
+    },
+    orangeBadge: {
+      position: 'absolute',
+      top: -4,
+      right: -4,
+      width: 12,
+      height: 12,
+      borderRadius: 6,
+      backgroundColor: Colors.primary,
+    },
 
 
   transactionCard: {
@@ -49,15 +70,8 @@ export const styles = StyleSheet.create({
   transactionLeft: {
     flex: 1,
   },
-  transactionTitle: {
-    fontSize: 16,
-    fontWeight: "500",
-    // color: COLORS.text,
-    marginBottom: 4,
-  },
   transactionCategory: {
     fontSize: 14,
-    // color: COLORS.textLight,
   },
   transactionRight: {
     alignItems: "flex-end",
