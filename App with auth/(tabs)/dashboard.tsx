@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { View, Text, FlatList, Alert, TouchableOpacity } from 'react-native'
-import PageLoader from '@/components/PageLoader'
-import { DashboardItem } from '@/components/DashboardItem'
-import NoConvFound from '@/components/NoConvFound'
-import { styles } from "@/assets/styles/dashboard.styles";
+import { SignOutButton } from '@/components/SignOutButton'
+import PageLoader from '../../components/PageLoader'
+import { DashboardItem } from '../../components/DashboardItem'
+import NoConvFound from '../../components/NoConvFound'
+import { styles } from "../../assets/styles/dashboard.styles";
 
 const Dashboard = () => {
   // const [isLoading, setIsLoading] = useState();
@@ -68,6 +69,7 @@ const Dashboard = () => {
         showsVerticalScrollIndicator={false}
         // refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       />
+      <SignOutButton />
     </View>
   );
 };
