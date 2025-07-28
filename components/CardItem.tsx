@@ -2,12 +2,12 @@ import { View, Text, TouchableOpacity } from 'react-native'
 import { styles } from "../assets/styles/cards.styles";
 import { Colors } from "@/constants/Colors";
 
-const CardItem = ({ item, onSelect, status }) => {
+const CardItem = ({ item, onSelect, status, reset }) => {
   const isOwned = status === 'owned';
   const isDuplicated = status === 'duplicated';
 
   return (
-    <TouchableOpacity onPress={onSelect}>
+    <TouchableOpacity onPress={onSelect} onLongPress={reset}>
       <View style={styles.cardItemWrapper}>
         <View
             style={[
