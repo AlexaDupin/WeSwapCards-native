@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { View, Text, FlatList } from 'react-native'
 import CardItem from '@/components/CardItem';
 import { styles } from "@/assets/styles/cards.styles";
@@ -7,8 +7,6 @@ import { useFonts, Lobster_400Regular } from '@expo-google-fonts/lobster';
 const cards = () => {
   const [selectedIds, setSelectedIds] = useState([]);
   console.log(selectedIds);
-  
-  const [isSelecting, setIsSelecting] = useState(false);
 
   const [fontsLoaded] = useFonts({
     Lobster_400Regular,
@@ -26,24 +24,21 @@ const cards = () => {
       { id: 9, name: 'Berlin9', number: 9, place_id: 2 }
     ]
 
-    const handleSelect = (id: string) => {
-      const isCardAlreadySelected = selectedIds.some(
-        (alreadySelectedCardId: string) => alreadySelectedCardId === id
-      );
+    const handleSelect = (id: string, multi = false) => {
+      const isAlreadySelected = selectedIds.includes(id);
 
-      if (isCardAlreadySelected) {
-          setSelectedIds(selectedIds.filter(
-            (alreadySelectedCardId) => alreadySelectedCardId !== id
-          ));
-      } else {
+      if (isAlreadySelected && !multi) {
+        setSelectedIds(selectedIds.filter((selectedId) => selectedId !== id));
+      } else if (!isAlreadySelected) {
         setSelectedIds((prev) => [...prev, id]);
       }
     };
-  
+     
     return (
       <View style={{ flex: 1, padding: 16 }}>
         <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 30 }}>My cards</Text>
         <Text style={styles.chapterTitle}>Berlin</Text>
+
         <FlatList
           horizontal
           keyExtractor={(item) => item.id.toString()}
@@ -53,7 +48,7 @@ const cards = () => {
             <CardItem
               item={item}
               isSelected={selectedIds.includes(item.id)}
-              onSelect={handleSelect}
+              onSelect={() => handleSelect(item.id)}
             />
           )}
           showsHorizontalScrollIndicator={false}
