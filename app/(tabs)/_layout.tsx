@@ -8,8 +8,8 @@ const TabsLayout = () => {
       <Tabs
         screenOptions={{
           headerShown: false,
-          tabBarActiveTintColor: "#8B593E",
-          tabBarInactiveTintColor: "#9A8478",
+          tabBarActiveTintColor: "#212529",
+          tabBarInactiveTintColor: "#6C757D",
           tabBarStyle: {
             backgroundColor: "#FFFFFF",
             borderTopColor: "#E5D3B7",
@@ -19,8 +19,8 @@ const TabsLayout = () => {
             height: 80,
           },
           tabBarLabelStyle: {
-            fontSize: 12,
-            fontWeight: "600",
+            fontSize: 11,
+            fontWeight: "400",
           },
         }}
       >
@@ -28,21 +28,21 @@ const TabsLayout = () => {
           name="dashboard"
           options={{
             title: "Dashboard",
-            tabBarIcon: ({ color, size }) => <Ionicons name="restaurant" size={size} color={color} />,
+            tabBarIcon: ({ color, size }) => <Ionicons name="chatbubbles-outline" size={size} color={color} />,
           }}
         />
         <Tabs.Screen
           name="cards"
           options={{
             title: "My cards",
-            tabBarIcon: ({ color, size }) => <Ionicons name="search" size={size} color={color} />,
+            tabBarIcon: ({ color, size }) => <Ionicons name="duplicate-outline" size={size} color={color} />,
           }}
         />
         <Tabs.Screen
           name="swap"
           options={{
             title: "Swap",
-            tabBarIcon: ({ color, size }) => <Ionicons name="heart" size={size} color={color} />,
+            tabBarIcon: ({ color, size }) => <Ionicons name="search-outline" size={size} color={color} />,
           }}
         />
       </Tabs>
