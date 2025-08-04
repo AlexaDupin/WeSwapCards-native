@@ -1,19 +1,27 @@
-import { View, Text, TouchableOpacity } from 'react-native'
+import React from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 import { styles } from "../assets/styles/cards.styles";
-import { Colors } from "@/constants/Colors";
+import type { CardItemData } from '../types/cardItemType';
+ 
+type Props = {
+  item: CardItemData,
+  status: 'default' | 'owned' | 'duplicated',
+  onSelect: () => void,
+  reset?: () => void;
+}
 
-const CardItem = ({ item, onSelect, status, reset }) => {
+const CardItem = ({ item, status, onSelect, reset }: Props) => {
   const isOwned = status === 'owned';
   const isDuplicated = status === 'duplicated';
+  const cardBackground = (isOwned || isDuplicated) ? '#b5e8da' : '#dedcd7';
 
   return (
-    <TouchableOpacity onPress={onSelect} onLongPress={reset}>
+    <TouchableOpacity onPress={onSelect} onLongPress={reset ?? undefined}>
       <View style={styles.cardItemWrapper}>
         <View
             style={[
               styles.cardItem,
-              { backgroundColor: isOwned || isDuplicated ? '#b5e8da' : '#dedcd7' },
-              // isOwned || isDuplicated ? styles.cardItemSelected : null,
+              { backgroundColor: cardBackground },
             ]}
         >
           <Text style={styles.cardNumber}>{item.number}</Text>
@@ -24,4 +32,4 @@ const CardItem = ({ item, onSelect, status, reset }) => {
   );
 };
 
-export default CardItem;
+export default React.memo(CardItem);

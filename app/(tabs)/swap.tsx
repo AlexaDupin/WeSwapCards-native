@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import {View, Text, TouchableOpacity, FlatList } from "react-native";
 import { styles } from "@/assets/styles/swap.styles";
-import { SafeAreaView } from 'react-native-safe-area-context';
 
 const swap = ({ onSelect }) => {
   const [isDropdownVisible, setDropdownVisible] = useState(false);
@@ -61,7 +60,6 @@ const swap = ({ onSelect }) => {
             data={chapters}
             keyExtractor={(item) => item.id.toString()}
             showsVerticalScrollIndicator={false}
-            // contentContainerStyle={{ marginBottom: 10 }}
             renderItem={({ item }) => (
               <TouchableOpacity
                 style={styles.option}

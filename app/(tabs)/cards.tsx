@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { View, Text, FlatList } from 'react-native'
-import CardItem from '@/components/CardItem';
 import { styles } from "@/assets/styles/cards.styles";
-import { useFonts, Lobster_400Regular } from '@expo-google-fonts/lobster';
+import CardItem from '@/components/CardItem';
+import { Lobster_400Regular, useFonts } from '@expo-google-fonts/lobster';
+import React, { useState } from 'react';
+import { FlatList, Text, View } from 'react-native';
 
 const cards = () => {
   const [cardStatuses, setCardStatuses] = useState({});
