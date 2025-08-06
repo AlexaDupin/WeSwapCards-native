@@ -77,11 +77,33 @@ export const styles = StyleSheet.create({
     fontSize: 12,
     // color: COLORS.textLight,
   },
+  transactionsList: {
+    flex: 1,
+  },
+  transactionsListContent: {
+    paddingBottom: 20,
+  },
+  pillList: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  pill: {
+    borderRadius: 18, 
+    backgroundColor: "#E0F2FE",
+    padding: 10,
+    paddingHorizontal: 16,
+    marginRight: 10,
+    marginBottom: 15
+  },
+  pillText: {
+    fontSize: 14, 
+    textAlign: "center",
+    color:  "#0369A1",
+  },
 
 
 
 
-  
   transactionAmount: {
     fontSize: 16,
     fontWeight: "600",
@@ -156,28 +178,5 @@ export const styles = StyleSheet.create({
     marginBottom: 10,
     paddingBottom: 5,
   },
-  transactionsList: {
-    flex: 1,
-  },
-  transactionsListContent: {
-    paddingBottom: 20,
-  },
-  pillList: {
-    flexDirection: "row",
-    alignItems: "center",
-  },
-  pill: {
-    borderRadius: 18, 
-    backgroundColor: "#E0F2FE",
-    padding: 10,
-    paddingHorizontal: 16,
-    marginRight: 10,
-    marginBottom: 15
-  },
-  pillText: {
-    fontSize: 14, 
-    textAlign: "center",
-    color:  "#0369A1",
-
-  },
+  
 });
