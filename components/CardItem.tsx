@@ -32,7 +32,7 @@ const CardItem = ({ item, status, onSelect, reset }: Props) => {
             ]}
         >
           <Text style={styles.cardNumber}>{item.number}</Text>
-          {isDuplicated && <View style={styles.orangeBadge} />}
+          {isDuplicated && <View testID={`badge-${item.id}`} style={styles.orangeBadge} />}
         </View>
       </View>  
     </TouchableOpacity>     
