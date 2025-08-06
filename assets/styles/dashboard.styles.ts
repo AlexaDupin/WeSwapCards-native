@@ -2,13 +2,40 @@ import { StyleSheet } from "react-native";
 import { Colors } from "../../constants/Colors";
 
 export const styles = StyleSheet.create({
+  renderRightAccept: {
+    backgroundColor: Colors.secondary,
+    justifyContent: "center",
+    alignItems: "center",
+    width: 70,
+    marginBottom: 10,
+    alignSelf: 'stretch',
+    borderTopRightRadius: 12,
+    borderBottomRightRadius: 12,
+  },
+  renderRightDecline: {
+    backgroundColor: Colors.primary,
+    justifyContent: "center",
+    alignItems: "center",
+    width: 70,
+    marginBottom: 10,
+    alignSelf: 'stretch',
+  },
+  renderLeftUnread: {
+    backgroundColor: "blue",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 70,
+    marginBottom: 10,
+    alignSelf: 'stretch',
+    borderTopLeftRadius: 12,
+    borderBottomLeftRadius: 12,
+  },
   transactionCard: {
     backgroundColor: "white",
     borderRadius: 12,
     marginBottom: 10,
     flexDirection: "row",
     alignItems: "center",
-    // shadowColor: COLORS.shadow,
     shadowOffset: {
       width: 0,
       height: 1,
@@ -38,25 +65,29 @@ export const styles = StyleSheet.create({
   transactionTitle: {
     fontSize: 16,
     fontWeight: "500",
-    // color: COLORS.text,
     marginBottom: 4,
   },
   transactionCategory: {
     fontSize: 14,
-    // color: COLORS.textLight,
   },
   transactionRight: {
     alignItems: "flex-end",
-  },
-  transactionAmount: {
-    fontSize: 16,
-    fontWeight: "600",
-    marginBottom: 4,
   },
   transactionDate: {
     fontSize: 12,
     // color: COLORS.textLight,
   },
+
+
+
+
+  
+  transactionAmount: {
+    fontSize: 16,
+    fontWeight: "600",
+    marginBottom: 4,
+  },
+
   deleteButton: {
     padding: 15,
     borderLeftWidth: 1,

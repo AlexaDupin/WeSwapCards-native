@@ -1,17 +1,17 @@
 import { styles } from "@/assets/styles/cards.styles";
 import CardItem from '@/components/CardItem';
 import React, { useState } from 'react';
-// import { Lobster_400Regular, useFonts } from '@expo-google-fonts/lobster';
+import { Lobster_400Regular, useFonts } from '@expo-google-fonts/lobster';
 import { FlatList, Text, View } from 'react-native';
-import type { CardItemData, CardStatus } from '../../types/cardItemType';
-import type { ChapterData } from '../../types/chapterType';
+import type { CardItemData, CardStatus } from '../../types/CardItemType';
+import type { ChapterData } from '../../types/ChapterType';
 
 const Cards = () => {
   const [cardStatuses, setCardStatuses] = useState<Record<number, CardStatus>>({});
 
-  // const [fontsLoaded] = useFonts({
-  //   Lobster_400Regular,
-  // });
+  useFonts({
+    Lobster_400Regular,
+  });
 
   const chapters: ChapterData[] = [
     {id: 1, name: 'Brussels'},

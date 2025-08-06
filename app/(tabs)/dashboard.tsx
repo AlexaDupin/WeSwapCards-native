@@ -33,7 +33,7 @@ const Dashboard = () => {
     }
   ]
 
-  const handleDelete = (id) => {
+  const handleDelete = (id: number) => {
     Alert.alert("Delete Transaction", "Are you sure you want to delete this transaction?", [
       { text: "Cancel", style: "cancel" },
       { text: "Delete", style: "destructive", onPress: () => console.log(id) },
@@ -63,10 +63,14 @@ const Dashboard = () => {
         style={styles.transactionsList}
         contentContainerStyle={styles.transactionsListContent}
         data={conversations}
-        renderItem={({ item }) => <DashboardItem item={item} onDelete={handleDelete} />}
+        renderItem={({ item }) => (
+          <DashboardItem 
+            item={item} 
+            onDelete={() => handleDelete(item.db_id)} 
+          />
+        )}
         ListEmptyComponent={<NoConvFound />}
         showsVerticalScrollIndicator={false}
-        // refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
       />
     </View>
   );

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { styles } from "../assets/styles/cards.styles";
-import type { CardItemData, CardStatus } from '../types/cardItemType';
+import type { CardItemData, CardStatus } from '../types/CardItemType';
  
 type Props = {
   item: CardItemData,
