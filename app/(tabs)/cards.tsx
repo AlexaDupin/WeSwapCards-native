@@ -1,21 +1,24 @@
 import { styles } from "@/assets/styles/cards.styles";
 import CardItem from '@/components/CardItem';
-import { Lobster_400Regular, useFonts } from '@expo-google-fonts/lobster';
 import React, { useState } from 'react';
+// import { Lobster_400Regular, useFonts } from '@expo-google-fonts/lobster';
 import { FlatList, Text, View } from 'react-native';
+import type { CardItemData, CardStatus } from '../../types/cardItemType';
+import type { ChapterData } from '../../types/chapterType';
 
-const cards = () => {
-  const [cardStatuses, setCardStatuses] = useState({});
+const Cards = () => {
+  const [cardStatuses, setCardStatuses] = useState<Record<number, CardStatus>>({});
 
-  const [fontsLoaded] = useFonts({
-    Lobster_400Regular,
-  });
+  // const [fontsLoaded] = useFonts({
+  //   Lobster_400Regular,
+  // });
 
-  const chapters = [
-    {id: 1, name: 'Brussels', place_id: 1},
-    {id: 2, name: 'Berlin', place_id: 2},
+  const chapters: ChapterData[] = [
+    {id: 1, name: 'Brussels'},
+    {id: 2, name: 'Berlin'},
   ]
-  const cards = [
+  
+  const cards: CardItemData[] = [
     { id: 1, name: 'Brussels1', number: 1, place_id: 1 },
     { id: 2, name: 'Brussels2', number: 2, place_id: 1 },
     { id: 3, name: 'Brussels3', number: 3, place_id: 1 },
@@ -36,7 +39,7 @@ const cards = () => {
     { id: 18, name: 'Berlin9', number: 9, place_id: 2 }
   ]
 
-  const getNextStatus = (current) => {
+  const getNextStatus = (current: CardStatus) => {
     switch (current) {
       case 'default': return 'owned';
       case 'owned': return 'duplicated';
@@ -45,7 +48,7 @@ const cards = () => {
     }
   };
 
-  const handleSelect = (id: string) => {
+  const handleSelect = (id: number) => {
     const currentStatus = cardStatuses[id] || 'default';
     const nextStatus = getNextStatus(currentStatus);
 
@@ -67,7 +70,7 @@ const cards = () => {
       }
     };
 
-    const reset = (id: string) => {  
+    const reset = (id: number) => {  
       setCardStatuses(prev => ({ ...prev, [id]: 'default' }));
       console.log(`Card ${id} reset. Sending "reset" to backend...`);
     };
@@ -80,23 +83,23 @@ const cards = () => {
     //   });
     // };
      
-    return (
-      <View style={{ flex: 1, padding: 16 }}>
-        <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 30 }}>My cards</Text>
+   return (
+  <View style={{ flex: 1, padding: 16 }}>
+    <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 30 }}>My cards</Text>
 
-        {chapters.map((chapter) => {
-      const chapterCards = cards.filter(card => card.place_id === chapter.place_id);
+    {chapters.map((chapter) => {
+      const chapterCards = cards.filter(card => card.place_id === chapter.id);
 
       return (
         <View key={chapter.id} style={{ marginBottom: 30 }}>
           <Text style={styles.chapterTitle}>{chapter.name}</Text>
 
-          <FlatList
+          <FlatList<CardItemData>
             horizontal
-            keyExtractor={(item) => item.id.toString()}
+            keyExtractor={(item: CardItemData) => item.id.toString()}
             contentContainerStyle={styles.cardsList}
             data={chapterCards}
-            renderItem={({ item }) => (
+            renderItem={({ item }: { item: CardItemData }) => (
               <CardItem
                 item={item}
                 status={cardStatuses[item.id] || 'default'}
@@ -144,4 +147,4 @@ const cards = () => {
   ); */}
 }
 
-export default cards
+export default Cards

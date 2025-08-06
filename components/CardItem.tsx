@@ -1,11 +1,11 @@
 import React from 'react';
 import { Text, TouchableOpacity, View } from 'react-native';
 import { styles } from "../assets/styles/cards.styles";
-import type { CardItemData } from '../types/cardItemType';
+import type { CardItemData, CardStatus } from '../types/cardItemType';
  
 type Props = {
   item: CardItemData,
-  status: 'default' | 'owned' | 'duplicated',
+  status: CardStatus,
   onSelect: () => void,
   reset?: () => void;
 }
@@ -16,9 +16,16 @@ const CardItem = ({ item, status, onSelect, reset }: Props) => {
   const cardBackground = (isOwned || isDuplicated) ? '#b5e8da' : '#dedcd7';
 
   return (
-    <TouchableOpacity onPress={onSelect} onLongPress={reset ?? undefined}>
+    <TouchableOpacity 
+      testID={`card-touch-${item.id}`}
+      onPress={onSelect} 
+      onLongPress={reset ?? undefined}
+      accessibilityRole="button"
+      accessibilityLabel={`Card number ${item.number}, status ${status} `}
+    >
       <View style={styles.cardItemWrapper}>
         <View
+            testID={`card-${item.id}`}
             style={[
               styles.cardItem,
               { backgroundColor: cardBackground },

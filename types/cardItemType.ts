@@ -2,5 +2,7 @@ export interface CardItemData {
     id: number;
     name: string;
     number: number;
-    price: number;
+    place_id: number;
 }
+
+export type CardStatus = 'default' | 'owned' | 'duplicated';
