@@ -1,6 +1,6 @@
 // styles/auth.styles.js
+import { Colors } from "@/constants/Colors";
 import { StyleSheet } from "react-native";
-import { Colors } from "../../constants/Colors";
 
 export const authStyles = StyleSheet.create({
   container: {
@@ -11,7 +11,6 @@ export const authStyles = StyleSheet.create({
   title: {
     fontSize: 32,
     fontWeight: "600",
-    color: Colors.text,
     marginVertical: 15,
     textAlign: "center",
     marginBottom: 20,
@@ -24,17 +23,14 @@ export const authStyles = StyleSheet.create({
     textAlign: "center",
   },
   input: {
-    backgroundColor: Colors.white,
     borderRadius: 12,
     padding: 15,
     marginBottom: 26,
     borderWidth: 1,
-    borderColor: Colors.border,
     fontSize: 16,
-    color: Colors.text,
   },
   errorInput: {
-    borderColor: Colors.expense,
+    // borderColor: Colors.expense,
   },
   button: {
     backgroundColor: Colors.primary,
@@ -58,38 +54,41 @@ export const authStyles = StyleSheet.create({
   footerText: {
     fontSize: 16,
   },
-  linkText: {
-    color: Colors.primary,
-    fontSize: 16,
-    fontWeight: "600",
-  },
-  verificationContainer: {
-    flex: 1,
-    backgroundColor: Colors.background,
-    padding: 20,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  verificationTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: Colors.text,
-    marginBottom: 20,
-    textAlign: "center",
-  },
-  verificationInput: {
-    backgroundColor: Colors.white,
-    borderRadius: 12,
-    padding: 15,
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: Colors.border,
-    fontSize: 16,
-    color: Colors.text,
-    width: "100%",
-    textAlign: "center",
-    letterSpacing: 2,
-  },
+
+
+  
+  // linkText: {
+  //   color: Colors.primary,
+  //   fontSize: 16,
+  //   fontWeight: "600",
+  // },
+  // verificationContainer: {
+  //   flex: 1,
+  //   backgroundColor: Colors.background,
+  //   padding: 20,
+  //   justifyContent: "center",
+  //   alignItems: "center",
+  // },
+  // verificationTitle: {
+  //   fontSize: 24,
+  //   fontWeight: "bold",
+  //   color: Colors.text,
+  //   marginBottom: 20,
+  //   textAlign: "center",
+  // },
+  // verificationInput: {
+  //   backgroundColor: Colors.white,
+  //   borderRadius: 12,
+  //   padding: 15,
+  //   marginBottom: 16,
+  //   borderWidth: 1,
+  //   borderColor: Colors.border,
+  //   fontSize: 16,
+  //   color: Colors.text,
+  //   width: "100%",
+  //   textAlign: "center",
+  //   letterSpacing: 2,
+  // },
 
   // 🔴 Error styles
   errorBox: {

@@ -1,5 +1,6 @@
 import { styles } from "@/assets/styles/cards.styles";
 import CardItem from '@/components/CardItem';
+import { SignOutButton } from "@/components/SignOutButton";
 import { axiosInstance } from '@/helpers/axiosInstance';
 import { Lobster_400Regular, useFonts } from '@expo-google-fonts/lobster';
 import React, { useEffect, useState } from 'react';
@@ -93,6 +94,7 @@ const Cards = () => {
      
    return (
   <View style={{ flex: 1, padding: 16 }}>
+    <SignOutButton />
     <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 30 }}>My cards</Text>
 
     <ScrollView showsVerticalScrollIndicator={false}>
