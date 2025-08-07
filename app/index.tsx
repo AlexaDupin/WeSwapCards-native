@@ -5,12 +5,21 @@ import Search from '@/assets/images/search.svg';
 import Users from '@/assets/images/users.svg';
 import { authStyles } from "@/assets/styles/auth.styles";
 import { homeStyles } from "@/assets/styles/home.styles";
+import PageLoader from '@/components/PageLoader';
 import StepsCard from "@/components/StepsCard";
-import { Link } from 'expo-router';
+import { useAuth } from '@clerk/clerk-expo';
+import { Link, Redirect } from 'expo-router';
 import { Image, ScrollView, Text, TouchableOpacity, View } from "react-native";
 
 export default function Index() {
-  // return <Redirect href="/cards" />;
+  const { isSignedIn, isLoaded } = useAuth();
+
+  if (!isLoaded) return <PageLoader />;
+  
+  if (isSignedIn) {
+    return <Redirect href={'/(tabs)/cards'} />
+  }
+
   return (
   <View
       style={{

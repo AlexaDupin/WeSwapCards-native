@@ -1,7 +1,9 @@
 import { styles } from "@/assets/styles/cards.styles";
 import CardItem from '@/components/CardItem';
+import PageLoader from "@/components/PageLoader";
 import { SignOutButton } from "@/components/SignOutButton";
 import { axiosInstance } from '@/helpers/axiosInstance';
+import { useAuth } from '@clerk/clerk-expo';
 import { Lobster_400Regular, useFonts } from '@expo-google-fonts/lobster';
 import React, { useEffect, useState } from 'react';
 import { FlatList, ScrollView, Text, View } from 'react-native';
@@ -12,6 +14,7 @@ const Cards = () => {
   const [cardStatuses, setCardStatuses] = useState<Record<number, CardStatus>>({});
   const [chapters, setChapters] = useState<ChapterData[]>([]);
   const [cards, setCards] = useState<CardItemData[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   
   type GetChaptersResponse = {
     places: ChapterData[];
@@ -21,6 +24,8 @@ const Cards = () => {
     cards: CardItemData[];
   };
   
+  const { getToken } = useAuth();
+
   const fetchAllChapters = async () => {
     try {
       const response = await axiosInstance.get<GetChaptersResponse>('/places');
@@ -32,7 +37,12 @@ const Cards = () => {
   
   const fetchAllCards = async () => {
     try {
-      const response = await axiosInstance.get<GetCardsResponse>('/cards');
+      const token = await getToken();
+      const response = await axiosInstance.get<GetCardsResponse>('/cards', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       setCards(response.data.cards);
     } catch (error) {
       console.error("Error fetching cards", error);
@@ -40,8 +50,15 @@ const Cards = () => {
   };
   
   useEffect(() => {
-    fetchAllChapters();
-    fetchAllCards();
+    const fetchData = async () => {
+      try {
+        await Promise.all([fetchAllChapters(), fetchAllCards()]);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+  
+    fetchData();
   }, []);
 
   useFonts({
@@ -91,6 +108,10 @@ const Cards = () => {
     //     }, 300); // simulate a short delay
     //   });
     // };
+
+  if (isLoading) {
+    return <PageLoader />
+  }
      
    return (
   <View style={{ flex: 1, padding: 16 }}>

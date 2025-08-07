@@ -4,7 +4,7 @@ import { Colors } from "../../constants/Colors";
 export const styles = StyleSheet.create({
     chapterTitle: {
         fontFamily: 'Lobster_400Regular',
-        fontSize: 28,
+        fontSize: 26,
         textShadowColor: 'rgba(0,0,0,0.2)',
         textShadowOffset: { width: 1, height: 1 },
         textShadowRadius: 1,
