@@ -15,13 +15,18 @@ const Cards = () => {
   const [chapters, setChapters] = useState<ChapterData[]>([]);
   const [cards, setCards] = useState<CardItemData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  
+  const explorerId: number = 134;
+
   type GetChaptersResponse = {
     places: ChapterData[];
   };
   
   type GetCardsResponse = {
     cards: CardItemData[];
+  };
+
+  type GetCardStatusesResponse = {
+    statuses: CardStatus[];
   };
   
   const { getToken } = useAuth();
@@ -48,11 +53,28 @@ const Cards = () => {
       console.error("Error fetching cards", error);
     }
   };
+
+  const fetchAllCardStatuses = async (explorerId: number) => {
+    console.log('explorerId', explorerId);
+    
+    try {
+      const token = await getToken();
+      const response = await axiosInstance.get<GetCardStatusesResponse>(`/cards/statuses/${explorerId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      // console.log('statuses', response.data.statuses);
+      setCardStatuses(response.data.statuses);
+    } catch (error) {
+      console.error("Error fetching statuses", error);
+    }
+  }
   
   useEffect(() => {
     const fetchData = async () => {
       try {
-        await Promise.all([fetchAllChapters(), fetchAllCards()]);
+        await Promise.all([fetchAllChapters(), fetchAllCards(), fetchAllCardStatuses(explorerId)]);
       } finally {
         setIsLoading(false);
       }

@@ -1,5 +1,5 @@
 import type { CardItemData } from '@/types/cardItemType';
-import { userEvent , render, screen } from '@testing-library/react-native';
+import { render, screen, userEvent } from '@testing-library/react-native';
 import React from 'react';
 import CardItem from '../CardItem';
 
