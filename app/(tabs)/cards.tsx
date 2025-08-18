@@ -55,7 +55,7 @@ const Cards = () => {
   };
 
   const fetchAllCardStatuses = async (explorerId: number) => {
-    console.log('explorerId', explorerId);
+    // console.log('explorerId', explorerId);
     
     try {
       const token = await getToken();
@@ -96,31 +96,67 @@ const Cards = () => {
     }
   };
 
-  const handleSelect = (id: number) => {
-    const currentStatus = cardStatuses[id] || 'default';
+  const addCardToExplorer = async (cardId: number) => {
+    try {
+      const token = await getToken();
+
+      const response = await axiosInstance.post<GetCardStatusesResponse>(`/explorercards/${explorerId}/cards/${cardId}`, {
+          cardId, duplicate: false
+      },
+      { headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.status === 200) {
+        console.log(`Card ${cardId} selected. Sending "owned" to backend...`);
+      }
+
+    } catch (error) {
+      console.error("Error fetching statuses", error);
+    }
+  }
+
+  const editDuplicateStatus = async (cardId: number, updatedDuplicateStatus: boolean) => {
+    try {
+      const token = await getToken();
+
+      const response = await axiosInstance.patch<GetCardStatusesResponse>(`/explorercards/${explorerId}/cards/${cardId}/duplicate`, {
+        duplicate: updatedDuplicateStatus,
+      },
+      { headers: {
+        Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.status === 200) {
+        console.log(`Card ${cardId} duplicated. Sending "duplicated" to backend...`);
+      }
+
+    } catch (error) {
+      console.error("Error fetching statuses", error);
+    }
+  }
+
+  const handleSelect = async (cardId: number) =>  {
+    const currentStatus = cardStatuses[cardId] || 'default';
     const nextStatus = getNextStatus(currentStatus);
 
-    setCardStatuses(prev => ({ ...prev, [id]: nextStatus }));
+    setCardStatuses(prev => ({ ...prev, [cardId]: nextStatus }));
 
     switch (nextStatus) {
       case 'owned':
-        console.log(`Card ${id} selected. Sending "owned" to backend...`);
-        // await fakeBackendRequest(id, 'owned');
+        await addCardToExplorer(cardId)
         break;
       case 'duplicated':
-        console.log(`Card ${id} duplicated. Sending "duplicated" to backend...`);
-        // await fakeBackendRequest(id, 'duplicated');
+        editDuplicateStatus(cardId, true)
         break;
-      // case 'default':
-      //   console.log(`Card ${id} reset. Sending "reset" to backend...`);
-      //   // await fakeBackendRequest(id, 'reset');
-      //   break;
-      }
-    };
+    }
+  };
 
-    const reset = (id: number) => {  
-      setCardStatuses(prev => ({ ...prev, [id]: 'default' }));
-      console.log(`Card ${id} reset. Sending "reset" to backend...`);
+    const reset = (cardId: number) => {  
+      setCardStatuses(prev => ({ ...prev, [cardId]: 'default' }));
+      console.log(`Card ${cardId} reset. Sending "reset" to backend...`);
     };
     // const fakeBackendRequest = async (cardId, status) => {
     //   return new Promise((resolve) => {
