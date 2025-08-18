@@ -29,6 +29,13 @@ const Cards = () => {
     statuses: CardStatus[];
   };
   
+  type UpsertCardResponse = {
+    explorerId: number;
+    cardId: number;
+    status: "owned" | "duplicated";
+    changed: boolean;
+  };
+  
   const { getToken } = useAuth();
 
   const fetchAllChapters = async () => {
@@ -100,8 +107,8 @@ const Cards = () => {
     try {
       const token = await getToken();
 
-      const response = await axiosInstance.post<GetCardStatusesResponse>(`/explorercards/${explorerId}/cards/${cardId}`, {
-          cardId, duplicate: false
+      const response = await axiosInstance.post<UpsertCardResponse>(`/explorercards/${explorerId}/cards/${cardId}`, {
+          duplicate: false
       },
       { headers: {
           Authorization: `Bearer ${token}`,
@@ -109,11 +116,11 @@ const Cards = () => {
       });
 
       if (response.status === 200) {
-        console.log(`Card ${cardId} selected. Sending "owned" to backend...`);
+        console.log(`Card ${cardId} selected. Sending "owned" to backend...`, response);
       }
 
     } catch (error) {
-      console.error("Error fetching statuses", error);
+      console.error("Error adding cart to explorer", error);
     }
   }
 
@@ -154,18 +161,25 @@ const Cards = () => {
     }
   };
 
-    const reset = (cardId: number) => {  
-      setCardStatuses(prev => ({ ...prev, [cardId]: 'default' }));
-      console.log(`Card ${cardId} reset. Sending "reset" to backend...`);
-    };
-    // const fakeBackendRequest = async (cardId, status) => {
-    //   return new Promise((resolve) => {
-    //     setTimeout(() => {
-    //       console.log(`Backend received card ${cardId} status: ${status}`);
-    //       resolve();
-    //     }, 300); // simulate a short delay
-    //   });
-    // };
+  const reset = async (cardId: number) => {  
+    try {
+      const token = await getToken();
+
+      const response = await axiosInstance.delete(`/explorercards/${explorerId}/cards/${cardId}`,
+      { headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.status === 200) {
+        setCardStatuses(prev => ({ ...prev, [cardId]: 'default' }));
+        console.log(`Card ${cardId} has been deleted`);
+      }
+
+    } catch (error) {
+      console.error("Error during card deletion", error);
+    }
+  };
 
   if (isLoading) {
     return <PageLoader />
