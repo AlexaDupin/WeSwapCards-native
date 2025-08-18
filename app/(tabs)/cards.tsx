@@ -130,7 +130,7 @@ const Cards = () => {
       });
 
       if (response.status === 200) {
-        console.log(`Card ${cardId} duplicated. Sending "duplicated" to backend...`);
+        console.log(`Card ${cardId} status updated`);
       }
 
     } catch (error) {
@@ -146,7 +146,7 @@ const Cards = () => {
 
     switch (nextStatus) {
       case 'owned':
-        await addCardToExplorer(cardId)
+        currentStatus === 'default' ? await addCardToExplorer(cardId) : await editDuplicateStatus(cardId, false)
         break;
       case 'duplicated':
         editDuplicateStatus(cardId, true)
