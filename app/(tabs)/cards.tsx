@@ -26,13 +26,13 @@ const Cards = () => {
   };
 
   type GetCardStatusesResponse = {
-    statuses: CardStatus[];
+    statuses: Record<number, CardStatus>;
   };
   
   type UpsertCardResponse = {
     explorerId: number;
     cardId: number;
-    status: "owned" | "duplicated";
+    duplicate: boolean;
     changed: boolean;
   };
   
@@ -103,60 +103,33 @@ const Cards = () => {
     }
   };
 
-  const addCardToExplorer = async (cardId: number) => {
-    try {
-      const token = await getToken();
+  const upsertCard = async (cardId: number, duplicate: boolean) => {
+    const token = await getToken();
+    const response = await axiosInstance.put<UpsertCardResponse>(`/explorercards/${explorerId}/cards/${cardId}`,
+      { duplicate },
+      { headers: { Authorization: `Bearer ${token}` } }
+    );
+    console.log(`Card ${cardId} status updated`, response.data);
 
-      const response = await axiosInstance.post<UpsertCardResponse>(`/explorercards/${explorerId}/cards/${cardId}`, {
-          duplicate: false
-      },
-      { headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+    if (response.status === 200 && response.data.duplicate === false) { 
+      setCardStatuses(prev => ({ ...prev, [cardId]: 'owned' }));
+    } 
 
-      if (response.status === 200) {
-        console.log(`Card ${cardId} selected. Sending "owned" to backend...`, response);
-      }
-
-    } catch (error) {
-      console.error("Error adding cart to explorer", error);
-    }
-  }
-
-  const editDuplicateStatus = async (cardId: number, updatedDuplicateStatus: boolean) => {
-    try {
-      const token = await getToken();
-
-      const response = await axiosInstance.patch<GetCardStatusesResponse>(`/explorercards/${explorerId}/cards/${cardId}/duplicate`, {
-        duplicate: updatedDuplicateStatus,
-      },
-      { headers: {
-        Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (response.status === 200) {
-        console.log(`Card ${cardId} status updated`);
-      }
-
-    } catch (error) {
-      console.error("Error fetching statuses", error);
-    }
-  }
+    if (response.status === 200 && response.data.duplicate === true) { 
+      setCardStatuses(prev => ({ ...prev, [cardId]: 'duplicated' }));
+    } 
+  };
 
   const handleSelect = async (cardId: number) =>  {
     const currentStatus = cardStatuses[cardId] || 'default';
     const nextStatus = getNextStatus(currentStatus);
 
-    setCardStatuses(prev => ({ ...prev, [cardId]: nextStatus }));
-
     switch (nextStatus) {
       case 'owned':
-        currentStatus === 'default' ? await addCardToExplorer(cardId) : await editDuplicateStatus(cardId, false)
+        await upsertCard(cardId, false)
         break;
       case 'duplicated':
-        editDuplicateStatus(cardId, true)
+        await upsertCard(cardId, true)
         break;
     }
   };
