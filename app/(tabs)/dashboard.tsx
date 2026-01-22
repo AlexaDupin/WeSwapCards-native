@@ -1,11 +1,9 @@
 import React, { useMemo, useCallback } from 'react'
-import { View, Text, FlatList, Alert, TouchableOpacity } from 'react-native'
-import PageLoader from '@/components/PageLoader'
-import DashboardItem from '@/components/DashboardItem'
-import Pill from '@/components/Pill'
-import NoConvFound from '@/components/NoConvFound'
-import { styles } from "@/assets/styles/dashboard.styles";
-import { DashboardItemData } from '@/types/DashboardItemType'
+import { View, Text, FlatList, Alert } from 'react-native'
+import DashboardItem from '@/src/features/dashboard/components/DashboardItem'
+import Pill from '@/src/components/Pill'
+import { styles } from "@/src/assets/styles/dashboard.styles";
+import { DashboardItemData } from '@/src/features/dashboard/types/DashboardItemType'
 
 const mockConversations: DashboardItemData[] = [
   {
@@ -65,7 +63,6 @@ const Dashboard = () => {
         contentContainerStyle={styles.transactionsListContent}
         data={conversations}
         renderItem={renderItem}
-        ListEmptyComponent={<NoConvFound />}
         showsVerticalScrollIndicator={false}
         keyExtractor={(item: DashboardItemData) => item.db_id.toString()}
       />

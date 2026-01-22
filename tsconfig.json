@@ -2,10 +2,14 @@
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
     "strict": true,
+    "jsx": "react-jsx",
     "noImplicitAny": true,
     "exactOptionalPropertyTypes": true,
     "noUncheckedIndexedAccess": true,
-    "types": ["jest", "@testing-library/react-native"],
+    "types": [
+      "jest",
+      "@testing-library/react-native"
+    ],
     "paths": {
       "@/*": [
         "./*"
@@ -15,7 +19,8 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
-    ".expo/types/**/*.ts",
-    "expo-env.d.ts"
+    "UNUSED/.expo/types/**/*.ts",
+    "expo-env.d.ts",
+    ".expo/types/**/*.ts"
   ]
 }

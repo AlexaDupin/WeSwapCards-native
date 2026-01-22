@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import {View, Text, TouchableOpacity, FlatList } from "react-native";
-import { styles } from "@/assets/styles/swap.styles";
+import { styles } from "@/src/assets/styles/swap.styles";
 
 const swap = ({ onSelect }) => {
   const [isDropdownVisible, setDropdownVisible] = useState(false);

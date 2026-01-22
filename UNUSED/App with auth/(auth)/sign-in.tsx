@@ -1,11 +1,12 @@
-import { useSignIn } from '@clerk/clerk-expo';
-import { Ionicons } from "@expo/vector-icons";
-import { Link, useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useState } from 'react'
+import { useSignIn } from '@clerk/clerk-expo'
+import { Link, useRouter } from 'expo-router'
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { authStyles } from "../../src/assets/styles/auth.styles";
-import { styles } from "../../src/assets/styles/styles";
+import { authStyles } from "../../../src/assets/styles/auth.styles";
+import { styles } from "../../../src/assets/styles/styles";
+import { Ionicons } from "@expo/vector-icons";
+import { Colors } from "../../../src/constants/Colors";
 
 export default function Page() {
   const { signIn, setActive, isLoaded } = useSignIn()
@@ -30,7 +31,7 @@ export default function Page() {
       // and redirect the user
       if (signInAttempt.status === 'complete') {
         await setActive({ session: signInAttempt.createdSessionId })
-        router.replace('/(tabs)/cards')
+        router.replace('/(tabs)/dashboard')
       } else {
         // If the status isn't complete, check why. User might need to
         // complete further steps.
@@ -102,9 +103,9 @@ export default function Page() {
             </TouchableOpacity>
         </Link>
                 
-        <Link href="/">
+        {/* <Link href="/">
           <Text>Home</Text>
-        </Link>
+        </Link> */}
 
       </View>
     </View>

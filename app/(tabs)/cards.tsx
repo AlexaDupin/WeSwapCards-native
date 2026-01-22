@@ -1,14 +1,14 @@
-import { styles } from "@/assets/styles/cards.styles";
-import CardItem from '@/components/CardItem';
-import PageLoader from "@/components/PageLoader";
-import { SignOutButton } from "@/components/SignOutButton";
-import { axiosInstance } from '@/helpers/axiosInstance';
+import { styles } from "@/src/assets/styles/cards.styles";
+import CardItem from '@/src/features/cards/components/CardItem';
+import PageLoader from "@/src/components/PageLoader";
+import { SignOutButton } from "@/src/components/SignOutButton";
+import { axiosInstance } from '@/src/lib/axiosInstance';
 import { useAuth } from '@clerk/clerk-expo';
 import { Lobster_400Regular, useFonts } from '@expo-google-fonts/lobster';
 import React, { useEffect, useState } from 'react';
 import { FlatList, ScrollView, Text, View } from 'react-native';
-import type { CardItemData, CardStatus } from '../../types/CardItemType';
-import type { ChapterData } from '../../types/ChapterType';
+import type { CardItemData, CardStatus } from '../../src/features/cards/types/CardItemType';
+import type { ChapterData } from '../../src/features/chapters/types/ChapterType';
 
 const Cards = () => {
   const [cardStatuses, setCardStatuses] = useState<Record<number, CardStatus>>({});
