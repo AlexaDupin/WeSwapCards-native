@@ -2,39 +2,44 @@ import { StyleSheet } from "react-native";
 
 export const homeStyles = StyleSheet.create({
     container: {
-      flex: 1,
-      alignItems: "center",
-      marginTop: 30,
-      paddingTop: 20,  
+        width: "100%",
+        paddingHorizontal: 16,
+        marginTop: 30,
+        paddingTop: 20,
     },
     scrollContent: {
-        paddingBottom: 32,
+        paddingHorizontal: 16,
+        paddingBottom: 24
     },
     title: {
         fontSize: 36,   
         fontWeight: "600",
-        marginTop: 20,
-        marginBottom: 20,
+        marginTop: 40,
+        marginBottom: 26,
         textAlign: "center",
-
     },
     paragraph: {
-        fontSize: 18,  
+        fontSize: 20,  
         marginTop: 10,  
         textAlign: "center",
+        lineHeight: 26,
+        marginBottom: 20,
     },
     disclaimer: {
         fontSize: 14, 
         marginTop: 10,  
         textAlign: "center",
+        lineHeight: 22,
+        marginBottom: 20,
     },
     steps: {
         flex: 1,
         flexDirection: "column",
     }, 
     subtitle: {
-        fontSize: 18,
+        fontSize: 20,
         marginBottom: 20,
+        textAlign: "center"
     },
 })
 

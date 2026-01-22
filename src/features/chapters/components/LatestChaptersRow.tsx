@@ -3,7 +3,7 @@ import { ActivityIndicator, FlatList, Image, Text, TouchableOpacity, View } from
 import { Link } from "expo-router";
 import { getLatestChapters, type LatestChapter } from "@/src/features/chapters/api/chapters.api";
 
-export default function LatestChaptersRow({ limit = 10 }: { limit?: number }) {
+export default function LatestChaptersRow({ limit = 5 }: { limit?: number }) {
   const [items, setItems] = useState<LatestChapter[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -29,26 +29,25 @@ export default function LatestChaptersRow({ limit = 10 }: { limit?: number }) {
   if (items.length === 0) return null;
 
   return (
-    <View style={{ marginTop: 18 }}>
-      <Text style={{ fontSize: 18, fontWeight: "700", marginBottom: 10 }}>
+    <View>
+      <Text style={{ fontSize: 24, fontWeight: "700", marginBottom: 20 }}>
         Browse the latest chapters
       </Text>
 
       <FlatList
-        horizontal
+        scrollEnabled={false}
         data={items}
         keyExtractor={(it) => String(it.id)}
-        showsHorizontalScrollIndicator={false}
         renderItem={({ item }) => (
           <Link href="/sign-up" asChild>
-            <TouchableOpacity style={{ width: 150, marginRight: 12 }}>
+            <TouchableOpacity style={{ marginBottom: 16 }}>
               {!!item.image_url && (
                 <Image
                   source={{ uri: item.image_url }}
-                  style={{ width: "100%", height: 95, borderRadius: 12 }}
+                  style={{ width: "100%", height: 140, borderRadius: 12 }}
                 />
               )}
-              <Text numberOfLines={2} style={{ marginTop: 8, fontWeight: "600" }}>
+              <Text numberOfLines={2} style={{ marginTop: 8, fontWeight: "600", fontSize: 16 }}>
                 {item.name}
               </Text>
             </TouchableOpacity>

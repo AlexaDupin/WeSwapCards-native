@@ -29,16 +29,13 @@ export const authStyles = StyleSheet.create({
     borderWidth: 1,
     fontSize: 16,
   },
-  errorInput: {
-    // borderColor: Colors.expense,
-  },
   button: {
     backgroundColor: Colors.primary,
     borderRadius: 12,
     padding: 16,
     alignItems: "center",
     marginTop: 10,
-    marginBottom: 20,
+    marginBottom: 8,
   },
   buttonText: {
     color: "#FFF",
