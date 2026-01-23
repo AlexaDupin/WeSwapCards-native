@@ -2,7 +2,7 @@ import { Text, View, TouchableOpacity, ScrollView, Image, FlatList } from "react
 import { homeStyles } from "../../src/assets/styles/home.styles";
 // import { styles } from "../assets/styles/styles";
 import { Link, useRouter } from 'expo-router'
-import StepsCard from "../../src/features/home/components/StepsCard";
+import StepsCard from "../../src/features/home/components/StepRow";
 
 import Report from '@/assets/images/report.svg';
 import Search from '../assets/images/search.svg';
