@@ -1,12 +1,7 @@
 import { axiosInstance } from "@/src/lib/axiosInstance";
+import type { LatestChapter } from "../types/chapters.types";
 
-export type LatestChapter = {
-  id: number;
-  name: string;
-  image_url: string | null;
-};
-
-export async function getLatestChapters(limit = 10): Promise<LatestChapter[]> {
+export async function getLatestChapters(limit = 5): Promise<LatestChapter[]> {
   const res = await axiosInstance.get<{ items: LatestChapter[] }>("/chapters/latest", {
     params: { limit },
   });

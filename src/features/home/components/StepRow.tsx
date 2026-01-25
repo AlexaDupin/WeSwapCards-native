@@ -12,7 +12,7 @@ export default function StepRow({ Icon, title, subtitle }: StepRowProps) {
   return (
     <View style={homeStyles.stepRow}>
       <View style={homeStyles.stepIconWrap}>
-        <Icon width={40} height={40} />
+        <Icon width={50} height={50} />
       </View>
 
       <View style={homeStyles.stepTextWrap}>

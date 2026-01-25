@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 
 export const homeStyles = StyleSheet.create({
-    screen: { flex: 1 },
+  screen: { flex: 1 },
 
   scrollContent: {
     paddingHorizontal: 16,
@@ -10,9 +10,6 @@ export const homeStyles = StyleSheet.create({
 
   topBar: {
     width: "100%",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
     paddingVertical: 10,
   },
   brandRow: { flexDirection: "row", alignItems: "center", gap: 10 },
@@ -26,25 +23,7 @@ export const homeStyles = StyleSheet.create({
     backgroundColor: "rgba(245, 230, 215, 0.55)",
     marginTop: 14,
   },
-
-  heroBadgeRow: {
-    flexDirection: "row",
-    justifyContent: "flex-start",
-    marginBottom: 10,
-  },
-  heroBadge: {
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 10,
-    backgroundColor: "rgba(0,0,0,0.08)",
-  },
-  heroBadgeText: {
-    fontSize: 12,
-    fontWeight: "900",
-    letterSpacing: 0.4,
-    opacity: 0.75,
-  },
-
+  
   heroTitle: {
     fontSize: 28,
     fontWeight: "800",
@@ -55,21 +34,16 @@ export const homeStyles = StyleSheet.create({
     fontSize: 16,
     lineHeight: 22,
     opacity: 0.78,
-    marginBottom: 12,
+    marginBottom: 8,
   },
 
-  microPill: {
-    alignSelf: "flex-start",
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-    borderRadius: 12,
-    backgroundColor: "rgba(0,0,0,0.04)",
-    marginBottom: 10,
+  microMeta: {
+    marginBottom: 16,
   },
-  microPillText: {
+  microMetaText: {
     fontSize: 13,
-    fontWeight: "800",
-    opacity: 0.7,
+    fontWeight: "600",
+    opacity: 0.6,
   },
   dot: { opacity: 0.45 },
 
@@ -132,4 +106,8 @@ export const homeStyles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.06)",
     marginLeft: 88,
   },
+
+  footerCta: {
+    marginTop: 14,
+  }
 });
