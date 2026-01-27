@@ -6,6 +6,7 @@ import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { authStyles } from "../../src/assets/styles/auth.styles";
 import { styles } from "../../src/assets/styles/styles";
+import type { ClerkAPIError } from "@clerk/types";
 
 export default function Page() {
   const { signIn, setActive, isLoaded } = useSignIn()
@@ -14,36 +15,50 @@ export default function Page() {
   const [emailAddress, setEmailAddress] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Handle the submission of the sign-in form
+  const getClerkErrorCode = (err: unknown) => {
+    const e = err as { errors?: ClerkAPIError[] };
+    return e?.errors?.[0]?.code;
+  };
+
   const onSignInPress = async () => {
-    if (!isLoaded) return
+    if (!isLoaded || isSubmitting) return
 
-    // Start the sign-in process using the email and password provided
+    if (!emailAddress.trim() || !password) {
+      setError("Please enter your email and password.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setError("");
+
     try {
       const signInAttempt = await signIn.create({
-        identifier: emailAddress,
+        identifier: emailAddress.trim(),
         password,
       })
 
-      // If sign-in process is complete, set the created session as active
-      // and redirect the user
       if (signInAttempt.status === 'complete') {
         await setActive({ session: signInAttempt.createdSessionId })
         router.replace('/(tabs)/cards')
       } else {
-        // If the status isn't complete, check why. User might need to
-        // complete further steps.
         console.error(JSON.stringify(signInAttempt, null, 2))
       }
-    } catch (err) {
-        console.error(JSON.stringify(err, null, 2))
+    } catch (err: unknown) {
+        console.error(err);
 
-        if (err.errors?.[0]?.code === "form_password_incorrect") {
-            setError("Password is incorrect. Please try again.");
-          } else {
-            setError("An error occurred. Please try again.");
-          }
+        const code = getClerkErrorCode(err);
+
+        if (code === "form_password_incorrect") {
+          setError("Password is incorrect. Please try again.");
+        } else if (code === "form_identifier_not_found") {
+          setError("No account found for this email.");
+        } else {
+          setError("An error occurred. Please try again.");
+        }
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
@@ -77,20 +92,33 @@ export default function Page() {
       <TextInput
         style={[authStyles.input, error && authStyles.errorInput]}
         autoCapitalize="none"
+        autoCorrect={false}
+        keyboardType="email-address"
+        textContentType="username"
+        autoComplete="email"
         value={emailAddress}
         placeholder="Enter email"
-        onChangeText={(emailAddress) => setEmailAddress(emailAddress)}
+        onChangeText={(value: string) => { setEmailAddress(value); if (error) setError(""); }}
+        returnKeyType="next"
       />
       <TextInput
         style={[authStyles.input, error && authStyles.errorInput]}
         value={password}
         placeholder="Enter password"
-        secureTextEntry={true}
-        onChangeText={(password) => setPassword(password)}
+        secureTextEntry
+        textContentType="password"
+        autoComplete="password"
+        onChangeText={(value: string) => { setPassword(value); if (error) setError(""); }}
+        returnKeyType="done"
+        onSubmitEditing={onSignInPress}
       />
 
-      <TouchableOpacity style={styles.button} onPress={onSignInPress}>
-        <Text style={styles.buttonText}>Sign in</Text>
+      <TouchableOpacity 
+        style={[styles.button, isSubmitting && { opacity: 0.6 }]}
+        onPress={onSignInPress}
+        disabled={isSubmitting}
+      >
+        <Text style={styles.buttonText}>{isSubmitting ? "Signing in..." : "Sign in"}</Text>
       </TouchableOpacity>
 
       <View style={authStyles.footerContainer}>

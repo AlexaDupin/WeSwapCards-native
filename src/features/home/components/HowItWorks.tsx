@@ -17,8 +17,8 @@ export default function HowItWorks() {
       </View>
 
       <View style={homeStyles.stepsCard}>
-        {howItWorksSteps.map((step, idx) => {
-          const isLast = idx === howItWorksSteps.length - 1;
+        {howItWorksSteps.map((step, index) => {
+          const isLast = index === howItWorksSteps.length - 1;
 
           return (
             <React.Fragment key={step.title}>
