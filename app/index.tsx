@@ -19,7 +19,7 @@ export default function Index() {
   const { isSignedIn, isLoaded } = useAuth();
 
   if (!isLoaded) return <PageLoader />;
-  if (isSignedIn) return <Redirect href={"/(tabs)/cards"} />;
+  if (isSignedIn) return <Redirect href={"/(tabs)/dashboard"} />;
 
   return (
     <View style={homeStyles.screen}>
