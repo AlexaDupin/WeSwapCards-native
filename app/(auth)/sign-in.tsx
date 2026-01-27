@@ -1,66 +1,28 @@
-import { useSignIn } from '@clerk/clerk-expo';
 import { Ionicons } from "@expo/vector-icons";
-import { Link, useRouter } from 'expo-router';
-import { useState } from 'react';
+import { Link } from 'expo-router';
+import { useState } from "react";
 import { Text, TextInput, TouchableOpacity, View } from "react-native";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
 import { authStyles } from "../../src/assets/styles/auth.styles";
 import { styles } from "../../src/assets/styles/styles";
-import type { ClerkAPIError } from "@clerk/types";
+import { useSignInSubmit } from "@/src/features/auth/hooks/useSignInSubmit";
 
-export default function Page() {
-  const { signIn, setActive, isLoaded } = useSignIn()
-  const router = useRouter()
-
-  const [emailAddress, setEmailAddress] = useState('')
-  const [password, setPassword] = useState('')
+export default function SignInScreen() {
+  const [emailAddress, setEmailAddress] = useState("");
+  const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const getClerkErrorCode = (err: unknown) => {
-    const e = err as { errors?: ClerkAPIError[] };
-    return e?.errors?.[0]?.code;
-  };
+  const { onSignInPress } = useSignInSubmit({
+    emailAddress,
+    password,
+    isSubmitting,
+    setIsSubmitting,
+    setError,
+    redirectTo: "/(tabs)/cards",
+  });
 
-  const onSignInPress = async () => {
-    if (!isLoaded || isSubmitting) return
-
-    if (!emailAddress.trim() || !password) {
-      setError("Please enter your email and password.");
-      return;
-    }
-
-    setIsSubmitting(true);
-    setError("");
-
-    try {
-      const signInAttempt = await signIn.create({
-        identifier: emailAddress.trim(),
-        password,
-      })
-
-      if (signInAttempt.status === 'complete') {
-        await setActive({ session: signInAttempt.createdSessionId })
-        router.replace('/(tabs)/cards')
-      } else {
-        console.error(JSON.stringify(signInAttempt, null, 2))
-      }
-    } catch (err: unknown) {
-        console.error(err);
-
-        const code = getClerkErrorCode(err);
-
-        if (code === "form_password_incorrect") {
-          setError("Password is incorrect. Please try again.");
-        } else if (code === "form_identifier_not_found") {
-          setError("No account found for this email.");
-        } else {
-          setError("An error occurred. Please try again.");
-        }
-    } finally {
-      setIsSubmitting(false);
-    }
-  }
+  const clearError = () => setError("");
 
   return (
     <KeyboardAwareScrollView
@@ -83,7 +45,7 @@ export default function Page() {
           <View style={authStyles.errorBox}>
             <Ionicons name="alert-circle" size={20} color={"#E74C3C"}/>
             <Text style={authStyles.errorText}>{error}</Text>
-            <TouchableOpacity onPress={() => setError("")}>
+            <TouchableOpacity onPress={clearError}>
               <Ionicons name="close" size={20} color={"#9A8478"} />
             </TouchableOpacity>
           </View>
@@ -98,7 +60,7 @@ export default function Page() {
         autoComplete="email"
         value={emailAddress}
         placeholder="Enter email"
-        onChangeText={(value: string) => { setEmailAddress(value); if (error) setError(""); }}
+        onChangeText={(value: string) => { setEmailAddress(value); if (error) clearError(); }}
         returnKeyType="next"
       />
       <TextInput
@@ -108,7 +70,8 @@ export default function Page() {
         secureTextEntry
         textContentType="password"
         autoComplete="password"
-        onChangeText={(value: string) => { setPassword(value); if (error) setError(""); }}
+        autoCorrect={false}
+        onChangeText={(value: string) => { setPassword(value); if (error) clearError(); }}
         returnKeyType="done"
         onSubmitEditing={onSignInPress}
       />
