@@ -1,42 +1,88 @@
-import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
-import { styles } from "../../../assets/styles/cards.styles";
-import type { CardItemData, CardStatus } from '../types/CardItemType';
- 
-type Props = {
-  item: CardItemData,
-  status: CardStatus,
-  onSelect: () => void,
-  reset?: () => void;
-}
+import React, { useRef } from "react";
+import { Text, View } from "react-native";
+import { styles } from "@/src/assets/styles/cards.styles";
+import type { CardItemData, CardStatus } from "@/src/features/cards/types/CardItemType";
+import { LongPressGestureHandler, TapGestureHandler, State } from "react-native-gesture-handler";
+import type {
+  LongPressGestureHandlerStateChangeEvent,
+  TapGestureHandlerStateChangeEvent,
+} from "react-native-gesture-handler";
 
-const CardItem = ({ item, status, onSelect, reset }: Props) => {
-  const isOwned = status === 'owned';
-  const isDuplicated = status === 'duplicated';
-  const cardBackground = (isOwned || isDuplicated) ? '#b5e8da' : '#dedcd7';
+type Props = {
+  item: CardItemData;
+  status: CardStatus;
+  onSelect: () => void;
+  reset?: () => void;
+  readOnly?: boolean;
+};
+
+function CardItem({ item, status, onSelect, reset, readOnly = false }: Props) {
+  const isOwned = status === "owned";
+  const isDuplicated = status === "duplicated";
+  const isDefault = status === "default";
+
+  const longPressRef = useRef<LongPressGestureHandler>(null);
+  const longPressEnabled = !readOnly && !isDefault && !!reset;
 
   return (
-    <TouchableOpacity 
-      testID={`card-touch-${item.id}`}
-      onPress={onSelect} 
-      onLongPress={reset ?? undefined}
-      accessibilityRole="button"
-      accessibilityLabel={`Card number ${item.number}, status ${status} `}
+    <LongPressGestureHandler
+      ref={longPressRef}
+      enabled={longPressEnabled}
+      minDurationMs={450}
+      shouldCancelWhenOutside
+      onHandlerStateChange={(
+        event: LongPressGestureHandlerStateChangeEvent
+      ) => {
+        if (event.nativeEvent.state === State.ACTIVE) {
+          reset?.();
+        }
+      }}
     >
-      <View style={styles.cardItemWrapper}>
+      <TapGestureHandler
+        waitFor={longPressEnabled ? longPressRef : undefined}
+        enabled={!readOnly}
+        onHandlerStateChange={(
+          event: TapGestureHandlerStateChangeEvent
+        ) => {
+          if (event.nativeEvent.state === State.END) {
+            onSelect();
+          }
+        }}
+      >
         <View
+          testID={`card-touch-${item.id}`}
+          accessibilityRole="button"
+          accessibilityLabel={`Card ${item.number} (${status})${readOnly ? " — sign in to log" : ""}`}
+          style={styles.cardItemWrapper}
+        >
+          <View
             testID={`card-${item.id}`}
             style={[
               styles.cardItem,
-              { backgroundColor: cardBackground },
+              isOwned || isDuplicated ? styles.cardItemOwned : styles.cardItemDefault,
             ]}
-        >
-          <Text style={styles.cardNumber}>{item.number}</Text>
-          {isDuplicated && <View testID={`badge-${item.id}`} style={styles.orangeBadge} />}
+          >
+            <View
+              style={[
+                styles.cardItemInner,
+                isOwned || isDuplicated ? styles.cardItemInnerOwned : styles.cardItemInnerDefault,
+              ]}
+            >
+              <Text style={[styles.cardNumber, (isOwned || isDuplicated) && styles.cardNumberOwned]}>
+                {item.number}
+              </Text>
+            </View>
+
+            {isDuplicated && (
+              <View testID={`badge-${item.id}`} style={styles.duplicateBadge}>
+                <Text style={styles.duplicateBadgeText}>+</Text>
+              </View>
+            )}
+          </View>
         </View>
-      </View>  
-    </TouchableOpacity>     
+      </TapGestureHandler>
+    </LongPressGestureHandler>
   );
-};
+}
 
 export default React.memo(CardItem);
