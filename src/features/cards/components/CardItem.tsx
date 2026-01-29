@@ -14,9 +14,10 @@ type Props = {
   onSelect: () => void;
   reset?: () => void;
   readOnly?: boolean;
+  cardWidth?: number;
 };
 
-function CardItem({ item, status, onSelect, reset, readOnly = false }: Props) {
+function CardItem({ item, status, onSelect, reset, readOnly = false, cardWidth }: Props) {
   const isOwned = status === "owned";
   const isDuplicated = status === "duplicated";
   const isDefault = status === "default";
@@ -59,6 +60,7 @@ function CardItem({ item, status, onSelect, reset, readOnly = false }: Props) {
             testID={`card-${item.id}`}
             style={[
               styles.cardItem,
+              cardWidth ? { width: cardWidth } : null,
               isOwned || isDuplicated ? styles.cardItemOwned : styles.cardItemDefault,
             ]}
           >
