@@ -2,9 +2,9 @@ import { Colors } from "@/src/constants/Colors";
 import { Platform, StyleSheet } from "react-native";
 
 const TRACK = "#eaeaea";
-const DEFAULT_BORDER = "#b1b1b1";
-const DEFAULT_INNER = "#eaeaea";
-const DEFAULT_TEXT = "#222";
+const DEFAULT_BORDER = "rgba(0,0,0,0.12)";
+const DEFAULT_INNER = "rgba(0,0,0,0.04)";
+const DEFAULT_TEXT = "rgba(0,0,0,0.8)";
 
 const OWNED_INNER = "#dff2ee"; // approx lighten(secondary, 45%)
 
@@ -21,7 +21,6 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
 
-  // Like .chapter-list max-width: 960 centered
   chapterListContent: {
     paddingHorizontal: 16,
     paddingBottom: 24,
@@ -32,6 +31,11 @@ export const styles = StyleSheet.create({
 
   chapter: {
     marginBottom: 32,
+    backgroundColor: "#fff",
+    borderRadius: 16,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: "rgba(0,0,0,0.06)",
   },
 
   chapterHeaderRow: {
@@ -46,9 +50,6 @@ export const styles = StyleSheet.create({
     fontWeight: "600",
     fontSize: 24,
     textAlign: "left",
-    textShadowColor: "rgba(0,0,0,0.2)",
-    textShadowOffset: { width: 1, height: 1 },
-    textShadowRadius: 1,
   },
 
   // Progress
@@ -87,8 +88,8 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
     flexWrap: "wrap",
     alignItems: "flex-start",
-    justifyContent: "space-evenly",
-    gap: 8, 
+    justifyContent: "space-between",
+    gap: 0,
   },
 
   cardItemWrapper: {
