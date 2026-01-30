@@ -1,4 +1,3 @@
-// src/features/cards/components/ChaptersList.tsx
 import React from "react";
 import { FlatList } from "react-native";
 import type { CardStatus } from "@/src/features/cards/types/CardItemType";
@@ -15,6 +14,7 @@ type Props = {
   onMarkAllDuplicated?: (chapterId: number) => void;
   isChapterPending?: (chapterId: number) => boolean;
   readOnly?: boolean;
+  listRef?: React.RefObject<FlatList<ChapterUI>>;
 };
 
 export default function ChaptersList({
@@ -26,9 +26,11 @@ export default function ChaptersList({
   onMarkAllDuplicated,
   isChapterPending,
   readOnly = false,
+  listRef,
 }: Props) {
   return (
     <FlatList
+      ref={listRef}
       data={chaptersData}
       keyExtractor={(c) => String(c.chapterId)}
       showsVerticalScrollIndicator={false}

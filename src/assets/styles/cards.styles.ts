@@ -245,4 +245,51 @@ export const styles = StyleSheet.create({
     fontWeight: "600",
     opacity: 0.8,
   },
+
+  controlsRow: {
+    marginTop: 10,
+    marginBottom: 12,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
+  
+  controlsLabel: {
+    fontSize: 13,
+    fontWeight: "700",
+    opacity: 0.7,
+  },
+  
+  latestPill: {
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    borderRadius: 999,
+    backgroundColor: "rgba(0,0,0,0.06)",
+  },
+  
+  latestPillActive: {
+    backgroundColor: "#2F6BFF", // pick your brand color
+    shadowColor: "#000",
+    shadowOpacity: 0.12,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 3 },
+    elevation: 3,
+  },
+  
+  latestPillPressed: {
+    opacity: 0.9,
+    transform: [{ scale: 0.98 }],
+  },
+  
+  latestPillText: {
+    fontSize: 13,
+    fontWeight: "800",
+    opacity: 0.75,
+  },
+  
+  latestPillTextActive: {
+    opacity: 1,
+    color: "white",
+  },
+  
 });
