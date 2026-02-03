@@ -46,6 +46,7 @@ export default function AZNav({ onSelect, lettersWithContent = new Set(), style 
 const styles = {
   wrap: {
     width: "100%",
+    marginBottom: 12,
   },
   row: {
     paddingHorizontal: 12,

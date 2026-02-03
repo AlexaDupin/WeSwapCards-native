@@ -16,9 +16,7 @@ export const styles = StyleSheet.create({
 
   pageTitle: {
     fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 18,
-    paddingHorizontal: 16,
+    fontWeight: "800",
   },
 
   chapterListContent: {
@@ -247,12 +245,14 @@ export const styles = StyleSheet.create({
   },
 
   controlsRow: {
-    marginTop: 10,
-    marginBottom: 12,
+    paddingHorizontal: 16,
+    paddingTop: 6,
+    paddingBottom: 10,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
   },
+  
   
   controlsLabel: {
     fontSize: 13,
@@ -290,6 +290,54 @@ export const styles = StyleSheet.create({
   latestPillTextActive: {
     opacity: 1,
     color: "white",
+  },
+
+  sortSegmentWrap: {
+    flexDirection: "row",
+    backgroundColor: "rgba(0,0,0,0.06)",
+    borderRadius: 999,
+    padding: 3,
+  },
+  
+  sortSegment: {
+    paddingVertical: 7,
+    paddingHorizontal: 12,
+    borderRadius: 999,
+    minWidth: 64,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  
+  sortSegmentActive: {
+    backgroundColor: "#fff",
+    borderWidth: 1,
+    borderColor: "rgba(0,0,0,0.08)",
+    ...Platform.select({
+      ios: {
+        shadowColor: "#000",
+        shadowOpacity: 0.08,
+        shadowRadius: 10,
+        shadowOffset: { width: 0, height: 4 },
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
+  },
+  
+  sortSegmentPressed: {
+    opacity: 0.9,
+    transform: [{ scale: 0.98 }],
+  },
+  
+  sortSegmentText: {
+    fontSize: 13,
+    fontWeight: "700",
+    opacity: 0.7,
+  },
+  
+  sortSegmentTextActive: {
+    opacity: 1,
   },
   
 });
