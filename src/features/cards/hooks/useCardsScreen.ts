@@ -92,24 +92,44 @@ export function useCardsScreen({ explorerId }: Params) {
     await Promise.all([fetchAllChapters(), fetchAllCards(), fetchAllCardStatuses(explorerId)]);
   }, [explorerId, fetchAllChapters, fetchAllCards, fetchAllCardStatuses]);
 
+  // useEffect(() => {
+  //   let mounted = true;
+
+  //   (async () => {
+  //     try {
+  //       await reload();
+  //     } catch (e) {
+  //       console.error("Cards screen load failed", e);
+  //     } finally {
+  //       if (mounted) setIsLoading(false);
+  //     }
+  //   })();
+
+  //   return () => {
+  //     mounted = false;
+  //   };
+  // }, [reload]);
+
   useEffect(() => {
     let mounted = true;
-
+  
     (async () => {
       try {
-        await reload();
-      } catch (e) {
-        console.error("Cards screen load failed", e);
+        await Promise.all([
+          fetchAllChapters(),
+          fetchAllCards(),
+          fetchAllCardStatuses(explorerId),
+        ]);
       } finally {
         if (mounted) setIsLoading(false);
       }
     })();
-
+  
     return () => {
       mounted = false;
     };
-  }, [reload]);
-
+  }, [explorerId]);
+  
   const cardsByPlaceId = useMemo(() => {
     const map: Record<number, CardItemData[]> = {};
     for (const c of cards) (map[c.place_id] ??= []).push(c);

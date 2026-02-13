@@ -1,88 +1,124 @@
-import React, { useState, useRef, useCallback } from 'react';
-import { View, Text, TouchableOpacity } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
-import { styles } from "../../../assets/styles/dashboard.styles";
-import { Colors } from "../../../constants/Colors";
-import { Swipeable } from "react-native-gesture-handler";
-import type { DashboardItemData } from '../types/DashboardItemType';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
+import Ionicons from '@expo/vector-icons/Ionicons';
+import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
+
+import { styles } from '@/src/assets/styles/dashboard.styles';
+import { Colors } from '@/src/constants/Colors';
+
+// TODO: broken import — should use DashboardItemData from feature types
+
+import type { DashboardItemData } from '@/src/features/dashboard/types/DashboardItemType';
 
 type Props = {
-  item: DashboardItemData,
-  onDelete: () => void;
+  item: DashboardItemData;
+  unread: boolean;
+  onToggleUnread: () => void;
+  onPress: () => void;
+};
+
+function formatLastMessage(timestamp: string | null) {
+  if (!timestamp) return '';
+  const date = new Date(timestamp);
+
+  const now = new Date();
+  const sameDay =
+    date.getFullYear() === now.getFullYear() &&
+    date.getMonth() === now.getMonth() &&
+    date.getDate() === now.getDate();
+
+  if (sameDay) {
+    return new Intl.DateTimeFormat(undefined, {
+      hour: '2-digit',
+      minute: '2-digit',
+    }).format(date);
+  }
+
+  const diffDays = (now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24);
+  if (diffDays <= 7) {
+    return new Intl.DateTimeFormat(undefined, { weekday: 'short' }).format(
+      date,
+    );
+  }
+
+  return new Intl.DateTimeFormat(undefined, {
+    month: 'short',
+    day: '2-digit',
+  }).format(date);
 }
 
-const DashboardItem = ({ item, onDelete }: Props) => {
+const DashboardItem = ({ item, unread, onToggleUnread, onPress }: Props) => {
   const [isSwipeOpen, setIsSwipeOpen] = useState(false);
-  const swipeableRef = useRef<Swipeable | null>(null);
+  const swipeableRef = useRef<React.ComponentRef<typeof Swipeable> | null>(
+    null,
+  );
 
-  const renderRightActions = useCallback(() => (
-      <><TouchableOpacity
-          style={styles.renderRightAccept}
-          onPress={() => {
-              onDelete(); 
-              swipeableRef.current?.close();
-          }}
-      >
-          <Ionicons name="checkmark-done-outline" size={24} color="white" />
-      </TouchableOpacity>
-      
-      <TouchableOpacity
-          style={styles.renderRightDecline}
-          onPress={() => {
-            onDelete();
-            swipeableRef.current?.close();
-          }}
-      >
-          <Ionicons name="remove-circle-outline" size={24} color="white" />
-      </TouchableOpacity></>
-  ), [onDelete]);
+  const timeLabel = useMemo(
+    () => formatLastMessage(item.last_message_at),
+    [item.last_message_at],
+  );
 
-  const renderLeftActions = useCallback(() => (
+  const iconName = unread ? 'checkmark-done-outline' : 'checkmark-outline';
+  const iconColor = unread ? Colors.primary : '#9aa0a6';
+
+  const renderLeftActions = useCallback(() => {
+    return (
       <TouchableOpacity
-          style={styles.renderLeftUnread}
-          onPress={() => {
-              onDelete(); 
-              swipeableRef.current?.close();
-          }}
+        style={styles.renderLeftUnread}
+        onPress={() => {
+          onToggleUnread();
+          swipeableRef.current?.close();
+        }}
       >
-          <Ionicons name="mail-unread-outline" size={24} color="white" />
+        <Ionicons name="mail-unread-outline" size={24} color="white" />
       </TouchableOpacity>
-  ), [onDelete]);
+    );
+  }, [onToggleUnread]);
 
   return (
-    <Swipeable 
-        ref={swipeableRef}
-        renderRightActions={renderRightActions}
-        renderLeftActions={renderLeftActions}
-        onSwipeableOpen={() => setIsSwipeOpen(true)}
-        onSwipeableClose={() => setIsSwipeOpen(false)}
+    <Swipeable
+      ref={swipeableRef}
+      renderLeftActions={renderLeftActions}
+      leftThreshold={40}
+      onSwipeableOpen={() => setIsSwipeOpen(true)}
+      onSwipeableClose={() => setIsSwipeOpen(false)}
     >
-
-      <View 
+      <View
         style={[
           styles.transactionCard,
           {
-            borderTopRightRadius: isSwipeOpen ? 0 : 12,
-            borderBottomRightRadius: isSwipeOpen ? 0 : 12,
-          }
-        ]} 
-        key={item.db_id}
-      >      
-        <TouchableOpacity style={styles.transactionContent}>
+            borderTopLeftRadius: isSwipeOpen ? 0 : 12,
+            borderBottomLeftRadius: isSwipeOpen ? 0 : 12,
+          },
+        ]}
+      >
+        <TouchableOpacity style={styles.transactionContent} onPress={onPress}>
           <View style={styles.categoryIconContainer}>
-            <Ionicons name={"checkmark-done-outline"} size={22} color={Colors.primary} />
+            <Ionicons name={iconName} size={22} color={iconColor} />
           </View>
+
           <View style={styles.transactionLeft}>
-            <Text style={styles.transactionTitle}>{item.card_name}</Text>
-            <Text style={styles.transactionCategory}>{item.swap_explorer}</Text>
+            <Text
+              style={[
+                styles.transactionTitle,
+                unread ? { fontWeight: '700' } : null,
+              ]}
+              numberOfLines={1}
+            >
+              {item.card_name}
+            </Text>
+            <Text style={styles.transactionCategory} numberOfLines={1}>
+              {item.swap_explorer}
+            </Text>
           </View>
+
           <View style={styles.transactionRight}>
-            <Text style={styles.transactionCategory}></Text>
-            <Text style={styles.transactionDate}>3 hours ago</Text>
+            <Text style={styles.transactionDate} numberOfLines={1}>
+              {timeLabel}
+            </Text>
           </View>
         </TouchableOpacity>
       </View>
-
     </Swipeable>
   );
 };
