@@ -1,50 +1,51 @@
-# Welcome to your Expo app 👋
+# WeSwapCards Mobile (React Native)
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Mobile application for the WeSwapCards platform, built with React Native (Expo + TypeScript).
 
-## Get started
+This app extends the existing production web platform (800+ members, 15,000+ trades) to provide a native mobile experience with improved accessibility, performance, and user engagement.
 
-1. Install dependencies
+## Overview
 
-   ```bash
-   npm install
-   ```
+WeSwapCards Mobile brings core marketplace functionality to iOS and Android, allowing users to:
+- Browse and manage their card collections
+- Track duplicates and missing cards
+- Discover swap opportunities
+- Access conversations and swap requests
+- Interact with the platform in a mobile-first environment
 
-2. Start the app
+The mobile app consumes the same production APIs used by the web platform, ensuring consistent business logic and data integrity across platforms.
 
-   ```bash
-   npx expo start
-   ```
+## Current Status
+🚧 Early-stage development
 
-In the output, you'll find options to open the app in a
+The project is currently focused on:
+- Establishing clean navigation architecture
+- Implementing strongly typed API integration
+- Building reusable UI components
+- Maintaining strict TypeScript contracts
+- Structuring scalable state management
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+The goal is to reuse backend contracts and business logic while optimizing the experience for mobile interactions.
 
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Tech Stack
+- React Native
+- Expo
+- TypeScript
 
-## Get a fresh project
-
-When you're ready, run:
+## Installation
 
 ```bash
-npm run reset-project
+git clone https://github.com/AlexaDupin/WeSwapCards-native.git
+npm install
+npx expo start
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## Related Project
+🌐 Web Platform:
+🔗 https://github.com/AlexaDupin/WeSwapCards
+🔗 Live: https://weswapcards.com
 
-## Learn more
+## Contact
 
-To learn more about developing your project with Expo, look at the following resources:
+For any questions, feel free to reach out at contact@weswapcards.com.
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
