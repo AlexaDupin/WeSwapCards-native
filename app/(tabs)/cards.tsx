@@ -1,20 +1,22 @@
-import { Text, View, Pressable } from "react-native";
+import { Text, View, Pressable } from 'react-native';
+import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
 
-import PageLoader from "@/src/components/PageLoader";
-import { SignOutButton } from "@/src/components/SignOutButton";
+import PageLoader from '@/src/components/PageLoader';
+import { SignOutButton } from '@/src/components/SignOutButton';
 
-import ChaptersList from "@/src/features/chapters/components/ChaptersList";
-import AZNav from "@/src/features/chapters/components/AZNav";
-import { styles } from "@/src/assets/styles/cards.styles";
+import ChaptersList from '@/src/features/chapters/components/ChaptersList';
+import AZNav from '@/src/features/chapters/components/AZNav';
+import { styles } from '@/src/assets/styles/cards.styles';
 
-import { useCardsScreen } from "@/src/features/cards/hooks/useCardsScreen";
+import { useCardsScreen } from '@/src/features/cards/hooks/useCardsScreen';
 
 export default function Cards() {
-  // TODO: replace with your real explorer id source
-  const explorerId = 134;
+  const { explorerId } = useExplorer();
+  const cards = useCardsScreen({ explorerId });
+
+  if (!explorerId) return <PageLoader />;
 
   const {
-    isLoading,
     sortLatest,
     setSortLatest,
     chaptersData,
@@ -27,9 +29,7 @@ export default function Cards() {
     lettersWithChapters,
     scrollToLetter,
     listRef,
-  } = useCardsScreen({ explorerId });
-
-  if (isLoading) return <PageLoader />;
+  } = cards;
 
   return (
     <View style={styles.cardsScreen}>
@@ -49,7 +49,12 @@ export default function Cards() {
             accessibilityRole="tab"
             accessibilityState={{ selected: !sortLatest }}
           >
-            <Text style={[styles.sortSegmentText, !sortLatest && styles.sortSegmentTextActive]}>
+            <Text
+              style={[
+                styles.sortSegmentText,
+                !sortLatest && styles.sortSegmentTextActive,
+              ]}
+            >
               A–Z
             </Text>
           </Pressable>
@@ -64,7 +69,12 @@ export default function Cards() {
             accessibilityRole="tab"
             accessibilityState={{ selected: sortLatest }}
           >
-            <Text style={[styles.sortSegmentText, sortLatest && styles.sortSegmentTextActive]}>
+            <Text
+              style={[
+                styles.sortSegmentText,
+                sortLatest && styles.sortSegmentTextActive,
+              ]}
+            >
               Latest
             </Text>
           </Pressable>
@@ -72,7 +82,10 @@ export default function Cards() {
       </View>
 
       <View style={styles.azWrap}>
-        <AZNav onSelect={scrollToLetter} lettersWithContent={lettersWithChapters} />
+        <AZNav
+          onSelect={scrollToLetter}
+          lettersWithContent={lettersWithChapters}
+        />
       </View>
 
       <ChaptersList

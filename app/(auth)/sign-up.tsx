@@ -1,18 +1,18 @@
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons } from '@expo/vector-icons';
 import { Link, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Text, TextInput, TouchableOpacity, View } from "react-native";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { authStyles } from "../../src/assets/styles/auth.styles";
-import { styles } from "../../src/assets/styles/styles";
-import { useSignUpSubmit } from "@/src/features/auth/hooks/useSignUpSubmit";
+import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { authStyles } from '../../src/assets/styles/auth.styles';
+import { styles } from '../../src/assets/styles/styles';
+import { useSignUpSubmit } from '@/src/features/auth/hooks/useSignUpSubmit';
 
 export default function SignUpScreen() {
-  const [emailAddress, setEmailAddress] = useState('')
-  const [password, setPassword] = useState('')
-  const [pendingVerification, setPendingVerification] = useState(false)
-  const [code, setCode] = useState<string>("");
-  const [error, setError] = useState("");
+  const [emailAddress, setEmailAddress] = useState('');
+  const [password, setPassword] = useState('');
+  const [pendingVerification, setPendingVerification] = useState(false);
+  const [code, setCode] = useState<string>('');
+  const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
 
@@ -25,34 +25,33 @@ export default function SignUpScreen() {
     isSubmitting,
     setIsSubmitting,
     setError,
-    redirectTo: "/",
+    redirectTo: '/(auth)/register-user',
   });
 
-  const clearError = () => setError("");
+  const clearError = () => setError('');
 
   return (
     <>
-    <View style={{ paddingHorizontal: 16, paddingTop: 8 }}>
-      <TouchableOpacity
-        onPress={() => router.replace("/")}
-        style={{ alignSelf: "flex-start", padding: 8 }}
-        hitSlop={10}
-      >
-        <Ionicons name="close" size={22} />
-      </TouchableOpacity>
-    </View>
-    
-    <KeyboardAwareScrollView
-      style={{ flex: 1 }}
-      contentContainerStyle={{ flexGrow: 1 }}
-      enableOnAndroid={true}
-      enableAutomaticScroll={true}
-      extraScrollHeight={30}
-    >
+      <View style={{ paddingHorizontal: 16, paddingTop: 8 }}>
+        <TouchableOpacity
+          onPress={() => router.replace('/')}
+          style={{ alignSelf: 'flex-start', padding: 8 }}
+          hitSlop={10}
+        >
+          <Ionicons name="close" size={22} />
+        </TouchableOpacity>
+      </View>
 
+      <KeyboardAwareScrollView
+        style={{ flex: 1 }}
+        contentContainerStyle={{ flexGrow: 1 }}
+        enableOnAndroid={true}
+        enableAutomaticScroll={true}
+        extraScrollHeight={30}
+      >
         <View style={authStyles.container}>
           <Text style={authStyles.title}>
-            {pendingVerification ? "Verify your email" : "Create an account"}
+            {pendingVerification ? 'Verify your email' : 'Create an account'}
           </Text>
 
           <View style={authStyles.subtitle}>
@@ -77,10 +76,10 @@ export default function SignUpScreen() {
 
           {error ? (
             <View style={authStyles.errorBox}>
-              <Ionicons name="alert-circle" size={20} color={"#E74C3C"} />
+              <Ionicons name="alert-circle" size={20} color={'#E74C3C'} />
               <Text style={authStyles.errorText}>{error}</Text>
               <TouchableOpacity onPress={clearError}>
-                <Ionicons name="close" size={20} color={"#9A8478"} />
+                <Ionicons name="close" size={20} color={'#9A8478'} />
               </TouchableOpacity>
             </View>
           ) : null}
@@ -94,11 +93,11 @@ export default function SignUpScreen() {
                 keyboardType="numeric"
                 onChangeText={(value: string) => {
                   setCode(value);
-                  if (error)
-                    clearError();
-                } }
+                  if (error) clearError();
+                }}
                 returnKeyType="done"
-                onSubmitEditing={onVerifyPress} />
+                onSubmitEditing={onVerifyPress}
+              />
 
               <TouchableOpacity
                 style={[styles.button, isSubmitting && { opacity: 0.6 }]}
@@ -106,7 +105,7 @@ export default function SignUpScreen() {
                 disabled={isSubmitting}
               >
                 <Text style={styles.buttonText}>
-                  {isSubmitting ? "Verifying..." : "Verify"}
+                  {isSubmitting ? 'Verifying...' : 'Verify'}
                 </Text>
               </TouchableOpacity>
             </>
@@ -123,10 +122,10 @@ export default function SignUpScreen() {
                 placeholder="Enter email"
                 onChangeText={(value: string) => {
                   setEmailAddress(value);
-                  if (error)
-                    clearError();
-                } }
-                returnKeyType="next" />
+                  if (error) clearError();
+                }}
+                returnKeyType="next"
+              />
 
               <TextInput
                 style={[authStyles.input, error && authStyles.errorInput]}
@@ -137,11 +136,11 @@ export default function SignUpScreen() {
                 autoComplete="password-new"
                 onChangeText={(value: string) => {
                   setPassword(value);
-                  if (error)
-                    clearError();
-                } }
+                  if (error) clearError();
+                }}
                 returnKeyType="done"
-                onSubmitEditing={onSignUpPress} />
+                onSubmitEditing={onSignUpPress}
+              />
 
               <TouchableOpacity
                 style={[styles.button, isSubmitting && { opacity: 0.6 }]}
@@ -149,20 +148,18 @@ export default function SignUpScreen() {
                 disabled={isSubmitting}
               >
                 <Text style={styles.buttonText}>
-                  {isSubmitting ? "Creating..." : "Continue"}
+                  {isSubmitting ? 'Creating...' : 'Continue'}
                 </Text>
               </TouchableOpacity>
             </>
           )}
 
           <View style={authStyles.footerContainer}>
-            <Text style={authStyles.footerText}>
-              Already have an account?
-            </Text>
+            <Text style={authStyles.footerText}>Already have an account?</Text>
 
             <Link href="/sign-in" asChild>
               <TouchableOpacity>
-                <Text style={{ fontWeight: "600", fontSize: 16 }}>Sign in</Text>
+                <Text style={{ fontWeight: '600', fontSize: 16 }}>Sign in</Text>
               </TouchableOpacity>
             </Link>
 
@@ -171,6 +168,7 @@ export default function SignUpScreen() {
             </Link>
           </View>
         </View>
-      </KeyboardAwareScrollView></>
-  )
+      </KeyboardAwareScrollView>
+    </>
+  );
 }

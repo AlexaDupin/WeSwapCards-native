@@ -1,12 +1,12 @@
-import { useSignUp } from "@clerk/clerk-expo";
-import { useRouter } from "expo-router";
-import { useCallback } from "react";
+import { useSignUp } from '@clerk/clerk-expo';
+import { type Href, useRouter } from 'expo-router';
+import { useCallback } from 'react';
 import {
   getClerkErrorCode,
   getClerkErrorMessage,
   getSignUpErrorMessage,
   getVerifyEmailErrorMessage,
-} from "../data/authErrors";
+} from '../data/authErrors';
 
 type Params = {
   emailAddress: string;
@@ -21,7 +21,7 @@ type Params = {
 
   setError: (v: string) => void;
 
-  redirectTo?: string;
+  redirectTo?: Href;
 };
 
 export function useSignUpSubmit({
@@ -33,7 +33,7 @@ export function useSignUpSubmit({
   isSubmitting,
   setIsSubmitting,
   setError,
-  redirectTo = "/",
+  redirectTo = '/(tabs)/cards',
 }: Params) {
   const { isLoaded, signUp, setActive } = useSignUp();
   const router = useRouter();
@@ -43,17 +43,17 @@ export function useSignUpSubmit({
 
     const email = emailAddress.trim();
     if (!email || !password) {
-      setError("Please enter your email and password.");
+      setError('Please enter your email and password.');
       return;
     }
 
     if (!signUp) {
-      setError("Sign-up not available. Please try again.");
+      setError('Sign-up not available. Please try again.');
       return;
     }
 
     setIsSubmitting(true);
-    setError("");
+    setError('');
 
     try {
       await signUp.create({
@@ -62,7 +62,7 @@ export function useSignUpSubmit({
         legalAccepted: true,
       });
 
-      await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
+      await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
       setPendingVerification(true);
     } catch (err: unknown) {
       console.error(err);
@@ -90,31 +90,31 @@ export function useSignUpSubmit({
 
     const otp: string = code.trim();
     if (!otp) {
-      setError("Please enter the verification code.");
+      setError('Please enter the verification code.');
       return;
     }
 
     if (!signUp) {
-      setError("Verification is not available right now. Please try again.");
+      setError('Verification is not available right now. Please try again.');
       return;
     }
 
     setIsSubmitting(true);
-    setError("");
+    setError('');
 
     try {
       const signUpAttempt = await signUp.attemptEmailAddressVerification({
         code: otp,
       });
 
-      if (signUpAttempt.status === "complete") {
+      if (signUpAttempt.status === 'complete') {
         await setActive({ session: signUpAttempt.createdSessionId });
         router.replace(redirectTo);
         return;
       }
 
       console.error(JSON.stringify(signUpAttempt, null, 2));
-      setError("Additional verification is required.");
+      setError('Additional verification is required.');
     } catch (err: unknown) {
       console.error(err);
       const code = getClerkErrorCode(err);

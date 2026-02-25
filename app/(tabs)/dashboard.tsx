@@ -13,18 +13,16 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { useAuth } from '@clerk/clerk-expo';
+import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
 
+import PageLoader from '@/src/components/PageLoader';
 import Pill from '@/src/components/Pill';
 import DashboardItem from '@/src/features/dashboard/components/DashboardItem';
 import { axiosInstance } from '@/src/lib/axiosInstance';
 import { styles } from '@/src/assets/styles/dashboard.styles';
+import { SignOutButton } from '@/src/components/SignOutButton';
 
 type TabKey = 'in-progress' | 'past';
-
-// TEMP (like your Cards screen): hardcode until we wire explorerId from state
-const EXPLORER_ID = 134;
-
-// TODO: broken import — should use DashboardItemData from feature types
 
 export type DashboardConversation = {
   db_id: number;
@@ -56,6 +54,7 @@ const PAST_PAGE_SIZE = 30;
 export default function DashboardScreen() {
   const { getToken } = useAuth();
   const getTokenRef = useRef(getToken);
+  const { explorerId } = useExplorer();
 
   useEffect(() => {
     getTokenRef.current = getToken;
@@ -110,25 +109,30 @@ export default function DashboardScreen() {
   }, []);
 
   const fetchInProgress = useCallback(async () => {
+    if (explorerId == null) return [];
     const headers = await authHeaders();
     const resp = await axiosInstance.get(
-      `/conversation/${EXPLORER_ID}?page=1&limit=40`,
+      `/conversation/${explorerId}?page=1&limit=40`,
       { headers },
     );
     return resp.data.conversations ?? [];
-  }, [authHeaders]);
+  }, [authHeaders, explorerId]);
 
   const fetchPastFirst = useCallback(async () => {
+    if (explorerId == null)
+      return { conversations: [], hasMore: false, nextCursor: null };
     const headers = await authHeaders();
     const resp = await axiosInstance.get<PastCursorResponse>(
-      `/conversation/past/${EXPLORER_ID}?mode=cursor&limit=${PAST_PAGE_SIZE}`,
+      `/conversation/past/${explorerId}?mode=cursor&limit=${PAST_PAGE_SIZE}`,
       { headers, timeout: 20000 },
     );
     return resp.data;
-  }, [authHeaders]);
+  }, [authHeaders, explorerId]);
 
   const fetchPastNext = useCallback(
     async (cursor: PastCursor) => {
+      if (explorerId == null)
+        return { conversations: [], hasMore: false, nextCursor: null };
       const headers = await authHeaders();
       const qs =
         `mode=cursor&limit=${PAST_PAGE_SIZE}` +
@@ -138,12 +142,12 @@ export default function DashboardScreen() {
         `&cursor_id=${cursor.cursor_id}`;
 
       const resp = await axiosInstance.get<PastCursorResponse>(
-        `/conversation/past/${EXPLORER_ID}?${qs}`,
+        `/conversation/past/${explorerId}?${qs}`,
         { headers, timeout: 20000 },
       );
       return resp.data;
     },
-    [authHeaders],
+    [authHeaders, explorerId],
   );
 
   const onRefresh = useCallback(async () => {
@@ -164,6 +168,10 @@ export default function DashboardScreen() {
   }, [activeTab, fetchInProgress, fetchPastFirst]);
 
   useEffect(() => {
+    if (explorerId == null) {
+      setLoadingInitial(false);
+      return;
+    }
     let cancelled = false;
 
     (async () => {
@@ -188,7 +196,7 @@ export default function DashboardScreen() {
     return () => {
       cancelled = true;
     };
-  }, [activeTab, fetchInProgress, fetchPastFirst]);
+  }, [activeTab, explorerId, fetchInProgress, fetchPastFirst]);
 
   const loadMorePast = useCallback(async () => {
     if (activeTab !== 'past') return;
@@ -229,11 +237,16 @@ export default function DashboardScreen() {
     [isUnread, toggleUiUnread],
   );
 
+  if (explorerId == null) {
+    return <PageLoader />;
+  }
+
   return (
     <View style={{ flex: 1, padding: 16 }}>
       <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 16 }}>
         Dashboard
       </Text>
+      <SignOutButton />
 
       <View style={styles.pillList}>
         <Pill
