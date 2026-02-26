@@ -1,11 +1,11 @@
-import { StyleSheet } from "react-native";
-import { Colors } from "../../constants/Colors";
+import { StyleSheet } from 'react-native';
+import { Colors } from '../../constants/Colors';
 
 export const styles = StyleSheet.create({
   renderRightAccept: {
     backgroundColor: Colors.secondary,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     width: 70,
     marginBottom: 10,
     alignSelf: 'stretch',
@@ -14,16 +14,16 @@ export const styles = StyleSheet.create({
   },
   renderRightDecline: {
     backgroundColor: Colors.primary,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     width: 70,
     marginBottom: 10,
     alignSelf: 'stretch',
   },
   renderLeftUnread: {
-    backgroundColor: "blue",
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: '#0A84FF',
+    justifyContent: 'center',
+    alignItems: 'center',
     width: 70,
     marginBottom: 10,
     alignSelf: 'stretch',
@@ -31,11 +31,11 @@ export const styles = StyleSheet.create({
     borderBottomLeftRadius: 12,
   },
   transactionCard: {
-    backgroundColor: "white",
+    backgroundColor: 'white',
     borderRadius: 12,
     marginBottom: 10,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     shadowOffset: {
       width: 0,
       height: 1,
@@ -46,17 +46,17 @@ export const styles = StyleSheet.create({
   },
   transactionContent: {
     flex: 1,
-    flexDirection: "row",
+    flexDirection: 'row',
     padding: 15,
-    alignItems: "center",
+    alignItems: 'center',
   },
   categoryIconContainer: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: "#F5F5F5",
-    justifyContent: "center",
-    alignItems: "center",
+    backgroundColor: '#F5F5F5',
+    justifyContent: 'center',
+    alignItems: 'center',
     marginRight: 12,
   },
   transactionLeft: {
@@ -64,14 +64,14 @@ export const styles = StyleSheet.create({
   },
   transactionTitle: {
     fontSize: 16,
-    fontWeight: "500",
+    fontWeight: '500',
     marginBottom: 4,
   },
   transactionCategory: {
     fontSize: 14,
   },
   transactionRight: {
-    alignItems: "flex-end",
+    alignItems: 'flex-end',
   },
   transactionDate: {
     fontSize: 12,
@@ -84,29 +84,39 @@ export const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   pillList: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   pill: {
-    borderRadius: 18, 
-    backgroundColor: "#E0F2FE",
+    borderRadius: 18,
+    backgroundColor: '#E0F2FE',
     padding: 10,
     paddingHorizontal: 16,
     marginRight: 10,
-    marginBottom: 15
+    marginBottom: 15,
   },
   pillText: {
-    fontSize: 14, 
-    textAlign: "center",
-    color:  "#0369A1",
+    fontSize: 14,
+    textAlign: 'center',
+    color: '#0369A1',
   },
 
-
-
+  unreadIconWrapper: {
+    position: 'relative',
+  },
+  unreadDot: {
+    position: 'absolute',
+    top: 0,
+    right: -2,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#0A84FF',
+  },
 
   transactionAmount: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
     marginBottom: 4,
   },
 
@@ -120,16 +130,16 @@ export const styles = StyleSheet.create({
   },
   loadingContainer: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
+    justifyContent: 'center',
+    alignItems: 'center',
     // backgroundColor: COLORS.background,
   },
   emptyState: {
     // backgroundColor: COLORS.card,
     borderRadius: 16,
     padding: 30,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     marginTop: 10,
     // shadowColor: COLORS.shadow,
     shadowOffset: { width: 0, height: 1 },
@@ -142,25 +152,25 @@ export const styles = StyleSheet.create({
   },
   emptyStateTitle: {
     fontSize: 18,
-    fontWeight: "600",
+    fontWeight: '600',
     // color: COLORS.text,
     marginBottom: 8,
   },
   emptyStateText: {
     // color: COLORS.textLight,
     fontSize: 14,
-    textAlign: "center",
+    textAlign: 'center',
     marginBottom: 20,
     lineHeight: 20,
   },
   emptyStateButton: {
     // backgroundColor: COLORS.primary,
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingVertical: 10,
     paddingHorizontal: 16,
     borderRadius: 20,
-    shadowColor: "#000",
+    shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 3,
@@ -168,15 +178,14 @@ export const styles = StyleSheet.create({
   },
   emptyStateButtonText: {
     // color: COLORS.white,
-    fontWeight: "600",
+    fontWeight: '600',
     marginLeft: 6,
   },
   transactionsHeaderContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     marginBottom: 10,
     paddingBottom: 5,
   },
-  
 });

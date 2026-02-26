@@ -4,9 +4,6 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 
 import { styles } from '@/src/assets/styles/dashboard.styles';
-import { Colors } from '@/src/constants/Colors';
-
-// TODO: broken import — should use DashboardItemData from feature types
 
 import type { DashboardItemData } from '@/src/features/dashboard/types/DashboardItemType';
 
@@ -58,9 +55,6 @@ const DashboardItem = ({ item, unread, onToggleUnread, onPress }: Props) => {
     [item.last_message_at],
   );
 
-  const iconName = unread ? 'checkmark-done-outline' : 'checkmark-outline';
-  const iconColor = unread ? Colors.primary : '#9aa0a6';
-
   const renderLeftActions = useCallback(() => {
     return (
       <TouchableOpacity
@@ -94,7 +88,10 @@ const DashboardItem = ({ item, unread, onToggleUnread, onPress }: Props) => {
       >
         <TouchableOpacity style={styles.transactionContent} onPress={onPress}>
           <View style={styles.categoryIconContainer}>
-            <Ionicons name={iconName} size={22} color={iconColor} />
+            <View style={styles.unreadIconWrapper}>
+              <Ionicons name="chatbubble-outline" size={22} color="#9aa0a6" />
+              {unread && <View style={styles.unreadDot} />}
+            </View>
           </View>
 
           <View style={styles.transactionLeft}>
