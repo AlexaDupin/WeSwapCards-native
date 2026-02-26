@@ -162,10 +162,6 @@ export default function SignUpScreen() {
                 <Text style={{ fontWeight: '600', fontSize: 16 }}>Sign in</Text>
               </TouchableOpacity>
             </Link>
-
-            <Link href="/">
-              <Text>Home</Text>
-            </Link>
           </View>
         </View>
       </KeyboardAwareScrollView>
