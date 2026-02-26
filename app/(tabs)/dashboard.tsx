@@ -15,7 +15,6 @@ import {
 import { useAuth } from '@clerk/clerk-expo';
 import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
 
-import PageLoader from '@/src/components/PageLoader';
 import Pill from '@/src/components/Pill';
 import DashboardItem from '@/src/features/dashboard/components/DashboardItem';
 import { axiosInstance } from '@/src/lib/axiosInstance';
@@ -109,7 +108,6 @@ export default function DashboardScreen() {
   }, []);
 
   const fetchInProgress = useCallback(async () => {
-    if (explorerId == null) return [];
     const headers = await authHeaders();
     const resp = await axiosInstance.get(
       `/conversation/${explorerId}?page=1&limit=40`,
@@ -119,8 +117,6 @@ export default function DashboardScreen() {
   }, [authHeaders, explorerId]);
 
   const fetchPastFirst = useCallback(async () => {
-    if (explorerId == null)
-      return { conversations: [], hasMore: false, nextCursor: null };
     const headers = await authHeaders();
     const resp = await axiosInstance.get<PastCursorResponse>(
       `/conversation/past/${explorerId}?mode=cursor&limit=${PAST_PAGE_SIZE}`,
@@ -131,8 +127,6 @@ export default function DashboardScreen() {
 
   const fetchPastNext = useCallback(
     async (cursor: PastCursor) => {
-      if (explorerId == null)
-        return { conversations: [], hasMore: false, nextCursor: null };
       const headers = await authHeaders();
       const qs =
         `mode=cursor&limit=${PAST_PAGE_SIZE}` +
@@ -168,10 +162,6 @@ export default function DashboardScreen() {
   }, [activeTab, fetchInProgress, fetchPastFirst]);
 
   useEffect(() => {
-    if (explorerId == null) {
-      setLoadingInitial(false);
-      return;
-    }
     let cancelled = false;
 
     (async () => {
@@ -196,7 +186,12 @@ export default function DashboardScreen() {
     return () => {
       cancelled = true;
     };
-  }, [activeTab, explorerId, fetchInProgress, fetchPastFirst]);
+  }, [activeTab, fetchInProgress, fetchPastFirst]);
+
+  useEffect(() => {
+    loadMoreLockRef.current = false;
+    setLoadingMore(false);
+  }, [activeTab]);
 
   const loadMorePast = useCallback(async () => {
     if (activeTab !== 'past') return;
@@ -236,10 +231,6 @@ export default function DashboardScreen() {
     ),
     [isUnread, toggleUiUnread],
   );
-
-  if (explorerId == null) {
-    return <PageLoader />;
-  }
 
   return (
     <View style={{ flex: 1, padding: 16 }}>

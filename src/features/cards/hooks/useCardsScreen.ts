@@ -31,7 +31,7 @@ export type ChapterUI = {
 type BulkChapterStatus = 'owned' | 'duplicated';
 
 type Params = {
-  explorerId: number | null;
+  explorerId: number;
 };
 
 const getNextStatus = (current: CardStatus): CardStatus => {
@@ -63,6 +63,7 @@ export function useCardsScreen({ explorerId }: Params) {
   );
 
   const listRef = useRef<FlatList<ChapterUI>>(null);
+  const pendingChaptersRef = useRef(new Set<number>());
 
   const fetchAllChapters = useCallback(async () => {
     const response = await axiosInstance.get<GetChaptersResponse>('/places');
@@ -99,7 +100,6 @@ export function useCardsScreen({ explorerId }: Params) {
   );
 
   const reload = useCallback(async () => {
-    if (explorerId == null) return;
     await Promise.all([
       fetchAllChapters(),
       fetchAllCards(),
@@ -108,10 +108,6 @@ export function useCardsScreen({ explorerId }: Params) {
   }, [explorerId, fetchAllChapters, fetchAllCards, fetchAllCardStatuses]);
 
   useEffect(() => {
-    if (explorerId == null) {
-      setIsLoading(false);
-      return;
-    }
     let mounted = true;
 
     (async () => {
@@ -129,7 +125,7 @@ export function useCardsScreen({ explorerId }: Params) {
     return () => {
       mounted = false;
     };
-  }, [explorerId]);
+  }, [explorerId, fetchAllChapters, fetchAllCards, fetchAllCardStatuses]);
 
   const cardsByPlaceId = useMemo(() => {
     const map: Record<number, CardItemData[]> = {};
@@ -181,7 +177,6 @@ export function useCardsScreen({ explorerId }: Params) {
 
   const upsertCard = useCallback(
     async (cardId: number, duplicate: boolean) => {
-      if (explorerId == null) return;
       const token = await getToken();
 
       const response = await axiosInstance.put<UpsertCardResponse>(
@@ -213,7 +208,6 @@ export function useCardsScreen({ explorerId }: Params) {
 
   const onResetCard = useCallback(
     async (cardId: number) => {
-      if (explorerId == null) return;
       const current = cardStatuses[String(cardId)] ?? 'default';
       if (current === 'default') return;
 
@@ -240,14 +234,10 @@ export function useCardsScreen({ explorerId }: Params) {
 
   const setChapterStatus = useCallback(
     async (chapterId: number, status: BulkChapterStatus) => {
-      if (explorerId == null) return;
-      if (pendingChapters.has(chapterId)) return;
+      if (pendingChaptersRef.current.has(chapterId)) return;
 
-      setPendingChapters((prev) => {
-        const next = new Set(prev);
-        next.add(chapterId);
-        return next;
-      });
+      pendingChaptersRef.current.add(chapterId);
+      setPendingChapters((prev) => new Set(prev).add(chapterId));
 
       try {
         const token = await getToken();
@@ -266,6 +256,7 @@ export function useCardsScreen({ explorerId }: Params) {
       } catch (e) {
         console.error(`Could not mark chapter ${chapterId} as ${status}`, e);
       } finally {
+        pendingChaptersRef.current.delete(chapterId);
         setPendingChapters((prev) => {
           const next = new Set(prev);
           next.delete(chapterId);
@@ -273,7 +264,7 @@ export function useCardsScreen({ explorerId }: Params) {
         });
       }
     },
-    [pendingChapters, cardsByPlaceId, explorerId, getToken],
+    [cardsByPlaceId, explorerId, getToken],
   );
 
   const onMarkAllOwned = useCallback(

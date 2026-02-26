@@ -7,7 +7,14 @@ import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
 export function ExplorerHydration({ children }: { children: React.ReactNode }) {
   const { isLoaded: authLoaded, isSignedIn, getToken } = useAuth();
   const { user, isLoaded: userLoaded } = useUser();
-  const { setExplorer, resetExplorer } = useExplorer();
+  const {
+    explorerId,
+    setExplorer,
+    resetExplorer,
+    setLoading,
+    setNeedsRegistration,
+    setError,
+  } = useExplorer();
 
   useEffect(() => {
     if (!authLoaded) return;
@@ -18,10 +25,13 @@ export function ExplorerHydration({ children }: { children: React.ReactNode }) {
     }
 
     if (!userLoaded || !user?.id) return;
+    if (explorerId != null) return;
 
     let cancelled = false;
 
     (async () => {
+      setLoading();
+
       const token = await getToken();
       if (!token || cancelled) return;
 
@@ -30,16 +40,21 @@ export function ExplorerHydration({ children }: { children: React.ReactNode }) {
           token,
           userUID: user.id,
         });
+
         if (cancelled) return;
-        if (explorer?.id) {
-          setExplorer({
-            explorerId: explorer.id,
-            explorerName: explorer.name ?? null,
-          });
+
+        if (!explorer?.id) {
+          setNeedsRegistration();
+          return;
         }
-      } catch (_) {
-        // Backend error or network: leave explorer null; tabs will show loader
-        // and user can retry by signing in again or refreshing
+
+        setExplorer({
+          explorerId: explorer.id,
+          explorerName: explorer.name ?? null,
+        });
+      } catch (e: any) {
+        if (cancelled) return;
+        setError();
       }
     })();
 
@@ -51,9 +66,13 @@ export function ExplorerHydration({ children }: { children: React.ReactNode }) {
     isSignedIn,
     userLoaded,
     user?.id,
+    explorerId,
     getToken,
     setExplorer,
     resetExplorer,
+    setLoading,
+    setNeedsRegistration,
+    setError,
   ]);
 
   return <>{children}</>;
