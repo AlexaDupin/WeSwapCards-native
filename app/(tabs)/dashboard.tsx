@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import { useAuth } from '@clerk/clerk-expo';
 import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
+import { router, useFocusEffect } from 'expo-router';
 
 import Pill from '@/src/components/Pill';
 import DashboardItem from '@/src/features/dashboard/components/DashboardItem';
@@ -193,6 +194,24 @@ export default function DashboardScreen() {
     setLoadingMore(false);
   }, [activeTab]);
 
+  useFocusEffect(
+    useCallback(() => {
+      if (activeTab === 'in-progress') {
+        fetchInProgress()
+          .then(setInProgress)
+          .catch(() => {});
+      } else {
+        fetchPastFirst()
+          .then((data) => {
+            setPast(data.conversations);
+            setPastHasMore(Boolean(data.hasMore));
+            setPastCursor(data.nextCursor);
+          })
+          .catch(() => {});
+      }
+    }, [activeTab, fetchInProgress, fetchPastFirst]),
+  );
+
   const loadMorePast = useCallback(async () => {
     if (activeTab !== 'past') return;
     if (!pastHasMore || !pastCursor) return;
@@ -225,7 +244,15 @@ export default function DashboardScreen() {
         unread={isUnread(item)}
         onToggleUnread={() => toggleUiUnread(item.db_id)}
         onPress={() => {
-          // Next later: navigate to chat + fetch opportunities
+          router.push({
+            pathname: '/(modal)/chat/[conversationId]',
+            params: {
+              conversationId: String(item.db_id),
+              cardName: item.card_name,
+              swapName: item.swap_explorer,
+              swapExplorerId: String(item.swap_explorer_id),
+            },
+          });
         }}
       />
     ),
