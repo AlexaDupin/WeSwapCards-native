@@ -44,7 +44,11 @@ export async function getAllMessages({
     timeout: 20000,
   });
 
-  return (resp.data?.allMessages ?? []) as Message[];
+  return {
+    allMessages: (resp.data?.allMessages ?? []) as Message[],
+    conversationStatus: (resp.data?.conversationStatus ??
+      null) as ConversationStatus | null,
+  };
 }
 
 export async function markConversationRead({

@@ -26,6 +26,8 @@ export function useChatScreen(args: {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [updatingStatus, setUpdatingStatus] = useState(false);
+  const [conversationStatus, setConversationStatusState] =
+    useState<ConversationStatus | null>(null);
 
   const authHeaders = useCallback(async () => {
     const token = await getTokenRef.current();
@@ -41,8 +43,13 @@ export function useChatScreen(args: {
   const refreshMessages = useCallback(async () => {
     if (!canLoad) return;
     const headers = await authHeaders();
-    const all = await chatApi.getAllMessages({ conversationId, headers });
-    setMessages(all);
+    const { allMessages, conversationStatus } = await chatApi.getAllMessages({
+      conversationId,
+      headers,
+    });
+
+    setMessages(allMessages);
+    setConversationStatusState(conversationStatus);
   }, [authHeaders, canLoad, conversationId]);
 
   const markRead = useCallback(async () => {
@@ -162,5 +169,6 @@ export function useChatScreen(args: {
     sendMessage,
     updatingStatus,
     setConversationStatus,
+    conversationStatus,
   };
 }
