@@ -10,6 +10,7 @@ import {
   FlatList,
   KeyboardAvoidingView,
   Platform,
+  Pressable,
   Text,
   TextInput,
   TouchableOpacity,
@@ -25,6 +26,7 @@ import { styles } from '@/src/assets/styles/chat.styles';
 import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
 import { useChatScreen } from '@/src/features/chat/hooks/useChatScreen';
 import type { Message } from '@/src/features/chat/types/MessageType';
+import type { ConversationStatus } from '@/src/features/chat/types/ConversationStatus';
 
 type Mode = 'auto' | 'short' | 'long';
 
@@ -64,6 +66,8 @@ export default function ChatScreen({
     setText,
     canSend,
     sendMessage,
+    updatingStatus,
+    setConversationStatus,
   } = useChatScreen({
     conversationId,
     swapExplorerId,
@@ -170,6 +174,14 @@ export default function ChatScreen({
     if (wasAtBottom) scrollToBottom(true);
   }, [sendMessage, scrollToBottom]);
 
+  const handleConversationStatus = useCallback(
+    async (status: ConversationStatus) => {
+      const success = await setConversationStatus(status);
+      if (success) router.back();
+    },
+    [setConversationStatus],
+  );
+
   const handleInputFocus = useCallback(() => {
     // Make sure the latest message is visible when keyboard opens
     scrollToBottom(true);
@@ -241,6 +253,45 @@ export default function ChatScreen({
             onContentSizeChange={(_, h) => decideModeIfReady(undefined, h)}
           />
         )}
+      </View>
+
+      <View style={styles.statusRow}>
+        <Pressable
+          onPress={() => handleConversationStatus('Completed')}
+          disabled={updatingStatus}
+          style={({ pressed }) => [
+            styles.statusButton,
+            styles.statusComplete,
+            (pressed || updatingStatus) && styles.statusButtonPressed,
+          ]}
+        >
+          <Text style={styles.statusButtonText}>Complete</Text>
+        </Pressable>
+
+        <Pressable
+          onPress={() => handleConversationStatus('Declined')}
+          disabled={updatingStatus}
+          style={({ pressed }) => [
+            styles.statusButton,
+            styles.statusDecline,
+            (pressed || updatingStatus) && styles.statusButtonPressed,
+          ]}
+        >
+          <Text style={styles.statusButtonText}>Decline</Text>
+        </Pressable>
+
+        <Pressable
+          onPress={() => handleConversationStatus('In progress')}
+          disabled={updatingStatus}
+          accessibilityLabel="Reopen conversation"
+          style={({ pressed }) => [
+            styles.statusIconButton,
+            styles.statusReopen,
+            (pressed || updatingStatus) && styles.statusButtonPressed,
+          ]}
+        >
+          <Ionicons name="refresh" size={18} color="#111" />
+        </Pressable>
       </View>
 
       <View

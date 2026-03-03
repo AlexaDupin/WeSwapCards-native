@@ -3,6 +3,7 @@ import { useAuth } from '@clerk/clerk-expo';
 import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
 import { useKeyboardVisible } from '@/src/hooks/useKeyboardVisible';
 import type { Message } from '@/src/features/chat/types/MessageType';
+import type { ConversationStatus } from '@/src/features/chat/types/ConversationStatus';
 import * as chatApi from '@/src/features/chat/api/chatApi';
 
 export function useChatScreen(args: {
@@ -24,6 +25,7 @@ export function useChatScreen(args: {
   const [text, setText] = useState('');
   const [sending, setSending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [updatingStatus, setUpdatingStatus] = useState(false);
 
   const authHeaders = useCallback(async () => {
     const token = await getTokenRef.current();
@@ -123,6 +125,31 @@ export function useChatScreen(args: {
     markRead,
   ]);
 
+  const setConversationStatus = useCallback(
+    async (status: ConversationStatus) => {
+      if (!Number.isFinite(conversationId)) return;
+
+      setUpdatingStatus(true);
+      setError(null);
+
+      try {
+        const headers = await authHeaders();
+        await chatApi.updateConversationStatus({
+          conversationId,
+          headers,
+          status,
+        });
+        return true;
+      } catch (e) {
+        setError('Could not update conversation status');
+        return false;
+      } finally {
+        setUpdatingStatus(false);
+      }
+    },
+    [authHeaders, conversationId],
+  );
+
   return {
     loading,
     error,
@@ -133,5 +160,7 @@ export function useChatScreen(args: {
     sending,
     canSend,
     sendMessage,
+    updatingStatus,
+    setConversationStatus,
   };
 }

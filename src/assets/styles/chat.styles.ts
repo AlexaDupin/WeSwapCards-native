@@ -76,4 +76,42 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+
+  statusRow: {
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#EEF2F6',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+
+  statusButton: {
+    flex: 1,
+    height: 40,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  statusIconButton: {
+    width: 44,
+    height: 40,
+    borderRadius: 12,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  statusButtonText: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: 'white',
+  },
+
+  statusComplete: { backgroundColor: '#16A34A' },
+  statusDecline: { backgroundColor: '#DC2626' },
+  statusReopen: { backgroundColor: '#E5E7EB' },
+
+  statusButtonPressed: { opacity: 0.7 },
 });
