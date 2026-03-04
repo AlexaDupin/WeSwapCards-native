@@ -1,4 +1,3 @@
-// MessageList.tsx
 import React, {
   forwardRef,
   useCallback,

@@ -88,24 +88,32 @@ export default function DashboardScreen() {
   const isUnread = useCallback(
     (conv: DashboardConversation) => {
       const override = uiUnreadOverrides[conv.db_id];
+
+      if (conv.unread > 0 && override === false) return true;
+
       if (override === true) return true;
       if (override === false) return false;
+
       return conv.unread > 0;
     },
     [uiUnreadOverrides],
   );
 
-  const toggleUiUnread = useCallback((dbId: number) => {
-    setUiUnreadOverrides((prev) => {
-      const current = prev[dbId];
-      // undefined -> force unread
-      if (current === undefined) return { ...prev, [dbId]: true };
-      // true -> force read
-      if (current === true) return { ...prev, [dbId]: false };
-      // false -> remove override
-      const { [dbId]: _, ...rest } = prev;
-      return rest;
-    });
+  // const toggleUiUnread = useCallback((dbId: number) => {
+  //   setUiUnreadOverrides((prev) => {
+  //     const current = prev[dbId];
+  //     // undefined -> force unread
+  //     if (current === undefined) return { ...prev, [dbId]: true };
+  //     // true -> force read
+  //     if (current === true) return { ...prev, [dbId]: false };
+  //     // false -> remove override
+  //     const { [dbId]: _, ...rest } = prev;
+  //     return rest;
+  //   });
+  // }, []);
+
+  const setUiUnread = useCallback((dbId: number, next: boolean) => {
+    setUiUnreadOverrides((prev) => ({ ...prev, [dbId]: next }));
   }, []);
 
   const fetchInProgress = useCallback(async () => {
@@ -242,8 +250,9 @@ export default function DashboardScreen() {
       <DashboardItem
         item={item}
         unread={isUnread(item)}
-        onToggleUnread={() => toggleUiUnread(item.db_id)}
+        onMarkUnread={() => setUiUnread(item.db_id, true)}
         onPress={() => {
+          setUiUnread(item.db_id, false);
           router.push({
             pathname: '/(modal)/chat/[conversationId]',
             params: {
@@ -256,7 +265,7 @@ export default function DashboardScreen() {
         }}
       />
     ),
-    [isUnread, toggleUiUnread],
+    [isUnread, setUiUnread],
   );
 
   return (

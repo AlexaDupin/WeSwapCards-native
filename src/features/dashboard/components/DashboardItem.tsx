@@ -10,7 +10,7 @@ import type { DashboardItemData } from '@/src/features/dashboard/types/Dashboard
 type Props = {
   item: DashboardItemData;
   unread: boolean;
-  onToggleUnread: () => void;
+  onMarkUnread: () => void;
   onPress: () => void;
 };
 
@@ -44,7 +44,7 @@ function formatLastMessage(timestamp: string | null) {
   }).format(date);
 }
 
-const DashboardItem = ({ item, unread, onToggleUnread, onPress }: Props) => {
+const DashboardItem = ({ item, unread, onMarkUnread, onPress }: Props) => {
   const [isSwipeOpen, setIsSwipeOpen] = useState(false);
   const swipeableRef = useRef<React.ComponentRef<typeof Swipeable> | null>(
     null,
@@ -55,19 +55,41 @@ const DashboardItem = ({ item, unread, onToggleUnread, onPress }: Props) => {
     [item.last_message_at],
   );
 
+  const { iconName, iconColor } = useMemo(() => {
+    switch (item.status) {
+      case 'Completed':
+        return {
+          iconName: 'checkmark-circle',
+          iconColor: '#34C759',
+        };
+
+      case 'Declined':
+        return {
+          iconName: 'close-circle',
+          iconColor: '#FF3B30',
+        };
+
+      default:
+        return {
+          iconName: 'chatbubble-outline',
+          iconColor: '#9aa0a6',
+        };
+    }
+  }, [item.status]);
+
   const renderLeftActions = useCallback(() => {
     return (
       <TouchableOpacity
         style={styles.renderLeftUnread}
         onPress={() => {
-          onToggleUnread();
+          onMarkUnread();
           swipeableRef.current?.close();
         }}
       >
         <Ionicons name="mail-unread-outline" size={24} color="white" />
       </TouchableOpacity>
     );
-  }, [onToggleUnread]);
+  }, [onMarkUnread]);
 
   return (
     <Swipeable
@@ -89,7 +111,7 @@ const DashboardItem = ({ item, unread, onToggleUnread, onPress }: Props) => {
         <TouchableOpacity style={styles.transactionContent} onPress={onPress}>
           <View style={styles.categoryIconContainer}>
             <View style={styles.unreadIconWrapper}>
-              <Ionicons name="chatbubble-outline" size={22} color="#9aa0a6" />
+              <Ionicons name={iconName} size={22} color={iconColor} />
               {unread && <View style={styles.unreadDot} />}
             </View>
           </View>
