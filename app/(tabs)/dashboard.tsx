@@ -43,6 +43,7 @@ export default function DashboardScreen() {
     loadMorePast,
     isUnread,
     setUiUnread,
+    setConversationStatus,
   } = useDashboard({ explorerId, authHeaders });
 
   const renderItem = useCallback(
@@ -51,6 +52,8 @@ export default function DashboardScreen() {
         item={item}
         unread={isUnread(item)}
         onMarkUnread={() => setUiUnread(item.db_id, true)}
+        onMarkCompleted={() => setConversationStatus(item.db_id, 'Completed')}
+        onMarkDeclined={() => setConversationStatus(item.db_id, 'Declined')}
         onPress={() => {
           setUiUnread(item.db_id, false);
           router.push({
@@ -65,7 +68,7 @@ export default function DashboardScreen() {
         }}
       />
     ),
-    [isUnread, setUiUnread],
+    [isUnread, setUiUnread, setConversationStatus],
   );
 
   return (

@@ -1,23 +1,20 @@
 import { StyleSheet } from 'react-native';
-import { Colors } from '../../constants/Colors';
 
 export const styles = StyleSheet.create({
   renderRightAccept: {
-    backgroundColor: Colors.secondary,
+    backgroundColor: '#34C759',
     justifyContent: 'center',
     alignItems: 'center',
     width: 70,
-    marginBottom: 10,
     alignSelf: 'stretch',
     borderTopRightRadius: 12,
     borderBottomRightRadius: 12,
   },
   renderRightDecline: {
-    backgroundColor: Colors.primary,
+    backgroundColor: '#FF3B30',
     justifyContent: 'center',
     alignItems: 'center',
     width: 70,
-    marginBottom: 10,
     alignSelf: 'stretch',
   },
   renderLeftUnread: {
@@ -29,6 +26,11 @@ export const styles = StyleSheet.create({
     alignSelf: 'stretch',
     borderTopLeftRadius: 12,
     borderBottomLeftRadius: 12,
+  },
+  rightActions: {
+    flexDirection: 'row',
+    alignSelf: 'stretch',
+    marginBottom: 10,
   },
   transactionCard: {
     backgroundColor: 'white',
@@ -75,7 +77,6 @@ export const styles = StyleSheet.create({
   },
   transactionDate: {
     fontSize: 12,
-    // color: COLORS.textLight,
   },
   transactionsList: {
     flex: 1,
@@ -112,80 +113,5 @@ export const styles = StyleSheet.create({
     height: 8,
     borderRadius: 4,
     backgroundColor: '#0A84FF',
-  },
-
-  transactionAmount: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginBottom: 4,
-  },
-
-  deleteButton: {
-    padding: 15,
-    borderLeftWidth: 1,
-    // borderLeftColor: COLORS.border,
-  },
-  transactionsContainer: {
-    marginBottom: 20,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    // backgroundColor: COLORS.background,
-  },
-  emptyState: {
-    // backgroundColor: COLORS.card,
-    borderRadius: 16,
-    padding: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 10,
-    // shadowColor: COLORS.shadow,
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  emptyStateIcon: {
-    marginBottom: 16,
-  },
-  emptyStateTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    // color: COLORS.text,
-    marginBottom: 8,
-  },
-  emptyStateText: {
-    // color: COLORS.textLight,
-    fontSize: 14,
-    textAlign: 'center',
-    marginBottom: 20,
-    lineHeight: 20,
-  },
-  emptyStateButton: {
-    // backgroundColor: COLORS.primary,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: 10,
-    paddingHorizontal: 16,
-    borderRadius: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 2,
-  },
-  emptyStateButtonText: {
-    // color: COLORS.white,
-    fontWeight: '600',
-    marginLeft: 6,
-  },
-  transactionsHeaderContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 10,
-    paddingBottom: 5,
   },
 });

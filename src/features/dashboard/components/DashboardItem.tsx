@@ -10,6 +10,8 @@ type Props = {
   item: DashboardItemData;
   unread: boolean;
   onMarkUnread: () => void;
+  onMarkCompleted: () => void;
+  onMarkDeclined: () => void;
   onPress: () => void;
 };
 
@@ -43,7 +45,14 @@ function formatLastMessage(timestamp: string | null) {
   }).format(date);
 }
 
-const DashboardItem = ({ item, unread, onMarkUnread, onPress }: Props) => {
+const DashboardItem = ({
+  item,
+  unread,
+  onMarkUnread,
+  onMarkCompleted,
+  onMarkDeclined,
+  onPress,
+}: Props) => {
   const [isSwipeOpen, setIsSwipeOpen] = useState(false);
   const swipeableRef = useRef<React.ComponentRef<typeof Swipeable> | null>(
     null,
@@ -90,10 +99,37 @@ const DashboardItem = ({ item, unread, onMarkUnread, onPress }: Props) => {
     );
   }, [onMarkUnread]);
 
+  const renderRightActions = useCallback(() => {
+    return (
+      <View style={styles.rightActions}>
+        <TouchableOpacity
+          style={styles.renderRightDecline}
+          onPress={() => {
+            onMarkDeclined();
+            swipeableRef.current?.close();
+          }}
+        >
+          <Ionicons name="close-circle" size={24} color="white" />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.renderRightAccept}
+          onPress={() => {
+            onMarkCompleted();
+            swipeableRef.current?.close();
+          }}
+        >
+          <Ionicons name="checkmark-circle" size={24} color="white" />
+        </TouchableOpacity>
+      </View>
+    );
+  }, [onMarkCompleted, onMarkDeclined]);
+
   return (
     <Swipeable
       ref={swipeableRef}
       renderLeftActions={renderLeftActions}
+      renderRightActions={renderRightActions}
       leftThreshold={40}
       onSwipeableOpen={() => setIsSwipeOpen(true)}
       onSwipeableClose={() => setIsSwipeOpen(false)}

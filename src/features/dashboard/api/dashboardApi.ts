@@ -57,3 +57,19 @@ export async function fetchPastNextPage(args: {
 
   return resp.data;
 }
+
+export async function updateConversationStatus(args: {
+  conversationId: number;
+  status: 'Completed' | 'Declined' | 'In progress';
+  headers: AuthHeaders;
+}) {
+  const { conversationId, status, headers } = args;
+
+  const resp = await axiosInstance.put(
+    `/conversation/${conversationId}`,
+    { status },
+    { headers },
+  );
+
+  return resp.data;
+}

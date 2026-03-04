@@ -5,6 +5,7 @@ import {
   fetchInProgressConversations,
   fetchPastFirstPage,
   fetchPastNextPage,
+  updateConversationStatus,
 } from '@/src/features/dashboard/api/dashboardApi';
 
 import {
@@ -65,6 +66,31 @@ export function useDashboard(args: UseDashboardArgs) {
       });
     },
     [authHeaders, explorerId],
+  );
+
+  const setStatusLocal = useCallback(
+    (conversationId: number, status: DashboardConversation['status']) => {
+      setInProgress((prev) =>
+        prev.map((c) => (c.db_id === conversationId ? { ...c, status } : c)),
+      );
+      setPast((prev) =>
+        prev.map((c) => (c.db_id === conversationId ? { ...c, status } : c)),
+      );
+    },
+    [],
+  );
+
+  const setConversationStatus = useCallback(
+    async (conversationId: number, status: DashboardConversation['status']) => {
+      try {
+        const headers = await authHeaders();
+        await updateConversationStatus({ conversationId, status, headers });
+        setStatusLocal(conversationId, status);
+      } catch {
+        // keep same "silent failure" style as other calls in this file
+      }
+    },
+    [authHeaders, setStatusLocal],
   );
 
   const onRefresh = useCallback(async () => {
@@ -170,5 +196,6 @@ export function useDashboard(args: UseDashboardArgs) {
     loadMorePast,
     isUnread,
     setUiUnread,
+    setConversationStatus,
   };
 }
