@@ -31,10 +31,12 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignSelf: 'stretch',
     marginBottom: 10,
+    borderTopRightRadius: 12,
+    borderBottomRightRadius: 12,
+    overflow: 'hidden',
   },
   transactionCard: {
     backgroundColor: 'white',
-    borderRadius: 12,
     marginBottom: 10,
     flexDirection: 'row',
     alignItems: 'center',

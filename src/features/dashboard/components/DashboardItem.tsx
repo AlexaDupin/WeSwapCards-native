@@ -53,7 +53,9 @@ const DashboardItem = ({
   onMarkDeclined,
   onPress,
 }: Props) => {
-  const [isSwipeOpen, setIsSwipeOpen] = useState(false);
+  const [openDirection, setOpenDirection] = useState<'left' | 'right' | null>(
+    null,
+  );
   const swipeableRef = useRef<React.ComponentRef<typeof Swipeable> | null>(
     null,
   );
@@ -131,15 +133,18 @@ const DashboardItem = ({
       renderLeftActions={renderLeftActions}
       renderRightActions={renderRightActions}
       leftThreshold={40}
-      onSwipeableOpen={() => setIsSwipeOpen(true)}
-      onSwipeableClose={() => setIsSwipeOpen(false)}
+      rightThreshold={40}
+      onSwipeableOpen={(direction) => setOpenDirection(direction)}
+      onSwipeableClose={() => setOpenDirection(null)}
     >
       <View
         style={[
           styles.transactionCard,
           {
-            borderTopLeftRadius: isSwipeOpen ? 0 : 12,
-            borderBottomLeftRadius: isSwipeOpen ? 0 : 12,
+            borderTopLeftRadius: openDirection === 'right' ? 0 : 12,
+            borderBottomLeftRadius: openDirection === 'right' ? 0 : 12,
+            borderTopRightRadius: openDirection === 'left' ? 0 : 12,
+            borderBottomRightRadius: openDirection === 'left' ? 0 : 12,
           },
         ]}
       >

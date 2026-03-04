@@ -16,6 +16,7 @@ import {
 } from '@/src/features/dashboard/types/DashboardTypes';
 
 import { useUiUnreadOverrides } from '@/src/features/dashboard/hooks/useUiUnreadOverrides';
+import { ConversationStatus } from '../../chat/types/ConversationStatus';
 
 type UseDashboardArgs = {
   explorerId: number | null;
@@ -40,6 +41,24 @@ export function useDashboard(args: UseDashboardArgs) {
   const { isUnread, setUiUnread } = useUiUnreadOverrides();
 
   const loadMoreLockRef = useRef(false);
+  const inProgressRef = useRef(inProgress);
+  const pastRef = useRef(past);
+
+  useEffect(() => {
+    inProgressRef.current = inProgress;
+  }, [inProgress]);
+
+  useEffect(() => {
+    pastRef.current = past;
+  }, [past]);
+
+  const upsertPastAtTop = (
+    prev: DashboardConversation[],
+    nextItem: DashboardConversation,
+  ) => {
+    const without = prev.filter((c) => c.db_id !== nextItem.db_id);
+    return [nextItem, ...without];
+  };
 
   const fetchInProgress = useCallback(async () => {
     const headers = await authHeaders();
@@ -68,29 +87,54 @@ export function useDashboard(args: UseDashboardArgs) {
     [authHeaders, explorerId],
   );
 
-  const setStatusLocal = useCallback(
-    (conversationId: number, status: DashboardConversation['status']) => {
-      setInProgress((prev) =>
-        prev.map((c) => (c.db_id === conversationId ? { ...c, status } : c)),
+  const applyStatusLocal = useCallback(
+    (conversationId: number, nextStatus: ConversationStatus) => {
+      const isInPast = pastRef.current.some((c) => c.db_id === conversationId);
+      if (isInPast) {
+        setPast((prevPast) =>
+          prevPast.map((c) =>
+            c.db_id === conversationId ? { ...c, status: nextStatus } : c,
+          ),
+        );
+        return;
+      }
+
+      const found = inProgressRef.current.find(
+        (c) => c.db_id === conversationId,
       );
-      setPast((prev) =>
-        prev.map((c) => (c.db_id === conversationId ? { ...c, status } : c)),
+      if (!found) return;
+
+      if (nextStatus === 'Completed' || nextStatus === 'Declined') {
+        const moved: DashboardConversation = { ...found, status: nextStatus };
+        setInProgress((prevIn) =>
+          prevIn.filter((c) => c.db_id !== conversationId),
+        );
+        setPast((prevPast) => upsertPastAtTop(prevPast, moved));
+        return;
+      }
+
+      setInProgress((prevIn) =>
+        prevIn.map((c) =>
+          c.db_id === conversationId ? { ...c, status: nextStatus } : c,
+        ),
       );
     },
     [],
   );
 
   const setConversationStatus = useCallback(
-    async (conversationId: number, status: DashboardConversation['status']) => {
+    async (conversationId: number, status: ConversationStatus) => {
       try {
         const headers = await authHeaders();
         await updateConversationStatus({ conversationId, status, headers });
-        setStatusLocal(conversationId, status);
+
+        // After server confirms, update/move locally using your rules
+        applyStatusLocal(conversationId, status);
       } catch {
-        // keep same "silent failure" style as other calls in this file
+        // keep current silent failure style
       }
     },
-    [authHeaders, setStatusLocal],
+    [authHeaders, applyStatusLocal],
   );
 
   const onRefresh = useCallback(async () => {
