@@ -1,10 +1,4 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { useCallback, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -14,42 +8,15 @@ import {
 } from 'react-native';
 import { useAuth } from '@clerk/clerk-expo';
 import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
-import { router, useFocusEffect } from 'expo-router';
+import { router } from 'expo-router';
 
 import Pill from '@/src/components/Pill';
 import DashboardItem from '@/src/features/dashboard/components/DashboardItem';
-import { axiosInstance } from '@/src/lib/axiosInstance';
 import { styles } from '@/src/assets/styles/dashboard.styles';
 import { SignOutButton } from '@/src/components/SignOutButton';
 
-type TabKey = 'in-progress' | 'past';
-
-export type DashboardConversation = {
-  db_id: number;
-  card_name: string;
-  swap_explorer: string;
-  swap_explorer_id: number;
-  status: 'In progress' | 'Completed' | 'Declined';
-  creator_id: number;
-  recipient_id: number;
-  unread: number; // backend should return number (COUNT(...)::int)
-  last_message_at: string | null;
-};
-
-type PastCursor = {
-  cursor_unread: 0 | 1;
-  cursor_card: string;
-  cursor_swap: string;
-  cursor_id: number;
-};
-
-type PastCursorResponse = {
-  conversations: DashboardConversation[];
-  hasMore: boolean;
-  nextCursor: PastCursor | null;
-};
-
-const PAST_PAGE_SIZE = 30;
+import { useDashboard } from '@/src/features/dashboard/hooks/useDashboard';
+import type { DashboardConversation } from '@/src/features/dashboard/types/DashboardTypes';
 
 export default function DashboardScreen() {
   const { getToken } = useAuth();
@@ -60,190 +27,23 @@ export default function DashboardScreen() {
     getTokenRef.current = getToken;
   }, [getToken]);
 
-  const [activeTab, setActiveTab] = useState<TabKey>('in-progress');
-
-  const [inProgress, setInProgress] = useState<DashboardConversation[]>([]);
-  const [past, setPast] = useState<DashboardConversation[]>([]);
-
-  const [loadingInitial, setLoadingInitial] = useState(true);
-  const [refreshing, setRefreshing] = useState(false);
-  const [loadingMore, setLoadingMore] = useState(false);
-
-  const [pastHasMore, setPastHasMore] = useState(false);
-  const [pastCursor, setPastCursor] = useState<PastCursor | null>(null);
-
-  // UI-only: mark as unread/remind-me (no DB write)
-  const [uiUnreadOverrides, setUiUnreadOverrides] = useState<
-    Record<number, boolean>
-  >({});
-
-  // Prevent duplicate onEndReached calls
-  const loadMoreLockRef = useRef(false);
-
   const authHeaders = useCallback(async () => {
     const token = await getTokenRef.current();
     return { Authorization: `Bearer ${token}` };
   }, []);
 
-  const isUnread = useCallback(
-    (conv: DashboardConversation) => {
-      const override = uiUnreadOverrides[conv.db_id];
-
-      if (conv.unread > 0 && override === false) return true;
-
-      if (override === true) return true;
-      if (override === false) return false;
-
-      return conv.unread > 0;
-    },
-    [uiUnreadOverrides],
-  );
-
-  // const toggleUiUnread = useCallback((dbId: number) => {
-  //   setUiUnreadOverrides((prev) => {
-  //     const current = prev[dbId];
-  //     // undefined -> force unread
-  //     if (current === undefined) return { ...prev, [dbId]: true };
-  //     // true -> force read
-  //     if (current === true) return { ...prev, [dbId]: false };
-  //     // false -> remove override
-  //     const { [dbId]: _, ...rest } = prev;
-  //     return rest;
-  //   });
-  // }, []);
-
-  const setUiUnread = useCallback((dbId: number, next: boolean) => {
-    setUiUnreadOverrides((prev) => ({ ...prev, [dbId]: next }));
-  }, []);
-
-  const fetchInProgress = useCallback(async () => {
-    const headers = await authHeaders();
-    const resp = await axiosInstance.get(
-      `/conversation/${explorerId}?page=1&limit=40`,
-      { headers },
-    );
-    return resp.data.conversations ?? [];
-  }, [authHeaders, explorerId]);
-
-  const fetchPastFirst = useCallback(async () => {
-    const headers = await authHeaders();
-    const resp = await axiosInstance.get<PastCursorResponse>(
-      `/conversation/past/${explorerId}?mode=cursor&limit=${PAST_PAGE_SIZE}`,
-      { headers, timeout: 20000 },
-    );
-    return resp.data;
-  }, [authHeaders, explorerId]);
-
-  const fetchPastNext = useCallback(
-    async (cursor: PastCursor) => {
-      const headers = await authHeaders();
-      const qs =
-        `mode=cursor&limit=${PAST_PAGE_SIZE}` +
-        `&cursor_unread=${cursor.cursor_unread}` +
-        `&cursor_card=${encodeURIComponent(cursor.cursor_card)}` +
-        `&cursor_swap=${encodeURIComponent(cursor.cursor_swap)}` +
-        `&cursor_id=${cursor.cursor_id}`;
-
-      const resp = await axiosInstance.get<PastCursorResponse>(
-        `/conversation/past/${explorerId}?${qs}`,
-        { headers, timeout: 20000 },
-      );
-      return resp.data;
-    },
-    [authHeaders, explorerId],
-  );
-
-  const onRefresh = useCallback(async () => {
-    setRefreshing(true);
-    try {
-      if (activeTab === 'in-progress') {
-        const list = await fetchInProgress();
-        setInProgress(list);
-      } else {
-        const data = await fetchPastFirst();
-        setPast(data.conversations);
-        setPastHasMore(Boolean(data.hasMore));
-        setPastCursor(data.nextCursor);
-      }
-    } finally {
-      setRefreshing(false);
-    }
-  }, [activeTab, fetchInProgress, fetchPastFirst]);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    (async () => {
-      setLoadingInitial(true);
-      try {
-        if (activeTab === 'in-progress') {
-          const list = await fetchInProgress();
-          if (!cancelled) setInProgress(list);
-        } else {
-          const data = await fetchPastFirst();
-          if (!cancelled) {
-            setPast(data.conversations);
-            setPastHasMore(Boolean(data.hasMore));
-            setPastCursor(data.nextCursor);
-          }
-        }
-      } finally {
-        if (!cancelled) setLoadingInitial(false);
-      }
-    })();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [activeTab, fetchInProgress, fetchPastFirst]);
-
-  useEffect(() => {
-    loadMoreLockRef.current = false;
-    setLoadingMore(false);
-  }, [activeTab]);
-
-  useFocusEffect(
-    useCallback(() => {
-      if (activeTab === 'in-progress') {
-        fetchInProgress()
-          .then(setInProgress)
-          .catch(() => {});
-      } else {
-        fetchPastFirst()
-          .then((data) => {
-            setPast(data.conversations);
-            setPastHasMore(Boolean(data.hasMore));
-            setPastCursor(data.nextCursor);
-          })
-          .catch(() => {});
-      }
-    }, [activeTab, fetchInProgress, fetchPastFirst]),
-  );
-
-  const loadMorePast = useCallback(async () => {
-    if (activeTab !== 'past') return;
-    if (!pastHasMore || !pastCursor) return;
-    if (loadingMore) return;
-    if (loadMoreLockRef.current) return;
-
-    loadMoreLockRef.current = true;
-    setLoadingMore(true);
-
-    try {
-      const data = await fetchPastNext(pastCursor);
-      setPast((prev) => [...prev, ...data.conversations]);
-      setPastHasMore(Boolean(data.hasMore));
-      setPastCursor(data.nextCursor);
-    } finally {
-      setLoadingMore(false);
-      loadMoreLockRef.current = false;
-    }
-  }, [activeTab, pastHasMore, pastCursor, loadingMore, fetchPastNext]);
-
-  const listData = useMemo(
-    () => (activeTab === 'in-progress' ? inProgress : past),
-    [activeTab, inProgress, past],
-  );
+  const {
+    activeTab,
+    setActiveTab,
+    listData,
+    loadingInitial,
+    refreshing,
+    loadingMore,
+    onRefresh,
+    loadMorePast,
+    isUnread,
+    setUiUnread,
+  } = useDashboard({ explorerId, authHeaders });
 
   const renderItem = useCallback(
     ({ item }: { item: DashboardConversation }) => (

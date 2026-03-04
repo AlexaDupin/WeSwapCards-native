@@ -5,8 +5,7 @@ import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 
 import { styles } from '@/src/assets/styles/dashboard.styles';
 
-import type { DashboardItemData } from '@/src/features/dashboard/types/DashboardItemType';
-
+import type { DashboardItemData } from '@/src/features/dashboard/types/DashboardTypes';
 type Props = {
   item: DashboardItemData;
   unread: boolean;
