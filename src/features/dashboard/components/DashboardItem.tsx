@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
@@ -6,6 +6,12 @@ import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
 import { styles } from '@/src/assets/styles/dashboard.styles';
 
 import type { DashboardItemData } from '@/src/features/dashboard/types/DashboardTypes';
+import { formatLastMessage } from '@/src/features/dashboard/utils/dashboardItemUtils';
+import {
+  DEFAULT_CARD_RADIUS,
+  STATUS_ICON_MAP,
+} from '@/src/features/dashboard/constants/dashboardItemConstants';
+
 type Props = {
   item: DashboardItemData;
   unread: boolean;
@@ -14,36 +20,6 @@ type Props = {
   onMarkDeclined: () => void;
   onPress: () => void;
 };
-
-function formatLastMessage(timestamp: string | null) {
-  if (!timestamp) return '';
-  const date = new Date(timestamp);
-
-  const now = new Date();
-  const sameDay =
-    date.getFullYear() === now.getFullYear() &&
-    date.getMonth() === now.getMonth() &&
-    date.getDate() === now.getDate();
-
-  if (sameDay) {
-    return new Intl.DateTimeFormat(undefined, {
-      hour: '2-digit',
-      minute: '2-digit',
-    }).format(date);
-  }
-
-  const diffDays = (now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24);
-  if (diffDays <= 7) {
-    return new Intl.DateTimeFormat(undefined, { weekday: 'short' }).format(
-      date,
-    );
-  }
-
-  return new Intl.DateTimeFormat(undefined, {
-    month: 'short',
-    day: '2-digit',
-  }).format(date);
-}
 
 const DashboardItem = ({
   item,
@@ -60,72 +36,54 @@ const DashboardItem = ({
     null,
   );
 
-  const timeLabel = useMemo(
-    () => formatLastMessage(item.last_message_at),
-    [item.last_message_at],
+  const timeLabel = formatLastMessage(item.last_message_at);
+
+  const { iconName, iconColor } = STATUS_ICON_MAP[item.status];
+  const isLeftOpen = openDirection === 'left';
+  const isRightOpen = openDirection === 'right';
+
+  const closeSwipe = useCallback(() => {
+    swipeableRef.current?.close();
+  }, []);
+
+  const runAndClose = useCallback(
+    (action: () => void) => {
+      action();
+      closeSwipe();
+    },
+    [closeSwipe],
   );
-
-  const { iconName, iconColor } = useMemo(() => {
-    switch (item.status) {
-      case 'Completed':
-        return {
-          iconName: 'checkmark-circle',
-          iconColor: '#34C759',
-        };
-
-      case 'Declined':
-        return {
-          iconName: 'close-circle',
-          iconColor: '#FF3B30',
-        };
-
-      default:
-        return {
-          iconName: 'chatbubble-outline',
-          iconColor: '#9aa0a6',
-        };
-    }
-  }, [item.status]);
 
   const renderLeftActions = useCallback(() => {
     return (
       <TouchableOpacity
         style={styles.renderLeftUnread}
-        onPress={() => {
-          onMarkUnread();
-          swipeableRef.current?.close();
-        }}
+        onPress={() => runAndClose(onMarkUnread)}
       >
         <Ionicons name="mail-unread-outline" size={24} color="white" />
       </TouchableOpacity>
     );
-  }, [onMarkUnread]);
+  }, [onMarkUnread, runAndClose]);
 
   const renderRightActions = useCallback(() => {
     return (
       <View style={styles.rightActions}>
         <TouchableOpacity
           style={styles.renderRightDecline}
-          onPress={() => {
-            onMarkDeclined();
-            swipeableRef.current?.close();
-          }}
+          onPress={() => runAndClose(onMarkDeclined)}
         >
           <Ionicons name="close-circle" size={24} color="white" />
         </TouchableOpacity>
 
         <TouchableOpacity
           style={styles.renderRightAccept}
-          onPress={() => {
-            onMarkCompleted();
-            swipeableRef.current?.close();
-          }}
+          onPress={() => runAndClose(onMarkCompleted)}
         >
           <Ionicons name="checkmark-circle" size={24} color="white" />
         </TouchableOpacity>
       </View>
     );
-  }, [onMarkCompleted, onMarkDeclined]);
+  }, [onMarkCompleted, onMarkDeclined, runAndClose]);
 
   return (
     <Swipeable
@@ -141,10 +99,10 @@ const DashboardItem = ({
         style={[
           styles.transactionCard,
           {
-            borderTopLeftRadius: openDirection === 'right' ? 0 : 12,
-            borderBottomLeftRadius: openDirection === 'right' ? 0 : 12,
-            borderTopRightRadius: openDirection === 'left' ? 0 : 12,
-            borderBottomRightRadius: openDirection === 'left' ? 0 : 12,
+            borderTopLeftRadius: isRightOpen ? 0 : DEFAULT_CARD_RADIUS,
+            borderBottomLeftRadius: isRightOpen ? 0 : DEFAULT_CARD_RADIUS,
+            borderTopRightRadius: isLeftOpen ? 0 : DEFAULT_CARD_RADIUS,
+            borderBottomRightRadius: isLeftOpen ? 0 : DEFAULT_CARD_RADIUS,
           },
         ]}
       >
