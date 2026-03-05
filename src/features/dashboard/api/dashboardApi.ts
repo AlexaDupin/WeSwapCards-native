@@ -73,3 +73,37 @@ export async function updateConversationStatus(args: {
 
   return resp.data;
 }
+
+export async function getUnreadCounts(args: {
+  explorerId: number;
+  headers: Record<string, string>;
+}) {
+  const { explorerId, headers } = args;
+
+  const resp = await axiosInstance.get(`/conversation/unread/${explorerId}`, {
+    headers,
+  });
+
+  return {
+    inProgress: Number(resp.data?.inProgress ?? 0),
+    past: Number(resp.data?.past ?? 0),
+  };
+}
+
+export async function markConversationUnread(args: {
+  conversationId: number;
+  explorerId: number;
+  headers: AuthHeaders;
+}) {
+  const { conversationId, explorerId, headers } = args;
+
+  const resp = await axiosInstance.put(
+    `/conversation/${conversationId}/${explorerId}/unread`,
+    {},
+    { headers },
+  );
+
+  return {
+    unread: Boolean(resp.data?.unread),
+  };
+}

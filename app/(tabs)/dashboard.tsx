@@ -11,6 +11,7 @@ import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
 import { router } from 'expo-router';
 
 import Pill from '@/src/components/Pill';
+import CountBadge from '@/src/components/CountBadge';
 import DashboardItem from '@/src/features/dashboard/components/DashboardItem';
 import { styles } from '@/src/assets/styles/dashboard.styles';
 import { SignOutButton } from '@/src/components/SignOutButton';
@@ -44,6 +45,7 @@ export default function DashboardScreen() {
     isUnread,
     setUiUnread,
     setConversationStatus,
+    unreadCounts,
   } = useDashboard({ explorerId, authHeaders });
 
   const renderItem = useCallback(
@@ -79,16 +81,23 @@ export default function DashboardScreen() {
       <SignOutButton />
 
       <View style={styles.pillList}>
-        <Pill
-          text="In progress"
-          isActive={activeTab === 'in-progress'}
-          onPress={() => setActiveTab('in-progress')}
-        />
-        <Pill
-          text="Past"
-          isActive={activeTab === 'past'}
-          onPress={() => setActiveTab('past')}
-        />
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Pill
+            text="In progress"
+            isActive={activeTab === 'in-progress'}
+            onPress={() => setActiveTab('in-progress')}
+          />
+          <CountBadge count={unreadCounts.inProgress} />
+        </View>
+
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Pill
+            text="Past"
+            isActive={activeTab === 'past'}
+            onPress={() => setActiveTab('past')}
+          />
+          <CountBadge count={unreadCounts.past} />
+        </View>
       </View>
 
       {loadingInitial ? (

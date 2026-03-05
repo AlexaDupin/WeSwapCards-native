@@ -6,6 +6,8 @@ import {
   fetchPastFirstPage,
   fetchPastNextPage,
   updateConversationStatus,
+  getUnreadCounts,
+  markConversationUnread,
 } from '@/src/features/dashboard/api/dashboardApi';
 
 import {
@@ -17,6 +19,11 @@ import {
 
 import { useUiUnreadOverrides } from '@/src/features/dashboard/hooks/useUiUnreadOverrides';
 import { ConversationStatus } from '../../chat/types/ConversationStatus';
+
+type UnreadCounts = {
+  inProgress: number;
+  past: number;
+};
 
 type UseDashboardArgs = {
   explorerId: number | null;
@@ -38,7 +45,12 @@ export function useDashboard(args: UseDashboardArgs) {
   const [pastHasMore, setPastHasMore] = useState(false);
   const [pastCursor, setPastCursor] = useState<PastCursor | null>(null);
 
-  const { isUnread, setUiUnread } = useUiUnreadOverrides();
+  const { isUnread, setUiUnread: setUiUnreadBase } = useUiUnreadOverrides();
+
+  const [unreadCounts, setUnreadCounts] = useState<UnreadCounts>({
+    inProgress: 0,
+    past: 0,
+  });
 
   const loadMoreLockRef = useRef(false);
   const inProgressRef = useRef(inProgress);
@@ -87,6 +99,58 @@ export function useDashboard(args: UseDashboardArgs) {
     [authHeaders, explorerId],
   );
 
+  const refreshUnreadCounts = useCallback(async () => {
+    if (!explorerId) return;
+
+    const headers = await authHeaders();
+    const counts = await getUnreadCounts({ explorerId, headers });
+
+    setUnreadCounts({
+      inProgress: Number(counts.inProgress ?? 0),
+      past: Number(counts.past ?? 0),
+    });
+  }, [authHeaders, explorerId]);
+
+  const setUiUnread = useCallback(
+    async (conversationId: number, next: boolean) => {
+      const item =
+        inProgressRef.current.find((c) => c.db_id === conversationId) ??
+        pastRef.current.find((c) => c.db_id === conversationId);
+
+      setUiUnreadBase(conversationId, next);
+
+      if (!item) return;
+      if (!next) return;
+
+      try {
+        if (!explorerId) return;
+
+        const headers = await authHeaders();
+        const result = await markConversationUnread({
+          conversationId,
+          explorerId,
+          headers,
+        });
+
+        if (!result.unread) {
+          setUiUnreadBase(conversationId, false);
+          return;
+        }
+
+        const patchUnread = (c: DashboardConversation) =>
+          c.db_id === conversationId ? { ...c, unread: 1 } : c;
+
+        setInProgress((prev) => prev.map(patchUnread));
+        setPast((prev) => prev.map(patchUnread));
+
+        await refreshUnreadCounts();
+      } catch {
+        setUiUnreadBase(conversationId, false);
+      }
+    },
+    [authHeaders, explorerId, refreshUnreadCounts, setUiUnreadBase],
+  );
+
   const applyStatusLocal = useCallback(
     (conversationId: number, nextStatus: ConversationStatus) => {
       const isInPast = pastRef.current.some((c) => c.db_id === conversationId);
@@ -128,18 +192,19 @@ export function useDashboard(args: UseDashboardArgs) {
         const headers = await authHeaders();
         await updateConversationStatus({ conversationId, status, headers });
 
-        // After server confirms, update/move locally using your rules
         applyStatusLocal(conversationId, status);
-      } catch {
-        // keep current silent failure style
-      }
+
+        await refreshUnreadCounts();
+      } catch {}
     },
-    [authHeaders, applyStatusLocal],
+    [authHeaders, applyStatusLocal, refreshUnreadCounts],
   );
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     try {
+      await refreshUnreadCounts();
+
       if (activeTab === 'in-progress') {
         const list = await fetchInProgress();
         setInProgress(list);
@@ -152,7 +217,7 @@ export function useDashboard(args: UseDashboardArgs) {
     } finally {
       setRefreshing(false);
     }
-  }, [activeTab, fetchInProgress, fetchPastFirst]);
+  }, [activeTab, fetchInProgress, fetchPastFirst, refreshUnreadCounts]);
 
   useEffect(() => {
     let cancelled = false;
@@ -160,6 +225,8 @@ export function useDashboard(args: UseDashboardArgs) {
     (async () => {
       setLoadingInitial(true);
       try {
+        await refreshUnreadCounts();
+
         if (activeTab === 'in-progress') {
           const list = await fetchInProgress();
           if (!cancelled) setInProgress(list);
@@ -179,7 +246,7 @@ export function useDashboard(args: UseDashboardArgs) {
     return () => {
       cancelled = true;
     };
-  }, [activeTab, fetchInProgress, fetchPastFirst]);
+  }, [activeTab, fetchInProgress, fetchPastFirst, refreshUnreadCounts]);
 
   useEffect(() => {
     loadMoreLockRef.current = false;
@@ -188,6 +255,8 @@ export function useDashboard(args: UseDashboardArgs) {
 
   useFocusEffect(
     useCallback(() => {
+      refreshUnreadCounts().catch(() => {});
+
       if (activeTab === 'in-progress') {
         fetchInProgress()
           .then(setInProgress)
@@ -201,7 +270,7 @@ export function useDashboard(args: UseDashboardArgs) {
           })
           .catch(() => {});
       }
-    }, [activeTab, fetchInProgress, fetchPastFirst]),
+    }, [activeTab, fetchInProgress, fetchPastFirst, refreshUnreadCounts]),
   );
 
   const loadMorePast = useCallback(async () => {
@@ -241,5 +310,6 @@ export function useDashboard(args: UseDashboardArgs) {
     isUnread,
     setUiUnread,
     setConversationStatus,
+    unreadCounts,
   };
 }
