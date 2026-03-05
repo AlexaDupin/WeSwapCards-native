@@ -1,12 +1,12 @@
-import { Colors } from "@/src/constants/Colors";
-import { Platform, StyleSheet } from "react-native";
+import { Colors } from '@/src/constants/Colors';
+import { Platform, StyleSheet } from 'react-native';
 
-const TRACK = "#eaeaea";
-const DEFAULT_BORDER = "rgba(0,0,0,0.12)";
-const DEFAULT_INNER = "rgba(0,0,0,0.04)";
-const DEFAULT_TEXT = "rgba(0,0,0,0.8)";
+const TRACK = '#eaeaea';
+const DEFAULT_BORDER = 'rgba(0,0,0,0.12)';
+const DEFAULT_INNER = 'rgba(0,0,0,0.04)';
+const DEFAULT_TEXT = 'rgba(0,0,0,0.8)';
 
-const OWNED_INNER = "#dff2ee"; // approx lighten(secondary, 45%)
+const OWNED_INNER = '#dff2ee'; // approx lighten(secondary, 45%)
 
 export const styles = StyleSheet.create({
   cardsScreen: {
@@ -16,44 +16,44 @@ export const styles = StyleSheet.create({
 
   pageTitle: {
     fontSize: 20,
-    fontWeight: "800",
+    fontWeight: '800',
   },
 
   chapterListContent: {
     paddingHorizontal: 16,
     paddingBottom: 24,
-    alignSelf: "center",
-    width: "100%",
+    alignSelf: 'center',
+    width: '100%',
     maxWidth: 960,
   },
 
   chapter: {
     marginBottom: 32,
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     borderRadius: 16,
     padding: 14,
     borderWidth: 1,
-    borderColor: "rgba(0,0,0,0.06)",
+    borderColor: 'rgba(0,0,0,0.06)',
   },
 
   chapterHeaderRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     marginBottom: 8,
   },
 
   chapterTitle: {
-    fontFamily: "Lobster_400Regular",
-    fontWeight: "600",
+    fontFamily: 'Lobster_400Regular',
+    fontWeight: '600',
     fontSize: 24,
-    textAlign: "left",
+    textAlign: 'left',
   },
 
   // Progress
   chapterProgressWrap: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center',
     gap: 10,
     marginBottom: 12,
   },
@@ -63,15 +63,15 @@ export const styles = StyleSheet.create({
     height: 10,
     borderRadius: 999,
     backgroundColor: TRACK,
-    overflow: "hidden",
+    overflow: 'hidden',
   },
 
   progressFill: {
-    height: "100%",
+    height: '100%',
     borderRadius: 999,
     backgroundColor: Colors.primary,
   },
-  
+
   progressFillFull: {
     backgroundColor: Colors.secondary,
   },
@@ -82,11 +82,11 @@ export const styles = StyleSheet.create({
   },
 
   cardsList: {
-    width: "100%",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    alignItems: "flex-start",
-    justifyContent: "space-between",
+    width: '100%',
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    alignItems: 'flex-start',
+    justifyContent: 'space-between',
     gap: 0,
   },
 
@@ -100,19 +100,19 @@ export const styles = StyleSheet.create({
 
   cardItem: {
     width: 36,
-    height: 66,
+    height: 60,
     borderRadius: 5,
     borderWidth: 1,
     padding: 3,
-    position: "relative",
+    position: 'relative',
   },
 
   cardItemInner: {
-    width: "100%",
-    height: "100%",
+    width: '100%',
+    height: '100%',
     borderRadius: 3,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 
   cardItemDefault: {
@@ -123,7 +123,6 @@ export const styles = StyleSheet.create({
     borderColor: Colors.secondary,
     ...Platform.select({
       ios: {
-        shadowColor: Colors.secondary,
         shadowOpacity: 0.35,
         shadowRadius: 4,
         shadowOffset: { width: 0, height: 0 },
@@ -139,36 +138,36 @@ export const styles = StyleSheet.create({
   },
 
   cardItemInnerOwned: {
-    backgroundColor: OWNED_INNER,
+    backgroundColor: DEFAULT_INNER,
   },
 
   cardNumber: {
     fontSize: 14,
-    fontWeight: "400",
+    fontWeight: '400',
     color: DEFAULT_TEXT,
   },
 
   cardNumberOwned: {
-    fontWeight: "600",
+    fontWeight: '600',
     color: Colors.secondary,
   },
 
   duplicateBadge: {
-    position: "absolute",
+    position: 'absolute',
     top: -2,
     right: -4,
     width: 12,
     height: 12,
     borderRadius: 999,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: Colors.secondary,
   },
 
   duplicateBadgeText: {
-    color: "#fff",
+    color: '#fff',
     fontSize: 10,
-    fontWeight: "600",
+    fontWeight: '600',
     lineHeight: 12,
   },
 
@@ -177,14 +176,14 @@ export const styles = StyleSheet.create({
     width: 34,
     height: 34,
     borderRadius: 999,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
     opacity: 0.75,
   },
 
   kebabPressed: {
     opacity: 1,
-    backgroundColor: "rgba(0,0,0,0.06)",
+    backgroundColor: 'rgba(0,0,0,0.06)',
   },
 
   kebabDisabled: {
@@ -199,13 +198,13 @@ export const styles = StyleSheet.create({
   // Modal menu
   modalOverlay: {
     flex: 1,
-    backgroundColor: "rgba(0,0,0,0.25)",
-    justifyContent: "center",
+    backgroundColor: 'rgba(0,0,0,0.25)',
+    justifyContent: 'center',
     padding: 20,
   },
 
   modalSheet: {
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     borderRadius: 14,
     paddingVertical: 12,
     paddingHorizontal: 12,
@@ -213,7 +212,7 @@ export const styles = StyleSheet.create({
 
   modalTitle: {
     fontSize: 14,
-    fontWeight: "700",
+    fontWeight: '700',
     marginBottom: 6,
     opacity: 0.8,
   },
@@ -225,7 +224,7 @@ export const styles = StyleSheet.create({
   },
 
   modalItemPressed: {
-    backgroundColor: "rgba(0,0,0,0.06)",
+    backgroundColor: 'rgba(0,0,0,0.06)',
   },
 
   modalItemText: {
@@ -235,12 +234,12 @@ export const styles = StyleSheet.create({
   modalCancel: {
     marginTop: 6,
     paddingVertical: 10,
-    alignItems: "center",
+    alignItems: 'center',
   },
 
   modalCancelText: {
     fontSize: 16,
-    fontWeight: "600",
+    fontWeight: '600',
     opacity: 0.8,
   },
 
@@ -248,73 +247,72 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingTop: 6,
     paddingBottom: 10,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
-  
-  
+
   controlsLabel: {
     fontSize: 13,
-    fontWeight: "700",
+    fontWeight: '700',
     opacity: 0.7,
   },
-  
+
   latestPill: {
     paddingVertical: 8,
     paddingHorizontal: 14,
     borderRadius: 999,
-    backgroundColor: "rgba(0,0,0,0.06)",
+    backgroundColor: 'rgba(0,0,0,0.06)',
   },
-  
+
   latestPillActive: {
-    backgroundColor: "#2F6BFF", // pick your brand color
-    shadowColor: "#000",
+    backgroundColor: '#2F6BFF', // pick your brand color
+    shadowColor: '#000',
     shadowOpacity: 0.12,
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 3 },
     elevation: 3,
   },
-  
+
   latestPillPressed: {
     opacity: 0.9,
     transform: [{ scale: 0.98 }],
   },
-  
+
   latestPillText: {
     fontSize: 13,
-    fontWeight: "800",
+    fontWeight: '800',
     opacity: 0.75,
   },
-  
+
   latestPillTextActive: {
     opacity: 1,
-    color: "white",
+    color: 'white',
   },
 
   sortSegmentWrap: {
-    flexDirection: "row",
-    backgroundColor: "rgba(0,0,0,0.06)",
+    flexDirection: 'row',
+    backgroundColor: 'rgba(0,0,0,0.06)',
     borderRadius: 999,
     padding: 3,
   },
-  
+
   sortSegment: {
     paddingVertical: 7,
     paddingHorizontal: 12,
     borderRadius: 999,
     minWidth: 64,
-    alignItems: "center",
-    justifyContent: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  
+
   sortSegmentActive: {
-    backgroundColor: "#fff",
+    backgroundColor: '#fff',
     borderWidth: 1,
-    borderColor: "rgba(0,0,0,0.08)",
+    borderColor: 'rgba(0,0,0,0.08)',
     ...Platform.select({
       ios: {
-        shadowColor: "#000",
+        shadowColor: '#000',
         shadowOpacity: 0.08,
         shadowRadius: 10,
         shadowOffset: { width: 0, height: 4 },
@@ -324,20 +322,19 @@ export const styles = StyleSheet.create({
       },
     }),
   },
-  
+
   sortSegmentPressed: {
     opacity: 0.9,
     transform: [{ scale: 0.98 }],
   },
-  
+
   sortSegmentText: {
     fontSize: 13,
-    fontWeight: "700",
+    fontWeight: '700',
     opacity: 0.7,
   },
-  
+
   sortSegmentTextActive: {
     opacity: 1,
   },
-  
 });
