@@ -42,12 +42,11 @@ export async function fetchPastNextPage(args: {
   cursor: PastCursor;
 }) {
   const { explorerId, headers, pageSize, cursor } = args;
+  const lastMessageAt = cursor.cursor_last_message_at ?? '';
 
   const qs =
     `mode=cursor&limit=${pageSize}` +
-    `&cursor_unread=${cursor.cursor_unread}` +
-    `&cursor_card=${encodeURIComponent(cursor.cursor_card)}` +
-    `&cursor_swap=${encodeURIComponent(cursor.cursor_swap)}` +
+    `&cursor_last_message_at=${encodeURIComponent(lastMessageAt)}` +
     `&cursor_id=${cursor.cursor_id}`;
 
   const resp = await axiosInstance.get<PastCursorResponse>(

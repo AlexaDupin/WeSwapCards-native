@@ -17,9 +17,7 @@ export type DashboardConversation = {
 export type DashboardItemData = DashboardConversation;
 
 export type PastCursor = {
-  cursor_unread: 0 | 1;
-  cursor_card: string;
-  cursor_swap: string;
+  cursor_last_message_at: string;
   cursor_id: number;
 };
 
