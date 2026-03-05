@@ -10,8 +10,7 @@ import { useAuth } from '@clerk/clerk-expo';
 import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
 import { router } from 'expo-router';
 
-import Pill from '@/src/components/Pill';
-import CountBadge from '@/src/components/CountBadge';
+import TabChip from '@/src/components/TabChip';
 import DashboardItem from '@/src/features/dashboard/components/DashboardItem';
 import { styles } from '@/src/assets/styles/dashboard.styles';
 import { SignOutButton } from '@/src/components/SignOutButton';
@@ -81,23 +80,18 @@ export default function DashboardScreen() {
       <SignOutButton />
 
       <View style={styles.pillList}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Pill
-            text="In progress"
-            isActive={activeTab === 'in-progress'}
-            onPress={() => setActiveTab('in-progress')}
-          />
-          <CountBadge count={unreadCounts.inProgress} />
-        </View>
-
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Pill
-            text="Past"
-            isActive={activeTab === 'past'}
-            onPress={() => setActiveTab('past')}
-          />
-          <CountBadge count={unreadCounts.past} />
-        </View>
+        <TabChip
+          label="In progress"
+          count={unreadCounts.inProgress}
+          active={activeTab === 'in-progress'}
+          onPress={() => setActiveTab('in-progress')}
+        />
+        <TabChip
+          label="Past"
+          count={unreadCounts.past}
+          active={activeTab === 'past'}
+          onPress={() => setActiveTab('past')}
+        />
       </View>
 
       {loadingInitial ? (

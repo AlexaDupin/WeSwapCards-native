@@ -89,6 +89,8 @@ export const styles = StyleSheet.create({
   pillList: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: 10,
+    marginBottom: 15,
   },
   pill: {
     borderRadius: 18,
