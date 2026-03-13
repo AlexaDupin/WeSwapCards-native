@@ -8,8 +8,8 @@ import type {
 
 // ---- Stable mock refs ----
 
-const isUnreadMock = jest.fn();
-const setUiUnreadBaseMock = jest.fn();
+const mockIsUnread = jest.fn();
+const mockSetUiUnreadBase = jest.fn();
 
 // ---- Module mocks ----
 
@@ -24,8 +24,8 @@ jest.mock('@/src/features/dashboard/api/dashboardApi', () => ({
 
 jest.mock('@/src/features/dashboard/hooks/useUiUnreadOverrides', () => ({
   useUiUnreadOverrides: jest.fn(() => ({
-    isUnread: isUnreadMock,
-    setUiUnread: setUiUnreadBaseMock,
+    isUnread: mockIsUnread,
+    setUiUnread: mockSetUiUnreadBase,
   })),
 }));
 
@@ -123,8 +123,8 @@ async function waitForInitialLoadToFinish(
 beforeEach(() => {
   jest.clearAllMocks();
 
-  isUnreadMock.mockReturnValue(false);
-  setUiUnreadBaseMock.mockReset();
+  mockIsUnread.mockReturnValue(false);
+  mockSetUiUnreadBase.mockReset();
 });
 
 describe('useDashboard', () => {
@@ -149,6 +149,41 @@ describe('useDashboard', () => {
       past: 1,
     });
     expect(result.current.listData).toEqual(conversations);
+    expect(result.current.loadingInitial).toBe(false);
+  });
+
+  it('loads the first past page when switching to the past tab', async () => {
+    const pastConversations = [
+      createPastConversation({ db_id: 11 }),
+      createPastConversation({ db_id: 12 }),
+    ];
+
+    const nextCursor = createPastCursor({ cursor_id: 99 });
+
+    dashboardApi.getUnreadCounts.mockResolvedValue({
+      inProgress: 0,
+      past: 0,
+    });
+    dashboardApi.fetchInProgressConversations.mockResolvedValue([]);
+    dashboardApi.fetchPastFirstPage.mockResolvedValue({
+      conversations: pastConversations,
+      hasMore: true,
+      nextCursor,
+    });
+
+    const { result } = renderUseDashboard();
+
+    await waitForInitialLoadToFinish(result);
+
+    await act(async () => {
+      result.current.setActiveTab('past');
+    });
+
+    await waitFor(() => {
+      expect(result.current.activeTab).toBe('past');
+      expect(result.current.listData).toEqual(pastConversations);
+    });
+
     expect(result.current.loadingInitial).toBe(false);
   });
 });
