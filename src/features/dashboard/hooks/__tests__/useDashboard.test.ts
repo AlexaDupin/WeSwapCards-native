@@ -186,4 +186,40 @@ describe('useDashboard', () => {
 
     expect(result.current.loadingInitial).toBe(false);
   });
+
+  it('removes a conversation from in-progress when status becomes Completed', async () => {
+    const conversations = [createInProgressConversation({ db_id: 1 })];
+
+    dashboardApi.getUnreadCounts.mockResolvedValue({
+      inProgress: 1,
+      past: 0,
+    });
+    dashboardApi.fetchInProgressConversations.mockResolvedValue(conversations);
+    dashboardApi.updateConversationStatus.mockResolvedValue({});
+
+    const { result } = renderUseDashboard();
+
+    await waitForInitialLoadToFinish(result);
+
+    expect(result.current.listData).toEqual([
+      expect.objectContaining({
+        db_id: 1,
+        status: 'In progress',
+      }),
+    ]);
+
+    await act(async () => {
+      await result.current.setConversationStatus(1, 'Completed');
+    });
+
+    await waitFor(() => {
+      expect(result.current.listData).toEqual([]);
+    });
+
+    expect(dashboardApi.updateConversationStatus).toHaveBeenCalledWith({
+      conversationId: 1,
+      status: 'Completed',
+      headers: expect.any(Object),
+    });
+  });
 });
