@@ -2,7 +2,7 @@
 
 Mobile application for the WeSwapCards platform, built with React Native (Expo + TypeScript).
 
-This app extends the existing production web platform (800+ members, 15,000+ trades) to provide a native mobile experience with improved accessibility, performance, and user engagement.
+This app extends the existing production web platform (900+ members, 15,000+ trades) to provide a native mobile experience with improved accessibility, performance, and user engagement.
 
 ## Overview
 
@@ -16,8 +16,6 @@ WeSwapCards Mobile brings core marketplace functionality to iOS and Android, all
 The mobile app consumes the same production APIs used by the web platform, ensuring consistent business logic and data integrity across platforms.
 
 ## Current Status
-🚧 Early-stage development
-
 The project is currently focused on:
 - Establishing clean navigation architecture
 - Implementing strongly typed API integration
