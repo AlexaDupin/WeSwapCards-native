@@ -1,4 +1,5 @@
 import { axiosInstance } from '@/src/lib/axiosInstance';
+import axios from 'axios';
 
 export type ExplorerInfo = { id: number; name: string } | null;
 
@@ -14,8 +15,12 @@ export async function fetchExplorerInfo(params: {
   const resp = await axiosInstance.post<ExplorerInfo>(
     '/login/user',
     { userUID: params.userUID },
-    { headers: { Authorization: `Bearer ${params.token}` } },
+    {
+      headers: { Authorization: `Bearer ${params.token}` },
+      timeout: 10000,
+    },
   );
+
   return resp.data ?? null;
 }
 

@@ -1,9 +1,8 @@
-import { useSignIn, useAuth, useUser } from '@clerk/clerk-expo';
+import { useSignIn } from '@clerk/clerk-expo';
 import { type Href, useRouter } from 'expo-router';
 import { useCallback } from 'react';
 
 import { getClerkErrorCode, getSignInErrorMessage } from '../data/authErrors';
-import { fetchExplorerInfo } from '@/src/features/auth/api/userApi';
 import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
 
 type Params = {
@@ -24,11 +23,8 @@ export function useSignInSubmit({
   redirectTo = '/(tabs)/cards',
 }: Params) {
   const { signIn, setActive, isLoaded } = useSignIn();
-  const { user, isLoaded: isUserLoaded } = useUser();
-  const { getToken } = useAuth();
-
   const router = useRouter();
-  const { setExplorer, resetExplorer } = useExplorer();
+  const { resetExplorer } = useExplorer();
 
   const onSignInPress = useCallback(async () => {
     if (!isLoaded || isSubmitting) return;
@@ -61,35 +57,8 @@ export function useSignInSubmit({
         return;
       }
 
+      resetExplorer();
       await setActive({ session: signInAttempt.createdSessionId });
-
-      // After Clerk session is active, call your backend to get explorerId
-      if (!isUserLoaded || !user?.id) {
-        // In rare cases, Clerk user isn't hydrated immediately after setActive.
-        // Best UX is to route to a bootstrap screen; simplest is an error for now.
-        setError('Signed in, but user not ready. Please try again.');
-        return;
-      }
-
-      const token = await getToken();
-      if (!token) {
-        setError('Missing auth token. Please try again.');
-        return;
-      }
-      console.log(user.id);
-
-      const explorer = await fetchExplorerInfo({ token, userUID: user.id });
-
-      if (explorer?.id) {
-        setExplorer({
-          explorerId: explorer.id,
-          explorerName: explorer.name ?? null,
-        });
-        router.replace(redirectTo);
-      } else {
-        // No explorer row in DB yet -> go to username creation screen
-        router.replace('/(auth)/register-user');
-      }
     } catch (err: unknown) {
       console.error(err);
       const code = getClerkErrorCode(err);
@@ -104,13 +73,7 @@ export function useSignInSubmit({
     password,
     signIn,
     setActive,
-    isUserLoaded,
-    user?.id,
-    getToken,
-    router,
-    redirectTo,
     resetExplorer,
-    setExplorer,
     setError,
     setIsSubmitting,
   ]);

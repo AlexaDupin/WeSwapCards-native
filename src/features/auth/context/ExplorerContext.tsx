@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useMemo, useState } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from 'react';
 
 export type ExplorerStatus =
   | 'idle'
@@ -16,7 +22,6 @@ type ExplorerState = {
   setLoading: () => void;
   setNeedsRegistration: () => void;
   setError: (msg?: string) => void;
-
   setExplorer: (v: { explorerId: number; explorerName: string | null }) => void;
   resetExplorer: () => void;
 };
@@ -29,47 +34,71 @@ export function ExplorerProvider({ children }: { children: React.ReactNode }) {
   const [status, setStatus] = useState<ExplorerStatus>('idle');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
+  const setLoading = useCallback(() => {
+    setStatus('loading');
+    setErrorMessage(null);
+  }, []);
+
+  const setNeedsRegistration = useCallback(() => {
+    setExplorerId(null);
+    setExplorerName(null);
+    setStatus('needs_registration');
+    setErrorMessage(null);
+  }, []);
+
+  const setError = useCallback((msg?: string) => {
+    setExplorerId(null);
+    setExplorerName(null);
+    setStatus('error');
+    setErrorMessage(msg ?? 'Unable to load your profile.');
+  }, []);
+
+  const setExplorer = useCallback(
+    ({
+      explorerId,
+      explorerName,
+    }: {
+      explorerId: number;
+      explorerName: string | null;
+    }) => {
+      setExplorerId(explorerId);
+      setExplorerName(explorerName);
+      setStatus('ready');
+      setErrorMessage(null);
+    },
+    [],
+  );
+
+  const resetExplorer = useCallback(() => {
+    setExplorerId(null);
+    setExplorerName(null);
+    setStatus('idle');
+    setErrorMessage(null);
+  }, []);
+
   const value = useMemo(
     () => ({
       explorerId,
       explorerName,
       status,
       errorMessage,
-
-      setLoading: () => {
-        setStatus('loading');
-        setErrorMessage(null);
-      },
-
-      setNeedsRegistration: () => {
-        setExplorerId(null);
-        setExplorerName(null);
-        setStatus('needs_registration');
-        setErrorMessage(null);
-      },
-
-      setError: (msg?: string) => {
-        setExplorerId(null);
-        setExplorerName(null);
-        setStatus('error');
-        setErrorMessage(msg ?? 'Unable to load your profile.');
-      },
-
-      setExplorer: ({ explorerId, explorerName }) => {
-        setExplorerId(explorerId);
-        setExplorerName(explorerName);
-        setStatus('ready');
-        setErrorMessage(null);
-      },
-
-      resetExplorer: () => {
-        setExplorerId(null);
-        setExplorerName(null);
-        setStatus('idle');
-        setErrorMessage(null);
-      },
+      setLoading,
+      setNeedsRegistration,
+      setError,
+      setExplorer,
+      resetExplorer,
     }),
-    [explorerId, explorerName, status, errorMessage],
+    [
+      explorerId,
+      explorerName,
+      status,
+      errorMessage,
+      setLoading,
+      setNeedsRegistration,
+      setError,
+      setExplorer,
+      resetExplorer,
+    ],
   );
 
   return (
