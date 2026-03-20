@@ -112,4 +112,42 @@ describe('ExplorerHydration', () => {
     expect(screen.getByTestId('explorerId')).toHaveTextContent('null');
     expect(screen.getByTestId('errorMessage')).toHaveTextContent('null');
   });
+
+  it('calls signOut and does not call fetchExplorerInfo when getToken returns null', async () => {
+    const signOut = jest.fn();
+    useAuth.mockReturnValue({
+      isLoaded: true,
+      isSignedIn: true,
+      getToken: jest.fn().mockResolvedValue(null),
+      signOut,
+    });
+
+    renderHydration();
+
+    await waitFor(() => {
+      expect(signOut).toHaveBeenCalledTimes(1);
+    });
+
+    expect(fetchExplorerInfo).not.toHaveBeenCalled();
+  });
+
+  it('reaches error state and does not re-fetch after a network failure', async () => {
+    fetchExplorerInfo.mockRejectedValue(new Error('Network Error'));
+
+    renderHydration();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('status')).toHaveTextContent('error');
+    });
+
+    expect(fetchExplorerInfo).toHaveBeenCalledTimes(1);
+    expect(screen.getByTestId('explorerId')).toHaveTextContent('null');
+
+    // Flush any further effects to confirm no automatic retry
+    await act(async () => {});
+
+    expect(fetchExplorerInfo).toHaveBeenCalledTimes(1);
+    expect(screen.getByTestId('status')).toHaveTextContent('error');
+    expect(screen.getByTestId('explorerId')).toHaveTextContent('null');
+  });
 });
