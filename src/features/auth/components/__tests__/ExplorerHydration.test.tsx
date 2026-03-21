@@ -1,6 +1,6 @@
 import React from 'react';
-import { Text } from 'react-native';
-import { act, render, screen, waitFor } from '@testing-library/react-native';
+import { Text, TouchableOpacity } from 'react-native';
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 
 import {
   ExplorerProvider,
@@ -36,12 +36,13 @@ const { fetchExplorerInfo } = jest.requireMock(
 // keeping the probe consistent regardless of context state.
 
 function ConsumerComponent() {
-  const { status, explorerId, errorMessage } = useExplorer();
+  const { status, explorerId, errorMessage, resetExplorer } = useExplorer();
   return (
     <>
       <Text testID="status">{status}</Text>
       <Text testID="explorerId">{explorerId ?? 'null'}</Text>
       <Text testID="errorMessage">{errorMessage ?? 'null'}</Text>
+      <TouchableOpacity testID="retry" onPress={resetExplorer} />
     </>
   );
 }
@@ -149,5 +150,49 @@ describe('ExplorerHydration', () => {
     expect(fetchExplorerInfo).toHaveBeenCalledTimes(1);
     expect(screen.getByTestId('status')).toHaveTextContent('error');
     expect(screen.getByTestId('explorerId')).toHaveTextContent('null');
+  });
+
+  it('re-hydrates successfully after user-initiated retry', async () => {
+    fetchExplorerInfo.mockRejectedValueOnce(new Error('Network Error'));
+    fetchExplorerInfo.mockResolvedValueOnce({ id: 99, name: 'Bob' });
+
+    renderHydration();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('status')).toHaveTextContent('error');
+    });
+
+    // Retry via the public ExplorerContext API — the same call the Retry
+    // button in (tabs)/_layout.tsx makes via resetExplorer()
+    fireEvent.press(screen.getByTestId('retry'));
+
+    await waitFor(() => {
+      expect(screen.getByTestId('status')).toHaveTextContent('ready');
+    });
+
+    expect(screen.getByTestId('explorerId')).toHaveTextContent('99');
+    expect(fetchExplorerInfo).toHaveBeenCalledTimes(2);
+  });
+
+  it('sets status to needs_registration when backend returns no explorer id', async () => {
+    const signOut = jest.fn();
+    useAuth.mockReturnValue({
+      isLoaded: true,
+      isSignedIn: true,
+      getToken: jest.fn().mockResolvedValue('test-token'),
+      signOut,
+    });
+
+    fetchExplorerInfo.mockResolvedValue(null);
+
+    renderHydration();
+
+    await waitFor(() => {
+      expect(screen.getByTestId('status')).toHaveTextContent('needs_registration');
+    });
+
+    expect(screen.getByTestId('explorerId')).toHaveTextContent('null');
+    expect(fetchExplorerInfo).toHaveBeenCalledTimes(1);
+    expect(signOut).not.toHaveBeenCalled();
   });
 });
