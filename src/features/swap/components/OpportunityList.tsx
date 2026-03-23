@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react';
-import { ActivityIndicator, FlatList, Text, View } from 'react-native';
+import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
 
 import OpportunityCard from '@/src/features/swap/components/OpportunityCard';
 import type { SwapOpportunityItem } from '@/src/features/swap/types/SwapTypes';
@@ -34,14 +34,12 @@ export default function OpportunityList({
     [onContact],
   );
 
-  const header =
+  const sectionHeader =
     selectedCardId != null ? (
-      <View style={{ paddingTop: 10, paddingBottom: 10 }}>
-        <Text style={{ fontSize: 16, fontWeight: '800' }}>
-          People who can give you this card
-        </Text>
+      <View style={styles.sectionHeader}>
+        <Text style={styles.sectionLabel}>Opportunities for</Text>
         {selectedCardName ? (
-          <Text style={{ marginTop: 4, opacity: 0.75 }}>
+          <Text style={styles.sectionCardName} numberOfLines={2}>
             {selectedCardName}
           </Text>
         ) : null}
@@ -50,10 +48,8 @@ export default function OpportunityList({
 
   const listHeader = (
     <View>
-      {topContent ? (
-        <View style={{ paddingBottom: 6 }}>{topContent}</View>
-      ) : null}
-      {header}
+      {topContent ? <View style={styles.topContent}>{topContent}</View> : null}
+      {sectionHeader}
     </View>
   );
 
@@ -64,11 +60,8 @@ export default function OpportunityList({
         keyExtractor={(it) => String(it.explorer_id)}
         renderItem={renderItem}
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={{
-          paddingHorizontal: 16,
-          paddingBottom: 28,
-        }}
-        ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+        contentContainerStyle={styles.listContent}
+        ItemSeparatorComponent={() => <View style={styles.separator} />}
         ListHeaderComponent={listHeader}
       />
     );
@@ -76,16 +69,14 @@ export default function OpportunityList({
 
   if (loadingOpportunities) {
     return (
-      <View style={{ paddingTop: 10 }}>
+      <View style={styles.loadingWrap}>
         {listHeader}
-        <View style={{ paddingVertical: 16 }}>
+        <View style={styles.loader}>
           <ActivityIndicator />
         </View>
       </View>
     );
   }
-
-  const showEmpty = opportunities.length === 0;
 
   return (
     <FlatList<SwapOpportunityItem>
@@ -93,27 +84,27 @@ export default function OpportunityList({
       keyExtractor={(it) => String(it.explorer_id)}
       renderItem={renderItem}
       showsVerticalScrollIndicator={false}
-      contentContainerStyle={{
-        paddingHorizontal: 16,
-        paddingBottom: 28,
-      }}
-      ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+      contentContainerStyle={styles.listContent}
+      ItemSeparatorComponent={() => <View style={styles.separator} />}
       ListHeaderComponent={listHeader}
       ListEmptyComponent={
-        showEmpty ? (
-          <View style={{ paddingVertical: 14 }}>
-            <Text style={{ opacity: 0.6 }}>
-              No opportunities available for {selectedCardName ?? 'this card'},
-              try another card.
-            </Text>
-          </View>
-        ) : null
+        <View style={styles.emptyContainer}>
+          <Text style={styles.emptyIcon}>🔍</Text>
+          <Text style={styles.emptyTitle}>No swap partners yet</Text>
+          <Text style={styles.emptySubtitle}>
+            Nobody currently has{' '}
+            <Text style={styles.emptyCardName}>
+              {selectedCardName ?? 'this card'}
+            </Text>{' '}
+            available to swap. Try selecting another card.
+          </Text>
+        </View>
       }
       onEndReached={opportunities.length > 0 ? onLoadMore : undefined}
       onEndReachedThreshold={0.4}
       ListFooterComponent={
         loadingMoreOpportunities ? (
-          <View style={{ paddingVertical: 16 }}>
+          <View style={styles.loader}>
             <ActivityIndicator />
           </View>
         ) : null
@@ -121,3 +112,69 @@ export default function OpportunityList({
     />
   );
 }
+
+const styles = StyleSheet.create({
+  listContent: {
+    paddingHorizontal: 16,
+    paddingBottom: 28,
+  },
+  topContent: {
+    paddingBottom: 6,
+  },
+  separator: {
+    height: 10,
+  },
+  sectionHeader: {
+    paddingTop: 10,
+    paddingBottom: 14,
+  },
+  sectionLabel: {
+    fontSize: 11,
+    fontWeight: '600',
+    letterSpacing: 0.6,
+    textTransform: 'uppercase',
+    color: 'rgba(0,0,0,0.4)',
+    marginBottom: 3,
+  },
+  sectionCardName: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: '#000',
+  },
+  loadingWrap: {
+    paddingTop: 10,
+    paddingHorizontal: 16,
+  },
+  loader: {
+    paddingVertical: 16,
+  },
+  emptyContainer: {
+    marginTop: 8,
+    paddingVertical: 32,
+    paddingHorizontal: 20,
+    borderRadius: 16,
+    backgroundColor: 'rgba(0,0,0,0.03)',
+    alignItems: 'center',
+  },
+  emptyIcon: {
+    fontSize: 36,
+    marginBottom: 12,
+  },
+  emptyTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: 'rgba(0,0,0,0.7)',
+    marginBottom: 6,
+    textAlign: 'center',
+  },
+  emptySubtitle: {
+    fontSize: 13,
+    color: 'rgba(0,0,0,0.5)',
+    textAlign: 'center',
+    lineHeight: 18,
+  },
+  emptyCardName: {
+    fontWeight: '700',
+    color: 'rgba(0,0,0,0.7)',
+  },
+});

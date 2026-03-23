@@ -1,6 +1,8 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { Colors } from '@/src/constants/Colors';
+
 import type { SwapCard } from '@/src/features/swap/types/SwapTypes';
 
 type Props = {
@@ -94,8 +96,8 @@ const styles = StyleSheet.create({
     marginRight: 4,
   },
   selectorSelected: {
-    borderColor: '#2F6BFF',
-    backgroundColor: 'rgba(47,107,255,0.08)',
+    borderColor: Colors.primary,
+    backgroundColor: Colors.primary,
   },
   selectorPressed: {
     opacity: 0.9,
@@ -106,7 +108,7 @@ const styles = StyleSheet.create({
     color: 'rgba(0,0,0,0.75)',
   },
   selectorTextSelected: {
-    color: '#2F6BFF',
+    color: '#fff',
   },
   emptyState: {
     paddingVertical: 14,

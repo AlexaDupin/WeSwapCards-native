@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { Colors } from '@/src/constants/Colors';
 import type { SwapOpportunityItem } from '@/src/features/swap/types/SwapTypes';
 
 type Props = {
@@ -46,10 +47,8 @@ export default function OpportunityCard({ opportunity, onContact }: Props) {
       </View>
 
       {offeredNames.length > 0 ? (
-        <View style={{ marginTop: 10 }}>
-          <Text style={styles.bodyText}>
-            In exchange, here are the cards you can offer them:
-          </Text>
+        <View style={styles.offeredSection}>
+          <Text style={styles.offeredLabel}>You can offer</Text>
           <View style={styles.tagsWrap}>
             {offeredNames.map((n) => (
               <View key={n} style={styles.tag}>
@@ -61,9 +60,8 @@ export default function OpportunityCard({ opportunity, onContact }: Props) {
           </View>
         </View>
       ) : (
-        <Text style={[styles.bodyText, { marginTop: 10 }]}>
-          You do not have any new cards for this user, but you can still contact
-          them.
+        <Text style={styles.noOffersText}>
+          No new cards to offer, but you can still reach out.
         </Text>
       )}
 
@@ -71,9 +69,9 @@ export default function OpportunityCard({ opportunity, onContact }: Props) {
         onPress={() => onContact(opportunity)}
         style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
         accessibilityRole="button"
-        accessibilityLabel={`Contact ${opportunity.explorer_name} to swap`}
+        accessibilityLabel={`Contact ${opportunity.explorer_name}`}
       >
-        <Text style={styles.buttonText}>Contact this user to swap</Text>
+        <Text style={styles.buttonText}>Contact</Text>
       </Pressable>
     </View>
   );
@@ -94,64 +92,76 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   name: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '800',
     flex: 1,
+    color: '#000',
   },
   badgeRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 6,
+    gap: 5,
   },
   dot: {
-    width: 8,
-    height: 8,
+    width: 7,
+    height: 7,
     borderRadius: 999,
   },
   dotActive: { backgroundColor: '#16A34A' },
-  dotInactive: { backgroundColor: 'rgba(0,0,0,0.25)' },
+  dotInactive: { backgroundColor: 'rgba(0,0,0,0.2)' },
   badgeText: {
     fontSize: 12,
-    fontWeight: '700',
-    opacity: 0.7,
+    fontWeight: '500',
+    color: 'rgba(0,0,0,0.45)',
   },
-  bodyText: {
-    fontSize: 13,
-    opacity: 0.75,
-    lineHeight: 18,
+  offeredSection: {
+    marginTop: 12,
+  },
+  offeredLabel: {
+    fontSize: 11,
+    fontWeight: '600',
+    letterSpacing: 0.4,
+    textTransform: 'uppercase',
+    color: 'rgba(0,0,0,0.4)',
+    marginBottom: 8,
   },
   tagsWrap: {
     flexDirection: 'row',
     flexWrap: 'wrap',
-    gap: 8,
-    marginTop: 10,
+    gap: 6,
   },
   tag: {
-    paddingVertical: 6,
+    paddingVertical: 5,
     paddingHorizontal: 10,
     borderRadius: 999,
     backgroundColor: 'rgba(0,0,0,0.06)',
     maxWidth: '100%',
   },
   tagText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: 'rgba(0,0,0,0.7)',
+  },
+  noOffersText: {
+    marginTop: 10,
     fontSize: 12,
-    fontWeight: '700',
-    opacity: 0.8,
+    color: 'rgba(0,0,0,0.45)',
+    fontStyle: 'italic',
+    lineHeight: 17,
   },
   button: {
-    marginTop: 12,
-    paddingVertical: 12,
-    paddingHorizontal: 12,
-    borderRadius: 12,
-    backgroundColor: '#0A84FF',
-    alignItems: 'center',
-    justifyContent: 'center',
+    marginTop: 14,
+    paddingVertical: 9,
+    paddingHorizontal: 18,
+    borderRadius: 999,
+    backgroundColor: Colors.primary,
+    alignSelf: 'flex-end',
   },
   buttonPressed: { opacity: 0.8 },
   buttonText: {
     color: 'white',
     fontSize: 14,
-    fontWeight: '800',
+    fontWeight: '700',
   },
 });
 

@@ -159,9 +159,9 @@ const styles = StyleSheet.create({
   sectionLabel: {
     marginTop: 12,
     marginBottom: 8,
-    opacity: 0.6,
+    opacity: 0.7,
     fontSize: 14,
-    fontWeight: '500',
+    fontWeight: '600',
   },
   errorText: {
     color: '#b00020',
