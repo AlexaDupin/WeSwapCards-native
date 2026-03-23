@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useLayoutEffect, useRef } from 'react';
 import {
   ActivityIndicator,
   Image,
@@ -25,12 +25,27 @@ type Props = {
   onSelectChapter: (chapterId: number) => void;
 };
 
+const TILE_WIDTH = 82;
+const TILE_GAP = 12;
+
 export default function LatestChaptersMiniTiles({
   chapters,
   loading,
   selectedChapterId,
   onSelectChapter,
 }: Props) {
+  const scrollRef = useRef<ScrollView>(null);
+
+  useLayoutEffect(() => {
+    if (selectedChapterId == null) return;
+    const index = chapters.findIndex((c) => c.id === selectedChapterId);
+    if (index <= 0) return;
+    scrollRef.current?.scrollTo({
+      x: index * (TILE_WIDTH + TILE_GAP),
+      animated: false,
+    });
+  }, [selectedChapterId, chapters]);
+
   if (loading) {
     return (
       <View style={styles.loadingWrap}>
@@ -44,6 +59,7 @@ export default function LatestChaptersMiniTiles({
   return (
     <View style={styles.wrapper}>
       <ScrollView
+        ref={scrollRef}
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.row}
