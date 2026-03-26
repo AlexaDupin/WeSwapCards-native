@@ -11,9 +11,12 @@ export default function ChatModalRoute() {
       swapExplorerId?: string;
     }>();
 
+  // 'new' signals a pending conversation with no DB row yet.
+  const resolvedConversationId = conversationId === 'new' ? null : Number(conversationId);
+
   return (
     <ChatScreen
-      conversationId={Number(conversationId)}
+      conversationId={resolvedConversationId}
       cardName={cardName ?? ''}
       swapName={swapName ?? 'Chat'}
       swapExplorerId={swapExplorerId ? Number(swapExplorerId) : null}

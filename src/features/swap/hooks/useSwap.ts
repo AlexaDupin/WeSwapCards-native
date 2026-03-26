@@ -411,24 +411,13 @@ export function useSwap(options?: UseSwapOptions) {
           headers,
         });
 
-        let conversationId: number;
-        if (existing) {
-          conversationId = existing.id;
-        } else {
-          const created = await chatApi.createConversation({
-            explorerId,
-            swapExplorerId: opportunity.explorer_id,
-            cardName: selectedCardName,
-            headers,
-          });
-          conversationId = created.id;
-        }
-
+        // conversationId is null when no conversation exists yet.
+        // The chat screen will create it lazily on the first message send.
         const payload: SwapContactPayload = {
           explorer_id: opportunity.explorer_id,
           explorer_name: opportunity.explorer_name,
           opportunities: opportunity.opportunities,
-          conversationId,
+          conversationId: existing?.id ?? null,
           cardName: selectedCardName,
         };
         onContact?.(payload);

@@ -46,7 +46,7 @@ export default function SwapScreen() {
         router.push({
           pathname: '/(modal)/chat/[conversationId]',
           params: {
-            conversationId: String(payload.conversationId),
+            conversationId: payload.conversationId != null ? String(payload.conversationId) : 'new',
             cardName: payload.cardName,
             swapName: payload.explorer_name,
             swapExplorerId: String(payload.explorer_id),

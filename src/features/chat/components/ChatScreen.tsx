@@ -23,7 +23,7 @@ import ConversationStatusBar from '@/src/features/chat/components/ConversationSt
 import ChatComposer from '@/src/features/chat/components/ChatComposer';
 
 type ChatScreenProps = {
-  conversationId: number;
+  conversationId: number | null;
   cardName: string;
   swapName: string;
   swapExplorerId: number | null;
@@ -57,6 +57,7 @@ export default function ChatScreen({
   } = useChatScreen({
     conversationId,
     swapExplorerId,
+    cardName,
   });
 
   const bottomSpacer = insets.bottom + 8;
@@ -112,7 +113,7 @@ export default function ChatScreen({
           messages={messages}
           explorerId={explorerId}
           bottomSpacer={bottomSpacer}
-          conversationId={conversationId}
+          conversationId={conversationId ?? 0}
         />
       )}
 

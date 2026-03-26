@@ -45,7 +45,7 @@ export type SwapContactPayload = {
   explorer_id: number;
   explorer_name: string;
   opportunities: SwapExplorerOpportunity[];
-  conversationId: number;
+  conversationId: number | null; // null when no existing conversation yet
   cardName: string;
 };
 
