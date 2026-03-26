@@ -3,6 +3,7 @@ import { useAuth } from '@clerk/clerk-expo';
 
 import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
 import * as swapApi from '@/src/features/swap/api/swapApi';
+import * as chatApi from '@/src/features/chat/api/chatApi';
 
 import type {
   SwapCard,
@@ -86,6 +87,7 @@ export function useSwap(options?: UseSwapOptions) {
    * including pagination and refresh. New requests invalidate older ones.
    */
   const oppsReqId = useRef(0);
+  const contactingRef = useRef(false);
 
   const [state, setState] = useState<SwapState>(initialState);
 
@@ -393,16 +395,58 @@ export function useSwap(options?: UseSwapOptions) {
   ]);
 
   const contact = useCallback(
-    (opportunity: SwapOpportunityItem): SwapContactPayload => {
-      const payload: SwapContactPayload = {
-        explorer_id: opportunity.explorer_id,
-        explorer_name: opportunity.explorer_name,
-        opportunities: opportunity.opportunities,
-      };
-      onContact?.(payload);
-      return payload;
+    async (opportunity: SwapOpportunityItem): Promise<void> => {
+      if (contactingRef.current) return;
+      if (!explorerId || !selectedCardName) return;
+
+      contactingRef.current = true;
+      try {
+        const headers = await authHeaders();
+
+        // Returns the row on 200, null on 204, throws on real errors.
+        const existing = await chatApi.getConversation({
+          explorerId,
+          swapExplorerId: opportunity.explorer_id,
+          cardName: selectedCardName,
+          headers,
+        });
+
+        let conversationId: number;
+        if (existing) {
+          conversationId = existing.id;
+        } else {
+          const created = await chatApi.createConversation({
+            explorerId,
+            swapExplorerId: opportunity.explorer_id,
+            cardName: selectedCardName,
+            headers,
+          });
+          conversationId = created.id;
+        }
+
+        const payload: SwapContactPayload = {
+          explorer_id: opportunity.explorer_id,
+          explorer_name: opportunity.explorer_name,
+          opportunities: opportunity.opportunities,
+          conversationId,
+          cardName: selectedCardName,
+        };
+        onContact?.(payload);
+      } catch (err) {
+        console.error('[useSwap] contact failed:', err);
+        if (!mountedRef.current) return;
+        setState((prev) => ({
+          ...prev,
+          error: {
+            code: 'contact_failed',
+            message: 'Could not open chat. Please try again.',
+          },
+        }));
+      } finally {
+        contactingRef.current = false;
+      }
     },
-    [onContact],
+    [authHeaders, explorerId, onContact, selectedCardName],
   );
 
   const resetSwapView = useCallback(() => {

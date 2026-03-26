@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 import {
   ActivityIndicator,
   ScrollView,
@@ -7,6 +7,7 @@ import {
   View,
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
+import { useRouter } from 'expo-router';
 
 import ChapterSelector from '@/src/features/swap/components/ChapterSelector';
 import CardGrid from '@/src/features/swap/components/CardGrid';
@@ -14,8 +15,11 @@ import LatestChaptersBanners from '@/src/features/swap/components/LatestChapters
 import LatestChaptersMiniTiles from '@/src/features/swap/components/LatestChaptersMiniTiles';
 import OpportunityList from '@/src/features/swap/components/OpportunityList';
 import { useSwap } from '@/src/features/swap/hooks/useSwap';
+import type { SwapContactPayload } from '@/src/features/swap/types/SwapTypes';
 
 export default function SwapScreen() {
+  const router = useRouter();
+
   const {
     chapters,
     latestChapters,
@@ -36,7 +40,22 @@ export default function SwapScreen() {
     dismissError,
     contact,
     resetSwapView,
-  } = useSwap();
+  } = useSwap({
+    onContact: useCallback(
+      (payload: SwapContactPayload) => {
+        router.push({
+          pathname: '/(modal)/chat/[conversationId]',
+          params: {
+            conversationId: String(payload.conversationId),
+            cardName: payload.cardName,
+            swapName: payload.explorer_name,
+            swapExplorerId: String(payload.explorer_id),
+          },
+        });
+      },
+      [router],
+    ),
+  });
 
   useFocusEffect(
     React.useCallback(() => {

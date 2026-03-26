@@ -1,8 +1,8 @@
 import React, { useMemo, useState } from 'react';
 import {
   ActivityIndicator,
-  FlatList,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -74,34 +74,35 @@ export default function ChapterSelector({
 
       {open ? (
         <View style={styles.listWrap}>
-          <FlatList<SwapChapter>
-            data={chapters}
-            keyExtractor={(c) => String(c.id)}
+          <ScrollView
             keyboardShouldPersistTaps="handled"
             showsVerticalScrollIndicator={false}
-            renderItem={({ item }) => {
+            style={styles.dropdownScroll}
+          >
+            {chapters.map((item, index) => {
               const selected = item.id === selectedChapterId;
               return (
-                <Pressable
-                  onPress={() => {
-                    setOpen(false);
-                    onSelectChapter(item.id);
-                  }}
-                  style={({ pressed }) => [
-                    styles.item,
-                    selected && styles.itemSelected,
-                    pressed && styles.itemPressed,
-                  ]}
-                >
-                  <Text style={[styles.itemText, selected && styles.itemTextSelected]}>
-                    {item.name}
-                  </Text>
-                </Pressable>
+                <React.Fragment key={String(item.id)}>
+                  {index > 0 ? <View style={styles.separator} /> : null}
+                  <Pressable
+                    onPress={() => {
+                      setOpen(false);
+                      onSelectChapter(item.id);
+                    }}
+                    style={({ pressed }) => [
+                      styles.item,
+                      selected && styles.itemSelected,
+                      pressed && styles.itemPressed,
+                    ]}
+                  >
+                    <Text style={[styles.itemText, selected && styles.itemTextSelected]}>
+                      {item.name}
+                    </Text>
+                  </Pressable>
+                </React.Fragment>
               );
-            }}
-            ItemSeparatorComponent={() => <View style={{ height: 6 }} />}
-            style={{ maxHeight: 260 }}
-          />
+            })}
+          </ScrollView>
         </View>
       ) : null}
     </View>
@@ -158,6 +159,12 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(0,0,0,0.08)',
     backgroundColor: '#fff',
     padding: 10,
+  },
+  dropdownScroll: {
+    maxHeight: 260,
+  },
+  separator: {
+    height: 6,
   },
   item: {
     paddingVertical: 10,

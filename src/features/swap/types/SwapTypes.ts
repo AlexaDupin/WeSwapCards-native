@@ -45,12 +45,15 @@ export type SwapContactPayload = {
   explorer_id: number;
   explorer_name: string;
   opportunities: SwapExplorerOpportunity[];
+  conversationId: number;
+  cardName: string;
 };
 
 export type SwapErrorCode =
   | 'chapters_fetch_failed'
   | 'cards_fetch_failed'
   | 'opportunities_fetch_failed'
+  | 'contact_failed'
   | 'sign_in_required';
 
 export type SwapError = {
