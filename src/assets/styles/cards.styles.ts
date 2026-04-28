@@ -16,7 +16,8 @@ export const styles = StyleSheet.create({
 
   pageTitle: {
     fontSize: 20,
-    fontWeight: '800',
+    fontWeight: '700',
+    marginBottom: 16,
   },
 
   chapterListContent: {
