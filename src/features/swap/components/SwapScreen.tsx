@@ -1,4 +1,4 @@
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useMemo, useRef } from 'react';
 import {
   ActivityIndicator,
   ScrollView,
@@ -19,6 +19,8 @@ import type { SwapContactPayload } from '@/src/features/swap/types/SwapTypes';
 
 export default function SwapScreen() {
   const router = useRouter();
+
+  const isOpeningChat = useRef(false);
 
   const {
     chapters,
@@ -43,6 +45,7 @@ export default function SwapScreen() {
   } = useSwap({
     onContact: useCallback(
       (payload: SwapContactPayload) => {
+        isOpeningChat.current = true;
         router.push({
           pathname: '/(modal)/chat/[conversationId]',
           params: {
@@ -59,8 +62,11 @@ export default function SwapScreen() {
 
   useFocusEffect(
     React.useCallback(() => {
+      isOpeningChat.current = false;
       return () => {
-        resetSwapView();
+        if (!isOpeningChat.current) {
+          resetSwapView();
+        }
       };
     }, [resetSwapView]),
   );
