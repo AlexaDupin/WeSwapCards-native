@@ -2,7 +2,6 @@ import { Text, View, Pressable } from 'react-native';
 import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
 
 import PageLoader from '@/src/components/PageLoader';
-import { SignOutButton } from '@/src/components/SignOutButton';
 
 import ChaptersList from '@/src/features/chapters/components/ChaptersList';
 import AZNav from '@/src/features/chapters/components/AZNav';
@@ -33,8 +32,6 @@ export default function Cards() {
 
   return (
     <View style={styles.cardsScreen}>
-      <SignOutButton />
-
       <View style={styles.controlsRow}>
         <Text style={styles.pageTitle}>My cards</Text>
 

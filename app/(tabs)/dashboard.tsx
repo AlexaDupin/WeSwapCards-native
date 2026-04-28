@@ -13,7 +13,7 @@ import { router } from 'expo-router';
 import TabChip from '@/src/components/TabChip';
 import DashboardItem from '@/src/features/dashboard/components/DashboardItem';
 import { styles } from '@/src/assets/styles/dashboard.styles';
-import { SignOutButton } from '@/src/components/SignOutButton';
+import { AccountButton } from '@/src/components/AccountButton';
 
 import { useDashboard } from '@/src/features/dashboard/hooks/useDashboard';
 import type { DashboardConversation } from '@/src/features/dashboard/types/DashboardTypes';
@@ -74,10 +74,10 @@ export default function DashboardScreen() {
 
   return (
     <View style={{ flex: 1, padding: 16 }}>
-      <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 16 }}>
-        Dashboard
-      </Text>
-      <SignOutButton />
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+        <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Dashboard</Text>
+        <AccountButton />
+      </View>
 
       <View style={styles.pillList}>
         <TabChip
