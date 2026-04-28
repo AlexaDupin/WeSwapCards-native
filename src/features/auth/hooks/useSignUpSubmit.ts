@@ -119,6 +119,17 @@ export function useSignUpSubmit({
       console.error(err);
       const code = getClerkErrorCode(err);
       const fallback = getClerkErrorMessage(err);
+      const normalizedFallback = fallback?.toLowerCase() ?? '';
+
+      // Clerk verification attempts are ephemeral; if missing, restart sign-up flow safely.
+      if (normalizedFallback.includes('no sign up attempt was found')) {
+        setPendingVerification(false);
+        setError(
+          'Your verification session expired. Please restart sign-up to request a new code.',
+        );
+        return;
+      }
+
       setError(getVerifyEmailErrorMessage(code, fallback));
     } finally {
       setIsSubmitting(false);

@@ -1,11 +1,16 @@
 import { useEffect, useState, useCallback } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 import { useAuth, useUser } from '@clerk/clerk-expo';
 
 import PageLoader from '@/src/components/PageLoader';
 import { axiosInstance } from '@/src/lib/axiosInstance';
 import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
+import { authStyles } from '@/src/assets/styles/auth.styles';
+import { styles } from '@/src/assets/styles/styles';
+
+const USERNAME_PATTERN = /^[a-zA-Z0-9_.]{2,20}$/;
 
 export default function RegisterUserScreen() {
   const router = useRouter();
@@ -66,7 +71,7 @@ export default function RegisterUserScreen() {
     return () => {
       cancelled = true;
     };
-  }, [isLoaded, user?.id]);
+  }, [isLoaded, user?.id, getToken, router, setExplorer]);
 
   /**
    -------------------------------------------------
@@ -80,6 +85,23 @@ export default function RegisterUserScreen() {
 
     if (!trimmed) {
       setError('Please choose a username.');
+      return;
+    }
+
+    if (trimmed.length < 2) {
+      setError('Your username must contain at least 2 characters.');
+      return;
+    }
+
+    if (trimmed.length > 20) {
+      setError('Your username must contain 20 characters max.');
+      return;
+    }
+
+    if (!USERNAME_PATTERN.test(trimmed)) {
+      setError(
+        'The format is invalid. Your username must contain between 2 and 20 letters and/or numbers, underscores, or full stops.',
+      );
       return;
     }
 
@@ -142,7 +164,14 @@ export default function RegisterUserScreen() {
     } finally {
       setSubmitting(false);
     }
-  }, [username, user?.id]);
+  }, [
+    username,
+    user?.id,
+    user?.primaryEmailAddress?.emailAddress,
+    getToken,
+    router,
+    setExplorer,
+  ]);
 
   /**
    -------------------------------------------------
@@ -159,56 +188,63 @@ export default function RegisterUserScreen() {
    -------------------------------------------------
    */
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        padding: 20,
-      }}
-    >
-      <Text
-        style={{
-          fontSize: 24,
-          fontWeight: '700',
-          marginBottom: 20,
-        }}
-      >
-        Choose a username
-      </Text>
+    <>
+      <View style={{ paddingHorizontal: 16, paddingTop: 8 }}>
+        <TouchableOpacity
+          onPress={() => router.replace('/')}
+          style={{ alignSelf: 'flex-start', padding: 8 }}
+          hitSlop={10}
+        >
+          <Ionicons name="close" size={22} />
+        </TouchableOpacity>
+      </View>
 
-      {error ? (
-        <Text style={{ color: 'red', marginBottom: 12 }}>{error}</Text>
-      ) : null}
+      <View style={authStyles.container}>
+        <Text style={authStyles.title}>Choose a username</Text>
 
-      <TextInput
-        placeholder="Letters, numbers, underscores"
-        autoCapitalize="none"
-        autoCorrect={false}
-        value={username}
-        onChangeText={setUsername}
-        style={{
-          borderWidth: 1,
-          borderRadius: 10,
-          padding: 14,
-          marginBottom: 12,
-        }}
-      />
+        <View style={authStyles.subtitle}>
+          <Text style={authStyles.subtitleText}>
+            One last step to finish creating your account.
+          </Text>
+          <Text style={authStyles.subtitleText}>
+            Use your WeWard username to make things easier.
+          </Text>
+        </View>
 
-      <TouchableOpacity
-        onPress={handleCreateUser}
-        disabled={submitting}
-        style={{
-          padding: 16,
-          borderRadius: 10,
-          alignItems: 'center',
-          opacity: submitting ? 0.6 : 1,
-          borderWidth: 1,
-        }}
-      >
-        <Text style={{ fontWeight: '600' }}>
-          {submitting ? 'Creating...' : 'Create account'}
-        </Text>
-      </TouchableOpacity>
-    </View>
+        {error ? (
+          <View style={authStyles.errorBox}>
+            <Ionicons name="alert-circle" size={20} color={'#E74C3C'} />
+            <Text style={authStyles.errorText}>{error}</Text>
+            <TouchableOpacity onPress={() => setError('')}>
+              <Ionicons name="close" size={20} color={'#9A8478'} />
+            </TouchableOpacity>
+          </View>
+        ) : null}
+
+        <TextInput
+          style={authStyles.input}
+          placeholder="Enter a username"
+          autoCapitalize="none"
+          autoCorrect={false}
+          value={username}
+          onChangeText={(value: string) => {
+            setUsername(value);
+            if (error) setError('');
+          }}
+          returnKeyType="done"
+          onSubmitEditing={handleCreateUser}
+        />
+
+        <TouchableOpacity
+          style={[styles.button, submitting && { opacity: 0.6 }]}
+          onPress={handleCreateUser}
+          disabled={submitting}
+        >
+          <Text style={styles.buttonText}>
+            {submitting ? 'Creating...' : 'Create account'}
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </>
   );
 }

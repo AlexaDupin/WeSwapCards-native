@@ -246,7 +246,6 @@ export const styles = StyleSheet.create({
 
   controlsRow: {
     paddingHorizontal: 16,
-    paddingTop: 6,
     paddingBottom: 10,
     flexDirection: 'row',
     alignItems: 'center',

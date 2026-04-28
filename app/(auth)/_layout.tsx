@@ -1,10 +1,17 @@
-import { Redirect, Stack } from 'expo-router'
+import PageLoader from '@/src/components/PageLoader'
+import { Redirect, Stack, useSegments } from 'expo-router'
 import { useAuth } from '@clerk/clerk-expo'
 
 export default function AuthLayout() {
-  const { isSignedIn } = useAuth()
+  const { isLoaded, isSignedIn } = useAuth()
+  const segments = useSegments() as string[]
+  const isRegisterUserRoute = segments.includes('register-user')
 
-  if (isSignedIn) {
+  if (!isLoaded) {
+    return <PageLoader />
+  }
+
+  if (isSignedIn && !isRegisterUserRoute) {
     return <Redirect href={'/(tabs)/dashboard'} />
   }
 
