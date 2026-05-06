@@ -1,49 +1,97 @@
-# WeSwapCards Mobile (React Native)
+# WeSwapCards Mobile
 
-Mobile application for the WeSwapCards platform, built with React Native (Expo + TypeScript).
+Mobile app for [WeSwapCards](https://weswapcards.com), a production card-trading platform used by 965+ members and supporting 15,000+ trades.
 
-This app extends the existing production web platform (900+ members, 15,000+ trades) to provide a native mobile experience with improved accessibility, performance, and user engagement.
+Built with **React Native**, **Expo**, and **TypeScript**, this app brings the core WeSwapCards experience to iOS and Android.
+
+<img width="585" height="1266" alt="WeSwapCards mobile app results" src="https://github.com/user-attachments/assets/b92750c2-ef40-4a2c-abbc-f6bc22bafdc0" />
 
 ## Overview
 
-WeSwapCards Mobile brings core marketplace functionality to iOS and Android, allowing users to:
-- Browse and manage their card collections
-- Track duplicates and missing cards
+WeSwapCards Mobile allows users to:
+
+- Sign up and sign in securely
+- Create their WeSwapCards profile
+- Browse and manage their card collection
+- Track owned and duplicated cards
 - Discover swap opportunities
-- Access conversations and swap requests
-- Interact with the platform in a mobile-first environment
+- View active and past swap conversations
+- Send messages to other collectors
 
-The mobile app consumes the same production APIs used by the web platform, ensuring consistent business logic and data integrity across platforms.
+The mobile app uses the same production backend as the web platform, keeping user data, conversations, cards, and swap opportunities consistent across both experiences.
 
-## Current Status
-The project is currently focused on:
-- Establishing clean navigation architecture
-- Implementing strongly typed API integration
-- Building reusable UI components
-- Maintaining strict TypeScript contracts
-- Structuring scalable state management
+## Current Features
 
-The goal is to reuse backend contracts and business logic while optimizing the experience for mobile interactions.
+- Authentication with Clerk
+- Username registration linked to the WeSwapCards database
+- Protected tab navigation
+- Dashboard for in-progress and past conversations
+- Chat with message sending and read tracking
+- Card status management: default, owned, duplicated
+- Swap discovery by chapter and card
+- Conversation status updates: In Progress, Completed, Declined
 
 ## Tech Stack
+
 - React Native
 - Expo
+- Expo Router
 - TypeScript
+- Clerk
+- Axios
+- Jest
+- React Native Testing Library
+
+## Project Structure
+
+```txt
+app/
+├── _layout.tsx
+├── index.tsx
+├── (auth)/
+│   ├── sign-in.tsx
+│   ├── sign-up.tsx
+│   └── register-user.tsx
+├── (tabs)/
+│   ├── dashboard.tsx
+│   ├── cards.tsx
+│   └── swap.tsx
+└── (modal)/
+    └── chat/
+        └── [conversationId].tsx
+```
+
+Feature code is organized under `src/features`, with separate folders for auth, dashboard, cards, swap, chat, and shared API logic.
+
+## Testing
+
+The project uses Jest and React Native Testing Library.
+
+Current tests cover:
+
+- Auth hydration flow
+- Retry behavior after auth hydration failure
+- Dashboard loading and pagination
+- Conversation status transitions
+- Card status cycling
+- Card item rendering and press behavior
 
 ## Installation
 
 ```bash
 git clone https://github.com/AlexaDupin/WeSwapCards-native.git
+cd WeSwapCards-native/mobile
 npm install
 npx expo start
 ```
 
 ## Related Project
-🌐 Web Platform:
-🔗 https://github.com/AlexaDupin/WeSwapCards
-🔗 Live: https://weswapcards.com
+
+- Web app GitHub: [github.com/AlexaDupin/WeSwapCards](https://github.com/AlexaDupin/WeSwapCards)
+- Live platform: [weswapcards.com](https://weswapcards.com)
 
 ## Contact
 
-For any questions, feel free to reach out at contact@weswapcards.com.
+For questions or feedback, contact:
 
+contact@weswapcards.com
