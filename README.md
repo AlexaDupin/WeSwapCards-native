@@ -4,7 +4,7 @@ Mobile app for [WeSwapCards](https://weswapcards.com), a production card-trading
 
 Built with **React Native**, **Expo**, and **TypeScript**, this app brings the core WeSwapCards experience to iOS and Android.
 
-<img width="585" height="1266" alt="WeSwapCards mobile app results" src="https://github.com/user-attachments/assets/b92750c2-ef40-4a2c-abbc-f6bc22bafdc0" />
+<img width="280" alt="WeSwapCards mobile app results" src="https://github.com/user-attachments/assets/b92750c2-ef40-4a2c-abbc-f6bc22bafdc0" />
 
 ## Overview
 
