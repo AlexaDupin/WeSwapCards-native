@@ -2,7 +2,14 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { FlatList } from 'react-native';
 import { useAuth } from '@clerk/clerk-expo';
 
-import { axiosInstance } from '@/src/lib/axiosInstance';
+import {
+  deleteExplorerCard,
+  fetchCardStatuses,
+  fetchCards,
+  fetchPlaces,
+  setChapterCardsStatus,
+  upsertExplorerCard,
+} from '@/src/features/cards/api/cardsApi';
 
 import type {
   CardItemData,
@@ -11,24 +18,12 @@ import type {
 import type { ChapterData } from '@/src/features/chapters/types/ChapterType';
 import useAZIndex from '@/src/features/chapters/hooks/useAZIndex';
 
-type GetChaptersResponse = { places: ChapterData[] };
-type GetCardsResponse = { cards: CardItemData[] };
-type GetCardStatusesResponse = { statuses: Record<string, CardStatus> };
-type UpsertCardResponse = {
-  explorerId: number;
-  cardId: number;
-  duplicate: boolean;
-  changed: boolean;
-};
-
 export type ChapterUI = {
   chapterId: number;
   chapterName: string;
   cards: CardItemData[];
   ownedOrDuplicatedCount: number;
 };
-
-type BulkChapterStatus = 'owned' | 'duplicated';
 
 type Params = {
   explorerId: number;
@@ -66,29 +61,25 @@ export function useCardsScreen({ explorerId }: Params) {
   const pendingChaptersRef = useRef(new Set<number>());
 
   const fetchAllChapters = useCallback(async () => {
-    const response = await axiosInstance.get<GetChaptersResponse>('/places');
-    setChapters(response.data.places);
+    const places = await fetchPlaces();
+    setChapters(places);
   }, []);
 
   const fetchAllCards = useCallback(async () => {
     const token = await getToken();
-    const response = await axiosInstance.get<GetCardsResponse>('/cards', {
+    const cards = await fetchCards({
       headers: { Authorization: `Bearer ${token}` },
     });
-    setCards(response.data.cards);
+    setCards(cards);
   }, [getToken]);
 
   const fetchAllCardStatuses = useCallback(
     async (id: number) => {
       const token = await getToken();
-      const response = await axiosInstance.get<GetCardStatusesResponse>(
-        `/cards/statuses/${id}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        },
-      );
-
-      const statuses = response.data?.statuses;
+      const statuses = await fetchCardStatuses({
+        explorerId: id,
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       setCardStatuses((prev) => {
         if (!statuses || typeof statuses !== 'object') return prev;
@@ -179,11 +170,12 @@ export function useCardsScreen({ explorerId }: Params) {
     async (cardId: number, duplicate: boolean) => {
       const token = await getToken();
 
-      const response = await axiosInstance.put<UpsertCardResponse>(
-        `/explorercards/${explorerId}/cards/${cardId}`,
-        { duplicate },
-        { headers: { Authorization: `Bearer ${token}` } },
-      );
+      const response = await upsertExplorerCard({
+        explorerId,
+        cardId,
+        duplicate,
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       if (response.status === 200) {
         setCardStatuses((prev) => ({
@@ -213,12 +205,11 @@ export function useCardsScreen({ explorerId }: Params) {
 
       try {
         const token = await getToken();
-        const response = await axiosInstance.delete(
-          `/explorercards/${explorerId}/cards/${cardId}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          },
-        );
+        const response = await deleteExplorerCard({
+          explorerId,
+          cardId,
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
         if (response.status === 200) {
           setCardStatuses((prev) => ({ ...prev, [String(cardId)]: 'default' }));
@@ -233,7 +224,7 @@ export function useCardsScreen({ explorerId }: Params) {
   );
 
   const setChapterStatus = useCallback(
-    async (chapterId: number, status: BulkChapterStatus) => {
+    async (chapterId: number, status: 'owned' | 'duplicated') => {
       if (pendingChaptersRef.current.has(chapterId)) return;
 
       pendingChaptersRef.current.add(chapterId);
@@ -241,11 +232,12 @@ export function useCardsScreen({ explorerId }: Params) {
 
       try {
         const token = await getToken();
-        await axiosInstance.post(
-          `/explorercards/${explorerId}/chapters/${chapterId}/status`,
-          { status },
-          { headers: { Authorization: `Bearer ${token}` } },
-        );
+        await setChapterCardsStatus({
+          explorerId,
+          chapterId,
+          status,
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
         const chapterCards = cardsByPlaceId[chapterId] ?? [];
         setCardStatuses((prev) => {
