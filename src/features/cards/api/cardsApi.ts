@@ -67,10 +67,9 @@ export async function deleteExplorerCard(args: {
   headers: AuthHeaders;
 }) {
   const { explorerId, cardId, headers } = args;
-  return axiosInstance.delete(
-    `/explorercards/${explorerId}/cards/${cardId}`,
-    { headers },
-  );
+  return axiosInstance.delete(`/explorercards/${explorerId}/cards/${cardId}`, {
+    headers,
+  });
 }
 
 export async function setChapterCardsStatus(args: {

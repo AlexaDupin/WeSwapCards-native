@@ -22,7 +22,9 @@ export function useChatScreen(args: {
   }, [getToken]);
 
   // resolvedConversationId starts from args and gets set after lazy creation
-  const [resolvedConversationId, setResolvedConversationId] = useState<number | null>(args.conversationId);
+  const [resolvedConversationId, setResolvedConversationId] = useState<
+    number | null
+  >(args.conversationId);
 
   const [loading, setLoading] = useState(args.conversationId !== null);
   const [messages, setMessages] = useState<Message[]>([]);
@@ -41,7 +43,11 @@ export function useChatScreen(args: {
   const keyboardVisible = useKeyboardVisible();
 
   const canLoad = useMemo(() => {
-    return resolvedConversationId !== null && Number.isFinite(resolvedConversationId) && Boolean(explorerId);
+    return (
+      resolvedConversationId !== null &&
+      Number.isFinite(resolvedConversationId) &&
+      Boolean(explorerId)
+    );
   }, [resolvedConversationId, explorerId]);
 
   const refreshMessages = useCallback(async () => {
@@ -57,9 +63,18 @@ export function useChatScreen(args: {
   }, [authHeaders, canLoad, resolvedConversationId]);
 
   const markRead = useCallback(async () => {
-    if (!explorerId || resolvedConversationId === null || !Number.isFinite(resolvedConversationId)) return;
+    if (
+      !explorerId ||
+      resolvedConversationId === null ||
+      !Number.isFinite(resolvedConversationId)
+    )
+      return;
     const headers = await authHeaders();
-    await chatApi.markConversationRead({ conversationId: resolvedConversationId, explorerId, headers });
+    await chatApi.markConversationRead({
+      conversationId: resolvedConversationId,
+      explorerId,
+      headers,
+    });
   }, [authHeaders, resolvedConversationId, explorerId]);
 
   useEffect(() => {
@@ -88,12 +103,7 @@ export function useChatScreen(args: {
 
   // canSend does not require a conversationId — user can type before one exists
   const canSend = useMemo(() => {
-    return (
-      !!text.trim() &&
-      !sending &&
-      !!explorerId &&
-      !!swapExplorerId
-    );
+    return !!text.trim() && !sending && !!explorerId && !!swapExplorerId;
   }, [text, sending, explorerId, swapExplorerId]);
 
   const sendMessage = useCallback(async () => {
@@ -138,13 +148,16 @@ export function useChatScreen(args: {
       // Refresh and mark read using cid directly — avoids stale-closure
       // issues that would occur if we called refreshMessages()/markRead()
       // immediately after setResolvedConversationId above.
-      const { allMessages, conversationStatus: newStatus } = await chatApi.getAllMessages({
-        conversationId: cid,
-        headers,
-      });
+      const { allMessages, conversationStatus: newStatus } =
+        await chatApi.getAllMessages({
+          conversationId: cid,
+          headers,
+        });
       setMessages(allMessages);
       setConversationStatusState(newStatus);
-      await chatApi.markConversationRead({ conversationId: cid, explorerId, headers }).catch(() => {});
+      await chatApi
+        .markConversationRead({ conversationId: cid, explorerId, headers })
+        .catch(() => {});
     } catch (e) {
       setError('Could not send message');
     } finally {
@@ -162,7 +175,11 @@ export function useChatScreen(args: {
 
   const setConversationStatus = useCallback(
     async (status: ConversationStatus) => {
-      if (resolvedConversationId === null || !Number.isFinite(resolvedConversationId)) return;
+      if (
+        resolvedConversationId === null ||
+        !Number.isFinite(resolvedConversationId)
+      )
+        return;
 
       setUpdatingStatus(true);
       setError(null);

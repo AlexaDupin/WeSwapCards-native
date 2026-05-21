@@ -1,5 +1,11 @@
 import React, { useCallback } from 'react';
-import { ActivityIndicator, FlatList, StyleSheet, Text, View } from 'react-native';
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 
 import OpportunityCard from '@/src/features/swap/components/OpportunityCard';
 import type { SwapOpportunityItem } from '@/src/features/swap/types/SwapTypes';

@@ -1,18 +1,18 @@
 // styles/auth.styles.js
-import { Colors } from "@/src/constants/Colors";
-import { StyleSheet } from "react-native";
+import { Colors } from '@/src/constants/Colors';
+import { StyleSheet } from 'react-native';
 
 export const authStyles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 20,
-    justifyContent: "center",
+    justifyContent: 'center',
   },
   title: {
     fontSize: 32,
-    fontWeight: "600",
+    fontWeight: '600',
     marginVertical: 15,
-    textAlign: "center",
+    textAlign: 'center',
     marginBottom: 20,
   },
   subtitle: {
@@ -20,7 +20,7 @@ export const authStyles = StyleSheet.create({
   },
   subtitleText: {
     fontSize: 20,
-    textAlign: "center",
+    textAlign: 'center',
   },
   input: {
     borderRadius: 12,
@@ -33,27 +33,25 @@ export const authStyles = StyleSheet.create({
     backgroundColor: Colors.primary,
     borderRadius: 12,
     padding: 16,
-    alignItems: "center",
+    alignItems: 'center',
     marginTop: 10,
     marginBottom: 8,
   },
   buttonText: {
-    color: "#FFF",
+    color: '#FFF',
     fontSize: 18,
-    fontWeight: "400",
+    fontWeight: '400',
   },
   footerContainer: {
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     gap: 8,
   },
   footerText: {
     fontSize: 16,
   },
 
-
-  
   // linkText: {
   //   color: Colors.primary,
   //   fontSize: 16,
@@ -89,13 +87,13 @@ export const authStyles = StyleSheet.create({
 
   // 🔴 Error styles
   errorBox: {
-    backgroundColor: "#FFE5E5",
+    backgroundColor: '#FFE5E5',
     padding: 12,
     borderRadius: 8,
     marginBottom: 16,
-    flexDirection: "row",
-    alignItems: "center",
-    width: "100%",
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
   },
   errorText: {
     marginLeft: 8,

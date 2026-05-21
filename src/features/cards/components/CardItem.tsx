@@ -1,12 +1,19 @@
-import React, { useRef } from "react";
-import { Text, View } from "react-native";
-import { styles } from "@/src/assets/styles/cards.styles";
-import type { CardItemData, CardStatus } from "@/src/features/cards/types/CardItemType";
-import { LongPressGestureHandler, TapGestureHandler, State } from "react-native-gesture-handler";
+import React, { useRef } from 'react';
+import { Text, View } from 'react-native';
+import { styles } from '@/src/assets/styles/cards.styles';
+import type {
+  CardItemData,
+  CardStatus,
+} from '@/src/features/cards/types/CardItemType';
+import {
+  LongPressGestureHandler,
+  TapGestureHandler,
+  State,
+} from 'react-native-gesture-handler';
 import type {
   LongPressGestureHandlerStateChangeEvent,
   TapGestureHandlerStateChangeEvent,
-} from "react-native-gesture-handler";
+} from 'react-native-gesture-handler';
 
 type Props = {
   item: CardItemData;
@@ -17,10 +24,17 @@ type Props = {
   cardWidth?: number;
 };
 
-function CardItem({ item, status, onSelect, reset, readOnly = false, cardWidth }: Props) {
-  const isOwned = status === "owned";
-  const isDuplicated = status === "duplicated";
-  const isDefault = status === "default";
+function CardItem({
+  item,
+  status,
+  onSelect,
+  reset,
+  readOnly = false,
+  cardWidth,
+}: Props) {
+  const isOwned = status === 'owned';
+  const isDuplicated = status === 'duplicated';
+  const isDefault = status === 'default';
 
   const longPressRef = useRef<LongPressGestureHandler>(null);
   const longPressEnabled = !readOnly && !isDefault && !!reset;
@@ -32,7 +46,7 @@ function CardItem({ item, status, onSelect, reset, readOnly = false, cardWidth }
       minDurationMs={450}
       shouldCancelWhenOutside
       onHandlerStateChange={(
-        event: LongPressGestureHandlerStateChangeEvent
+        event: LongPressGestureHandlerStateChangeEvent,
       ) => {
         if (event.nativeEvent.state === State.ACTIVE) {
           reset?.();
@@ -42,9 +56,7 @@ function CardItem({ item, status, onSelect, reset, readOnly = false, cardWidth }
       <TapGestureHandler
         waitFor={longPressEnabled ? longPressRef : undefined}
         enabled={!readOnly}
-        onHandlerStateChange={(
-          event: TapGestureHandlerStateChangeEvent
-        ) => {
+        onHandlerStateChange={(event: TapGestureHandlerStateChangeEvent) => {
           if (event.nativeEvent.state === State.END) {
             onSelect();
           }
@@ -53,7 +65,7 @@ function CardItem({ item, status, onSelect, reset, readOnly = false, cardWidth }
         <View
           testID={`card-touch-${item.id}`}
           accessibilityRole="button"
-          accessibilityLabel={`Card ${item.number} (${status})${readOnly ? " — sign in to log" : ""}`}
+          accessibilityLabel={`Card ${item.number} (${status})${readOnly ? ' — sign in to log' : ''}`}
           style={styles.cardItemWrapper}
         >
           <View
@@ -61,16 +73,25 @@ function CardItem({ item, status, onSelect, reset, readOnly = false, cardWidth }
             style={[
               styles.cardItem,
               cardWidth ? { width: cardWidth } : null,
-              isOwned || isDuplicated ? styles.cardItemOwned : styles.cardItemDefault,
+              isOwned || isDuplicated
+                ? styles.cardItemOwned
+                : styles.cardItemDefault,
             ]}
           >
             <View
               style={[
                 styles.cardItemInner,
-                isOwned || isDuplicated ? styles.cardItemInnerOwned : styles.cardItemInnerDefault,
+                isOwned || isDuplicated
+                  ? styles.cardItemInnerOwned
+                  : styles.cardItemInnerDefault,
               ]}
             >
-              <Text style={[styles.cardNumber, (isOwned || isDuplicated) && styles.cardNumberOwned]}>
+              <Text
+                style={[
+                  styles.cardNumber,
+                  (isOwned || isDuplicated) && styles.cardNumberOwned,
+                ]}
+              >
                 {item.number}
               </Text>
             </View>

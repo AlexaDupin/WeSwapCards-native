@@ -1,9 +1,9 @@
-import React from "react";
-import { Text, View } from "react-native";
-import { Link } from "expo-router";
-import StepRow from "@/src/features/home/components/StepRow";
-import { howItWorksSteps } from "@/src/features/home/data/howItWorksSteps";
-import { homeStyles } from "@/src/assets/styles/home.styles";
+import React from 'react';
+import { Text, View } from 'react-native';
+import { Link } from 'expo-router';
+import StepRow from '@/src/features/home/components/StepRow';
+import { howItWorksSteps } from '@/src/features/home/data/howItWorksSteps';
+import { homeStyles } from '@/src/assets/styles/home.styles';
 
 export default function HowItWorks() {
   return (
@@ -22,7 +22,11 @@ export default function HowItWorks() {
 
           return (
             <React.Fragment key={step.title}>
-              <StepRow Icon={step.Icon} title={step.title} subtitle={step.subtitle} />
+              <StepRow
+                Icon={step.Icon}
+                title={step.title}
+                subtitle={step.subtitle}
+              />
               {!isLast && <View style={homeStyles.stepDivider} />}
             </React.Fragment>
           );

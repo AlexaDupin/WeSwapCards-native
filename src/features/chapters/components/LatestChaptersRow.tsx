@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -6,11 +6,11 @@ import {
   Text,
   TouchableOpacity,
   View,
-} from "react-native";
-import { Link } from "expo-router";
-import { getLatestChapters } from "@/src/features/chapters/api/chapters.api";
-import { type LatestChapter } from "@/src/features/chapters/types/chapters.types";
-import { LatestChaptersRowStyles } from "@/src/features/chapters/components/LatestChaptersRow.styles";
+} from 'react-native';
+import { Link } from 'expo-router';
+import { getLatestChapters } from '@/src/features/chapters/api/chapters.api';
+import { type LatestChapter } from '@/src/features/chapters/types/chapters.types';
+import { LatestChaptersRowStyles } from '@/src/features/chapters/components/LatestChaptersRow.styles';
 
 export default function LatestChaptersRow({ limit = 5 }: { limit?: number }) {
   const [items, setItems] = useState<LatestChapter[]>([]);
@@ -24,7 +24,7 @@ export default function LatestChaptersRow({ limit = 5 }: { limit?: number }) {
         const data = await getLatestChapters(limit);
         if (mounted) setItems(data);
       } catch (e) {
-        console.error("latest chapters failed", e);
+        console.error('latest chapters failed', e);
       } finally {
         if (mounted) setLoading(false);
       }
@@ -67,7 +67,6 @@ export default function LatestChaptersRow({ limit = 5 }: { limit?: number }) {
               <Text numberOfLines={2} style={LatestChaptersRowStyles.name}>
                 {item.name}
               </Text>
-
             </TouchableOpacity>
           </Link>
         )}

@@ -1,4 +1,4 @@
 export interface ChapterData {
-    id: number;
-    name: string;
+  id: number;
+  name: string;
 }

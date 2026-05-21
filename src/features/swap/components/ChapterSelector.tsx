@@ -66,7 +66,9 @@ export default function ChapterSelector({
           accessibilityRole="button"
           accessibilityLabel="Clear chapter selection"
         >
-          <Text style={[styles.clearText, !canClear && styles.clearTextDisabled]}>
+          <Text
+            style={[styles.clearText, !canClear && styles.clearTextDisabled]}
+          >
             Clear
           </Text>
         </Pressable>
@@ -95,7 +97,12 @@ export default function ChapterSelector({
                       pressed && styles.itemPressed,
                     ]}
                   >
-                    <Text style={[styles.itemText, selected && styles.itemTextSelected]}>
+                    <Text
+                      style={[
+                        styles.itemText,
+                        selected && styles.itemTextSelected,
+                      ]}
+                    >
                       {item.name}
                     </Text>
                   </Pressable>
@@ -186,4 +193,3 @@ const styles = StyleSheet.create({
     fontWeight: '800',
   },
 });
-

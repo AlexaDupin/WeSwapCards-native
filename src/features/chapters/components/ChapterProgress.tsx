@@ -1,6 +1,6 @@
-import { useMemo } from "react";
-import { Text, View } from "react-native";
-import { styles } from "@/src/assets/styles/cards.styles";
+import { useMemo } from 'react';
+import { Text, View } from 'react-native';
+import { styles } from '@/src/assets/styles/cards.styles';
 
 export default function ChapterProgress({
   value,

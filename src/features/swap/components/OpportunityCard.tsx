@@ -37,10 +37,7 @@ export default function OpportunityCard({ opportunity, onContact }: Props) {
 
         <View style={styles.badgeRow}>
           <View
-            style={[
-              styles.dot,
-              active ? styles.dotActive : styles.dotInactive,
-            ]}
+            style={[styles.dot, active ? styles.dotActive : styles.dotInactive]}
           />
           <Text style={styles.badgeText}>{active ? 'Active' : 'Inactive'}</Text>
         </View>
@@ -67,7 +64,10 @@ export default function OpportunityCard({ opportunity, onContact }: Props) {
 
       <Pressable
         onPress={() => onContact(opportunity)}
-        style={({ pressed }) => [styles.button, pressed && styles.buttonPressed]}
+        style={({ pressed }) => [
+          styles.button,
+          pressed && styles.buttonPressed,
+        ]}
         accessibilityRole="button"
         accessibilityLabel={`Contact ${opportunity.explorer_name}`}
       >
@@ -164,4 +164,3 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 });
-

@@ -74,7 +74,14 @@ export default function DashboardScreen() {
 
   return (
     <View style={{ flex: 1, padding: 16 }}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
+      <View
+        style={{
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: 16,
+        }}
+      >
         <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Dashboard</Text>
         <AccountButton />
       </View>

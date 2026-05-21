@@ -1,10 +1,13 @@
-import { useMemo } from "react";
-import { Text, View, useWindowDimensions } from "react-native";
-import type { CardItemData, CardStatus } from "@/src/features/cards/types/CardItemType";
-import CardItem from "@/src/features/cards/components/CardItem";
-import ChapterProgress from "./ChapterProgress";
-import ChapterKebabMenu from "./ChapterKebabMenu";
-import { styles } from "@/src/assets/styles/cards.styles";
+import { useMemo } from 'react';
+import { Text, View, useWindowDimensions } from 'react-native';
+import type {
+  CardItemData,
+  CardStatus,
+} from '@/src/features/cards/types/CardItemType';
+import CardItem from '@/src/features/cards/components/CardItem';
+import ChapterProgress from './ChapterProgress';
+import ChapterKebabMenu from './ChapterKebabMenu';
+import { styles } from '@/src/assets/styles/cards.styles';
 
 type Props = {
   chapterId: number;
@@ -58,8 +61,14 @@ export default function ChapterSection({
 
         <ChapterKebabMenu
           disabled={isPending || readOnly}
-          onMarkAllOwned={onMarkAllOwned ? () => onMarkAllOwned(chapterId) : undefined}
-          onMarkAllDuplicated={onMarkAllDuplicated ? () => onMarkAllDuplicated(chapterId) : undefined}
+          onMarkAllOwned={
+            onMarkAllOwned ? () => onMarkAllOwned(chapterId) : undefined
+          }
+          onMarkAllDuplicated={
+            onMarkAllDuplicated
+              ? () => onMarkAllDuplicated(chapterId)
+              : undefined
+          }
         />
       </View>
 
@@ -70,7 +79,7 @@ export default function ChapterSection({
           <CardItem
             key={card.id}
             item={card}
-            status={statuses[card.id] || "default"}
+            status={statuses[card.id] || 'default'}
             onSelect={() => onSelectCard(card.id)}
             reset={onResetCard ? () => onResetCard(card.id) : undefined}
             readOnly={readOnly}

@@ -1,6 +1,12 @@
 import React from 'react';
 import { Text, TouchableOpacity } from 'react-native';
-import { act, fireEvent, render, screen, waitFor } from '@testing-library/react-native';
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react-native';
 
 import {
   ExplorerProvider,
@@ -188,7 +194,9 @@ describe('ExplorerHydration', () => {
     renderHydration();
 
     await waitFor(() => {
-      expect(screen.getByTestId('status')).toHaveTextContent('needs_registration');
+      expect(screen.getByTestId('status')).toHaveTextContent(
+        'needs_registration',
+      );
     });
 
     expect(screen.getByTestId('explorerId')).toHaveTextContent('null');

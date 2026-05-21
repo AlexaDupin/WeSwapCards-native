@@ -1,9 +1,9 @@
-import React from "react";
-import { FlatList } from "react-native";
-import type { CardStatus } from "@/src/features/cards/types/CardItemType";
-import type { ChapterUI } from "@/src/features/cards/screens/Cards";
-import ChapterSection from "./ChapterSection";
-import { styles } from "@/src/assets/styles/cards.styles";
+import React from 'react';
+import { FlatList } from 'react-native';
+import type { CardStatus } from '@/src/features/cards/types/CardItemType';
+import type { ChapterUI } from '@/src/features/cards/screens/Cards';
+import ChapterSection from './ChapterSection';
+import { styles } from '@/src/assets/styles/cards.styles';
 
 type Props = {
   chaptersData: ChapterUI[];

@@ -12,7 +12,8 @@ export default function ChatModalRoute() {
     }>();
 
   // 'new' signals a pending conversation with no DB row yet.
-  const resolvedConversationId = conversationId === 'new' ? null : Number(conversationId);
+  const resolvedConversationId =
+    conversationId === 'new' ? null : Number(conversationId);
 
   return (
     <ChatScreen

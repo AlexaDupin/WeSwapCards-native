@@ -6,14 +6,9 @@
     "noImplicitAny": true,
     "exactOptionalPropertyTypes": true,
     "noUncheckedIndexedAccess": true,
-    "types": [
-      "jest",
-      "@testing-library/react-native"
-    ],
+    "types": ["jest", "@testing-library/react-native"],
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"]
     }
   },
   "include": [

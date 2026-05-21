@@ -1,5 +1,13 @@
 import React, { useState, useCallback } from 'react';
-import { Image, Modal, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Image,
+  Modal,
+  Pressable,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { useClerk, useUser } from '@clerk/clerk-expo';
 import { useRouter } from 'expo-router';
 
@@ -23,7 +31,10 @@ export function AccountButton() {
 
   return (
     <>
-      <TouchableOpacity onPress={() => setVisible(true)} style={styles.avatarButton}>
+      <TouchableOpacity
+        onPress={() => setVisible(true)}
+        style={styles.avatarButton}
+      >
         <Image source={{ uri: user?.imageUrl }} style={styles.avatarImage} />
       </TouchableOpacity>
 
@@ -42,14 +53,21 @@ export function AccountButton() {
             )}
 
             <Pressable
-              style={({ pressed }) => [styles.item, pressed && styles.itemPressed]}
+              style={({ pressed }) => [
+                styles.item,
+                pressed && styles.itemPressed,
+              ]}
               onPress={handleSignOut}
             >
               <Text style={styles.signOutText}>Sign out</Text>
             </Pressable>
 
             <Pressable
-              style={({ pressed }) => [styles.item, styles.cancelItem, pressed && styles.itemPressed]}
+              style={({ pressed }) => [
+                styles.item,
+                styles.cancelItem,
+                pressed && styles.itemPressed,
+              ]}
               onPress={() => setVisible(false)}
             >
               <Text style={styles.cancelText}>Cancel</Text>

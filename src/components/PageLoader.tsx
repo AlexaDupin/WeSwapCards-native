@@ -1,6 +1,6 @@
-import { View, ActivityIndicator } from "react-native";
-import { styles } from "../assets/styles/styles";
-import { Colors } from "../constants/Colors";
+import { View, ActivityIndicator } from 'react-native';
+import { styles } from '../assets/styles/styles';
+import { Colors } from '../constants/Colors';
 
 const PageLoader = () => {
   return (

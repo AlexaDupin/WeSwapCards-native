@@ -1,7 +1,7 @@
 // src/features/cards/components/ChapterKebabMenu.tsx
-import React, { useState } from "react";
-import { Modal, Pressable, Text, View } from "react-native";
-import { styles } from "@/src/assets/styles/cards.styles";
+import React, { useState } from 'react';
+import { Modal, Pressable, Text, View } from 'react-native';
+import { styles } from '@/src/assets/styles/cards.styles';
 
 type Props = {
   disabled?: boolean;
@@ -9,7 +9,11 @@ type Props = {
   onMarkAllDuplicated?: () => void;
 };
 
-export default function ChapterKebabMenu({ disabled = false, onMarkAllOwned, onMarkAllDuplicated }: Props) {
+export default function ChapterKebabMenu({
+  disabled = false,
+  onMarkAllOwned,
+  onMarkAllDuplicated,
+}: Props) {
   const [open, setOpen] = useState(false);
 
   const close = () => setOpen(false);
@@ -20,18 +24,30 @@ export default function ChapterKebabMenu({ disabled = false, onMarkAllOwned, onM
         onPress={() => !disabled && setOpen(true)}
         accessibilityRole="button"
         accessibilityLabel="Chapter actions"
-        style={({ pressed }) => [styles.kebabButton, pressed && styles.kebabPressed, disabled && styles.kebabDisabled]}
+        style={({ pressed }) => [
+          styles.kebabButton,
+          pressed && styles.kebabPressed,
+          disabled && styles.kebabDisabled,
+        ]}
       >
         <Text style={styles.kebabText}>⋮</Text>
       </Pressable>
 
-      <Modal visible={open} transparent animationType="fade" onRequestClose={close}>
+      <Modal
+        visible={open}
+        transparent
+        animationType="fade"
+        onRequestClose={close}
+      >
         <Pressable style={styles.modalOverlay} onPress={close}>
           <View style={styles.modalSheet}>
             <Text style={styles.modalTitle}>Actions</Text>
 
             <Pressable
-              style={({ pressed }) => [styles.modalItem, pressed && styles.modalItemPressed]}
+              style={({ pressed }) => [
+                styles.modalItem,
+                pressed && styles.modalItemPressed,
+              ]}
               onPress={() => {
                 close();
                 onMarkAllOwned?.();
@@ -41,7 +57,10 @@ export default function ChapterKebabMenu({ disabled = false, onMarkAllOwned, onM
             </Pressable>
 
             <Pressable
-              style={({ pressed }) => [styles.modalItem, pressed && styles.modalItemPressed]}
+              style={({ pressed }) => [
+                styles.modalItem,
+                pressed && styles.modalItemPressed,
+              ]}
               onPress={() => {
                 close();
                 onMarkAllDuplicated?.();

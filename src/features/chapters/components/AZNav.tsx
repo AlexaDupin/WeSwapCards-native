@@ -1,5 +1,5 @@
-import React, { useMemo } from "react";
-import { Pressable, ScrollView, Text, View } from "react-native";
+import React, { useMemo } from 'react';
+import { Pressable, ScrollView, Text, View } from 'react-native';
 
 type Props = {
   onSelect: (letter: string) => void;
@@ -7,21 +7,33 @@ type Props = {
   style?: any;
 };
 
-const LETTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+const LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
-export default function AZNav({ onSelect, lettersWithContent = new Set(), style }: Props) {
+export default function AZNav({
+  onSelect,
+  lettersWithContent = new Set(),
+  style,
+}: Props) {
   const data = useMemo(
     () =>
       LETTERS.map((L) => ({
         letter: L,
         enabled: lettersWithContent.has(L),
       })),
-    [lettersWithContent]
+    [lettersWithContent],
   );
 
   return (
-    <View style={[styles.wrap, style]} accessibilityRole="toolbar" accessibilityLabel="Jump to letter">
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.row}>
+    <View
+      style={[styles.wrap, style]}
+      accessibilityRole="toolbar"
+      accessibilityLabel="Jump to letter"
+    >
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.row}
+      >
         {data.map(({ letter, enabled }) => (
           <Pressable
             key={letter}
@@ -35,7 +47,11 @@ export default function AZNav({ onSelect, lettersWithContent = new Set(), style 
             accessibilityRole="button"
             accessibilityLabel={`Jump to ${letter}`}
           >
-            <Text style={[styles.pillText, !enabled && styles.pillTextDisabled]}>{letter}</Text>
+            <Text
+              style={[styles.pillText, !enabled && styles.pillTextDisabled]}
+            >
+              {letter}
+            </Text>
           </Pressable>
         ))}
       </ScrollView>
@@ -45,7 +61,7 @@ export default function AZNav({ onSelect, lettersWithContent = new Set(), style 
 
 const styles = {
   wrap: {
-    width: "100%",
+    width: '100%',
     marginBottom: 12,
   },
   row: {
@@ -56,18 +72,18 @@ const styles = {
     paddingVertical: 7,
     paddingHorizontal: 10,
     borderRadius: 999,
-    backgroundColor: "rgba(0,0,0,0.06)",
+    backgroundColor: 'rgba(0,0,0,0.06)',
   },
   pillPressed: {
     transform: [{ scale: 0.98 }],
     opacity: 0.9,
   },
   pillDisabled: {
-    backgroundColor: "rgba(0,0,0,0.03)",
+    backgroundColor: 'rgba(0,0,0,0.03)',
   },
   pillText: {
     fontSize: 12,
-    fontWeight: "800",
+    fontWeight: '800',
     opacity: 0.85,
   },
   pillTextDisabled: {

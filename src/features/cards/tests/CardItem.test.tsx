@@ -12,13 +12,7 @@ const mockCard: CardItemData = {
 
 describe('CardItem', () => {
   it('renders the card number', () => {
-    render(
-      <CardItem
-        item={mockCard}
-        status="default"
-        onSelect={() => {}}
-      />
-    );
+    render(<CardItem item={mockCard} status="default" onSelect={() => {}} />);
 
     expect(screen.getByText('5')).toBeTruthy();
   });
@@ -27,11 +21,7 @@ describe('CardItem', () => {
     const onSelectMock = jest.fn();
 
     render(
-      <CardItem
-        item={mockCard}
-        status="default"
-        onSelect={onSelectMock}
-      />
+      <CardItem item={mockCard} status="default" onSelect={onSelectMock} />,
     );
 
     await userEvent.press(screen.getByText('5'));
