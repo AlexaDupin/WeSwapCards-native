@@ -6,8 +6,6 @@ const DEFAULT_BORDER = 'rgba(0,0,0,0.12)';
 const DEFAULT_INNER = 'rgba(0,0,0,0.04)';
 const DEFAULT_TEXT = 'rgba(0,0,0,0.8)';
 
-const OWNED_INNER = '#dff2ee'; // approx lighten(secondary, 45%)
-
 export const styles = StyleSheet.create({
   cardsScreen: {
     flex: 1,

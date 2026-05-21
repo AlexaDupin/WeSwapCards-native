@@ -145,6 +145,7 @@ export function useSignUpSubmit({
     redirectTo,
     setError,
     setIsSubmitting,
+    setPendingVerification,
   ]);
 
   return { onSignUpPress, onVerifyPress };

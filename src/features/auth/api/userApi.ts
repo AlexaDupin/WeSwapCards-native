@@ -1,5 +1,4 @@
 import { axiosInstance } from '@/src/lib/axiosInstance';
-import axios from 'axios';
 
 export type ExplorerInfo = { id: number; name: string } | null;
 

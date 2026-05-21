@@ -1,5 +1,5 @@
 import { useSignIn } from '@clerk/clerk-expo';
-import { type Href, useRouter } from 'expo-router';
+import { type Href } from 'expo-router';
 import { useCallback } from 'react';
 
 import { getClerkErrorCode, getSignInErrorMessage } from '../data/authErrors';
@@ -23,7 +23,6 @@ export function useSignInSubmit({
   redirectTo = '/(tabs)/cards',
 }: Params) {
   const { signIn, setActive, isLoaded } = useSignIn();
-  const router = useRouter();
   const { resetExplorer } = useExplorer();
 
   const onSignInPress = useCallback(async () => {

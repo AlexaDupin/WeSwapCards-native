@@ -89,7 +89,7 @@ export function useChatScreen(args: {
       try {
         await refreshMessages();
         markRead().catch(() => {});
-      } catch (e) {
+      } catch {
         if (!cancelled) setError('Could not load messages');
       } finally {
         if (!cancelled) setLoading(false);
@@ -158,7 +158,7 @@ export function useChatScreen(args: {
       await chatApi
         .markConversationRead({ conversationId: cid, explorerId, headers })
         .catch(() => {});
-    } catch (e) {
+    } catch {
       setError('Could not send message');
     } finally {
       setSending(false);
@@ -192,7 +192,7 @@ export function useChatScreen(args: {
           status,
         });
         return true;
-      } catch (e) {
+      } catch {
         setError('Could not update conversation status');
         return false;
       } finally {
