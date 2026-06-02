@@ -6,6 +6,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { authStyles } from '../../src/assets/styles/auth.styles';
 import { styles } from '../../src/assets/styles/styles';
 import { useSignUpSubmit } from '@/src/features/auth/hooks/useSignUpSubmit';
+import PasswordInput from '@/src/components/PasswordInput';
 
 export default function SignUpScreen() {
   const [emailAddress, setEmailAddress] = useState('');
@@ -127,19 +128,16 @@ export default function SignUpScreen() {
                 returnKeyType="next"
               />
 
-              <TextInput
-                style={[authStyles.input, error && authStyles.errorInput]}
+              <PasswordInput
                 value={password}
-                placeholder="Enter password"
-                secureTextEntry
-                textContentType="newPassword"
-                autoComplete="password-new"
                 onChangeText={(value: string) => {
                   setPassword(value);
                   if (error) clearError();
                 }}
-                returnKeyType="done"
                 onSubmitEditing={onSignUpPress}
+                textContentType="newPassword"
+                autoComplete="password-new"
+                hasError={Boolean(error)}
               />
 
               <TouchableOpacity
