@@ -106,3 +106,18 @@ export async function markConversationUnread(args: {
     unread: Boolean(resp.data?.unread),
   };
 }
+
+export async function updateExplorerActivity(args: {
+  explorerId: number;
+  headers: AuthHeaders;
+}): Promise<void> {
+  const { explorerId, headers } = args;
+  await axiosInstance.post(
+    `/exploreractivity/${explorerId}`,
+    {},
+    {
+      headers,
+      timeout: 10000,
+    },
+  );
+}

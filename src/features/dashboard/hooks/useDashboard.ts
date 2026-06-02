@@ -8,6 +8,7 @@ import {
   updateConversationStatus,
   getUnreadCounts,
   markConversationUnread,
+  updateExplorerActivity,
 } from '@/src/features/dashboard/api/dashboardApi';
 
 import {
@@ -271,6 +272,15 @@ export function useDashboard(args: UseDashboardArgs) {
           .catch(() => {});
       }
     }, [activeTab, fetchInProgress, fetchPastFirst, refreshUnreadCounts]),
+  );
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!explorerId) return;
+      authHeaders()
+        .then((headers) => updateExplorerActivity({ explorerId, headers }))
+        .catch(() => {});
+    }, [explorerId, authHeaders]),
   );
 
   const loadMorePast = useCallback(async () => {
