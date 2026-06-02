@@ -8,10 +8,18 @@ import HowItWorks from '@/src/features/home/components/HowItWorks';
 
 import { useAuth } from '@clerk/clerk-expo';
 import { Link, Redirect } from 'expo-router';
-import { ScrollView, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Image,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 
 export default function Index() {
   const { isSignedIn, isLoaded } = useAuth();
+  const { width } = useWindowDimensions();
 
   if (!isLoaded) return <PageLoader />;
   if (isSignedIn) return <Redirect href={'/(tabs)/cards'} />;
@@ -25,6 +33,16 @@ export default function Index() {
         <TopBar />
 
         <HeroCard />
+
+        <Image
+          source={require('@/src/assets/images/LandingPageImage.png')}
+          style={[
+            homeStyles.landingImage,
+            { width, height: width * (941 / 1672) },
+          ]}
+          resizeMode="contain"
+          accessibilityIgnoresInvertColors
+        />
 
         <View style={homeStyles.sectionBlock}>
           <LatestChaptersRow limit={5} />

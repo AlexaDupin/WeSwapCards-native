@@ -56,6 +56,11 @@ export const homeStyles = StyleSheet.create({
   },
   signInLink: { fontWeight: '800' },
 
+  landingImage: {
+    marginHorizontal: -16,
+    marginTop: 18,
+  },
+
   sectionBlock: {
     width: '100%',
     marginTop: 22,
