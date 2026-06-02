@@ -29,6 +29,9 @@ export const authStyles = StyleSheet.create({
     borderWidth: 1,
     fontSize: 16,
   },
+  errorInput: {
+    borderColor: '#E74C3C',
+  },
   button: {
     backgroundColor: Colors.primary,
     borderRadius: 12,
