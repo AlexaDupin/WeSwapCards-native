@@ -120,6 +120,23 @@ export default function DashboardScreen() {
           }
           onEndReached={activeTab === 'past' ? loadMorePast : undefined}
           onEndReachedThreshold={0.4}
+          ListEmptyComponent={
+            <View style={styles.emptyContainer}>
+              <Text style={styles.emptyIcon}>
+                {activeTab === 'in-progress' ? '💬' : '🗂️'}
+              </Text>
+              <Text style={styles.emptyTitle}>
+                {activeTab === 'in-progress'
+                  ? 'No open conversations'
+                  : 'No past conversations'}
+              </Text>
+              <Text style={styles.emptySubtitle}>
+                {activeTab === 'in-progress'
+                  ? 'Start swapping!'
+                  : 'Completed and declined conversations will be archived here.'}
+              </Text>
+            </View>
+          }
           ListFooterComponent={
             activeTab === 'past' && loadingMore ? (
               <View style={{ paddingVertical: 16 }}>

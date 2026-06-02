@@ -118,4 +118,30 @@ export const styles = StyleSheet.create({
     borderRadius: 4,
     backgroundColor: '#0A84FF',
   },
+
+  emptyContainer: {
+    marginTop: 8,
+    paddingVertical: 32,
+    paddingHorizontal: 20,
+    borderRadius: 16,
+    backgroundColor: 'rgba(0,0,0,0.03)',
+    alignItems: 'center',
+  },
+  emptyIcon: {
+    fontSize: 36,
+    marginBottom: 12,
+  },
+  emptyTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: 'rgba(0,0,0,0.7)',
+    marginBottom: 6,
+    textAlign: 'center',
+  },
+  emptySubtitle: {
+    fontSize: 13,
+    color: 'rgba(0,0,0,0.5)',
+    textAlign: 'center',
+    lineHeight: 18,
+  },
 });
