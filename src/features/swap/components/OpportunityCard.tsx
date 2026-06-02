@@ -52,7 +52,9 @@ export default function OpportunityCard({ opportunity, onContact }: Props) {
 
             {tooltipOpen ? (
               <View style={styles.tooltip}>
-                <Text style={styles.tooltipText}>Active recently</Text>
+                <Text style={styles.tooltipText} numberOfLines={1}>
+                  Active recently
+                </Text>
               </View>
             ) : null}
           </View>
@@ -124,6 +126,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 24,
     right: 0,
+    width: 130,
+    alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.85)',
     paddingVertical: 6,
     paddingHorizontal: 10,
