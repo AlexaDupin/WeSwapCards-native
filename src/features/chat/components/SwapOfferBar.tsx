@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import {
   ActivityIndicator,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   View,
@@ -21,8 +22,6 @@ export default function SwapOfferBar({ cards, loading = false }: Props) {
   const [expanded, setExpanded] = useState(false);
 
   const hasMore = cards.length > COLLAPSE_LIMIT;
-  const visibleCards =
-    expanded || !hasMore ? cards : cards.slice(0, COLLAPSE_LIMIT);
   const hiddenCount = cards.length - COLLAPSE_LIMIT;
 
   return (
@@ -32,32 +31,55 @@ export default function SwapOfferBar({ cards, loading = false }: Props) {
         <ActivityIndicator size="small" style={styles.spinner} />
       ) : cards.length === 0 ? (
         <Text style={styles.empty}>No missing card to exchange</Text>
+      ) : expanded ? (
+        <ScrollView
+          style={styles.expandedScroll}
+          showsVerticalScrollIndicator={false}
+          nestedScrollEnabled
+        >
+          <View style={styles.chipsRow}>
+            {cards.map((card) => (
+              <View key={card.id} style={styles.chip}>
+                <Text style={styles.chipText} numberOfLines={1}>
+                  {card.name}
+                </Text>
+              </View>
+            ))}
+          </View>
+          <Pressable
+            onPress={() => setExpanded(false)}
+            style={styles.chevronBtn}
+            hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+            accessibilityRole="button"
+            accessibilityLabel="Show fewer cards"
+          >
+            <Ionicons name="chevron-up" size={16} color="rgba(0,0,0,0.45)" />
+          </Pressable>
+        </ScrollView>
       ) : (
         <View style={styles.chipsRow}>
-          {visibleCards.map((card) => (
+          {(hasMore ? cards.slice(0, COLLAPSE_LIMIT) : cards).map((card) => (
             <View key={card.id} style={styles.chip}>
               <Text style={styles.chipText} numberOfLines={1}>
                 {card.name}
               </Text>
             </View>
           ))}
-          {!expanded && hasMore ? (
+          {hasMore ? (
             <View style={styles.chip}>
               <Text style={styles.chipText}>+{hiddenCount}</Text>
             </View>
           ) : null}
           {hasMore ? (
             <Pressable
-              onPress={() => setExpanded((e) => !e)}
+              onPress={() => setExpanded(true)}
               style={styles.chevronBtn}
               hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
               accessibilityRole="button"
-              accessibilityLabel={
-                expanded ? 'Show fewer cards' : 'Show all cards'
-              }
+              accessibilityLabel="Show all cards"
             >
               <Ionicons
-                name={expanded ? 'chevron-up' : 'chevron-down'}
+                name="chevron-down"
                 size={16}
                 color="rgba(0,0,0,0.45)"
               />
@@ -94,6 +116,9 @@ const styles = StyleSheet.create({
     color: 'rgba(0,0,0,0.45)',
     fontStyle: 'italic',
   },
+  expandedScroll: {
+    maxHeight: 150,
+  },
   chipsRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
@@ -118,5 +143,7 @@ const styles = StyleSheet.create({
     height: 26,
     borderRadius: 999,
     backgroundColor: 'rgba(0,0,0,0.04)',
+    marginTop: 8,
+    alignSelf: 'center',
   },
 });
