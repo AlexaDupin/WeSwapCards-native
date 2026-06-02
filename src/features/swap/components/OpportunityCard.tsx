@@ -1,5 +1,6 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 import { Colors } from '@/src/constants/Colors';
 import type { SwapOpportunityItem } from '@/src/features/swap/types/SwapTypes';
@@ -19,6 +20,8 @@ function isRecentlyActive(lastActiveAt?: string | null) {
 }
 
 export default function OpportunityCard({ opportunity, onContact }: Props) {
+  const [tooltipOpen, setTooltipOpen] = useState(false);
+
   const active = useMemo(
     () => isRecentlyActive(opportunity.last_active_at),
     [opportunity.last_active_at],
@@ -35,12 +38,25 @@ export default function OpportunityCard({ opportunity, onContact }: Props) {
           {opportunity.explorer_name}
         </Text>
 
-        <View style={styles.badgeRow}>
-          <View
-            style={[styles.dot, active ? styles.dotActive : styles.dotInactive]}
-          />
-          <Text style={styles.badgeText}>{active ? 'Active' : 'Inactive'}</Text>
-        </View>
+        {active ? (
+          <View style={styles.lightningWrap}>
+            <Pressable
+              onPress={() => setTooltipOpen((open) => !open)}
+              style={styles.lightningBtn}
+              hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+              accessibilityRole="button"
+              accessibilityLabel="Active recently"
+            >
+              <Ionicons name="flash" size={18} color="#7C3AED" />
+            </Pressable>
+
+            {tooltipOpen ? (
+              <View style={styles.tooltip}>
+                <Text style={styles.tooltipText}>Active recently</Text>
+              </View>
+            ) : null}
+          </View>
+        ) : null}
       </View>
 
       {offeredNames.length > 0 ? (
@@ -97,22 +113,28 @@ const styles = StyleSheet.create({
     flex: 1,
     color: '#000',
   },
-  badgeRow: {
-    flexDirection: 'row',
+  lightningWrap: {
+    position: 'relative',
+  },
+  lightningBtn: {
     alignItems: 'center',
-    gap: 5,
+    justifyContent: 'center',
   },
-  dot: {
-    width: 7,
-    height: 7,
-    borderRadius: 999,
+  tooltip: {
+    position: 'absolute',
+    top: 24,
+    right: 0,
+    backgroundColor: 'rgba(0,0,0,0.85)',
+    paddingVertical: 6,
+    paddingHorizontal: 10,
+    borderRadius: 8,
+    zIndex: 10,
+    elevation: 4,
   },
-  dotActive: { backgroundColor: '#16A34A' },
-  dotInactive: { backgroundColor: 'rgba(0,0,0,0.2)' },
-  badgeText: {
+  tooltipText: {
+    color: '#fff',
     fontSize: 12,
-    fontWeight: '500',
-    color: 'rgba(0,0,0,0.45)',
+    fontWeight: '600',
   },
   offeredSection: {
     marginTop: 12,
