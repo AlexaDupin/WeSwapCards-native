@@ -26,7 +26,7 @@ export default function SwapOfferBar({ cards, loading = false }: Props) {
 
   return (
     <View style={styles.bar}>
-      <Text style={styles.label}>You can offer in return</Text>
+      <Text style={styles.label}>Cards to exchange in return</Text>
       {loading ? (
         <ActivityIndicator size="small" style={styles.spinner} />
       ) : cards.length === 0 ? (
