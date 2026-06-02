@@ -9,6 +9,8 @@ import {
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
+import { Colors } from '@/src/constants/Colors';
+
 type Card = { id: number; name: string };
 
 type Props = {
@@ -26,7 +28,16 @@ export default function SwapOfferBar({ cards, loading = false }: Props) {
 
   return (
     <View style={styles.bar}>
-      <Text style={styles.label}>Cards to exchange in return</Text>
+      <View style={styles.labelRow}>
+        <Ionicons
+          name="swap-horizontal"
+          size={15}
+          color={Colors.primary}
+          accessibilityElementsHidden
+          importantForAccessibility="no-hide-descendants"
+        />
+        <Text style={styles.label}>Cards to exchange in return</Text>
+      </View>
       {loading ? (
         <ActivityIndicator size="small" style={styles.spinner} />
       ) : cards.length === 0 ? (
@@ -99,13 +110,18 @@ const styles = StyleSheet.create({
     borderBottomColor: '#EEF2F6',
     backgroundColor: '#fff',
   },
+  labelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 6,
+  },
   label: {
     fontSize: 11,
     fontWeight: '600',
     letterSpacing: 0.4,
     textTransform: 'uppercase',
     color: 'rgba(0,0,0,0.4)',
-    marginBottom: 6,
   },
   spinner: {
     marginTop: 4,
