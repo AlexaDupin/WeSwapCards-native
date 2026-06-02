@@ -8,7 +8,6 @@ type Props = {
   onSubmitEditing: () => void;
   textContentType: 'password' | 'newPassword';
   autoComplete: 'password' | 'password-new';
-  hasError: boolean;
   placeholder?: string;
 };
 
@@ -18,13 +17,12 @@ export default function PasswordInput({
   onSubmitEditing,
   textContentType,
   autoComplete,
-  hasError,
   placeholder = 'Enter password',
 }: Props) {
   const [visible, setVisible] = useState(false);
 
   return (
-    <View style={[styles.container, hasError && styles.containerError]}>
+    <View style={styles.container}>
       <TextInput
         style={styles.input}
         value={value}
@@ -64,9 +62,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingRight: 12,
-  },
-  containerError: {
-    borderColor: '#E74C3C',
   },
   input: {
     flex: 1,

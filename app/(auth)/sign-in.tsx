@@ -66,7 +66,7 @@ export default function SignInScreen() {
           ) : null}
 
           <TextInput
-            style={[authStyles.input, error && authStyles.errorInput]}
+            style={authStyles.input}
             autoCapitalize="none"
             autoCorrect={false}
             keyboardType="email-address"
@@ -89,7 +89,6 @@ export default function SignInScreen() {
             onSubmitEditing={onSignInPress}
             textContentType="password"
             autoComplete="password"
-            hasError={Boolean(error)}
           />
 
           <TouchableOpacity

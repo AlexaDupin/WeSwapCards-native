@@ -88,7 +88,7 @@ export default function SignUpScreen() {
           {pendingVerification ? (
             <>
               <TextInput
-                style={[authStyles.input, error && authStyles.errorInput]}
+                style={authStyles.input}
                 value={code}
                 placeholder="Enter verification code"
                 keyboardType="numeric"
@@ -113,7 +113,7 @@ export default function SignUpScreen() {
           ) : (
             <>
               <TextInput
-                style={[authStyles.input, error && authStyles.errorInput]}
+                style={authStyles.input}
                 autoCapitalize="none"
                 autoCorrect={false}
                 keyboardType="email-address"
@@ -137,7 +137,6 @@ export default function SignUpScreen() {
                 onSubmitEditing={onSignUpPress}
                 textContentType="newPassword"
                 autoComplete="password-new"
-                hasError={Boolean(error)}
               />
 
               <TouchableOpacity
