@@ -56,6 +56,12 @@ export default function SwapScreen() {
             cardName: payload.cardName,
             swapName: payload.explorer_name,
             swapExplorerId: String(payload.explorer_id),
+            offeredCards: JSON.stringify(
+              payload.opportunities.map((o) => ({
+                id: o.card.id,
+                name: o.card.name,
+              })),
+            ),
           },
         });
       },

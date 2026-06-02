@@ -86,6 +86,30 @@ export async function updateConversationStatus({
   );
 }
 
+type FetchOfferableCardsArgs = {
+  conversationId: number;
+  creatorId: number;
+  recipientId: number;
+  headers: AuthHeaders;
+};
+
+type OfferableCardItem = {
+  card: { id: number; name: string };
+};
+
+export async function fetchOfferableCards({
+  conversationId,
+  creatorId,
+  recipientId,
+  headers,
+}: FetchOfferableCardsArgs): Promise<OfferableCardItem[]> {
+  const resp = await axiosInstance.get(
+    `/conversation/${conversationId}/opportunities/${creatorId}/${recipientId}`,
+    { headers, timeout: 20000 },
+  );
+  return (resp.data ?? []) as OfferableCardItem[];
+}
+
 type GetConversationArgs = {
   explorerId: number;
   swapExplorerId: number;

@@ -64,6 +64,8 @@ export default function DashboardScreen() {
               cardName: item.card_name,
               swapName: item.swap_explorer,
               swapExplorerId: String(item.swap_explorer_id),
+              creatorId: String(item.creator_id),
+              recipientId: String(item.recipient_id),
             },
           });
         }}

@@ -14,6 +14,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { styles } from '@/src/assets/styles/chat.styles';
 import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
 import { useChatScreen } from '@/src/features/chat/hooks/useChatScreen';
+import { useOfferableCards } from '@/src/features/chat/hooks/useOfferableCards';
 import type { ConversationStatus } from '@/src/features/chat/types/ConversationStatus';
 
 import MessageList, {
@@ -21,12 +22,16 @@ import MessageList, {
 } from '@/src/features/chat/components/MessageList';
 import ConversationStatusBar from '@/src/features/chat/components/ConversationStatusBar';
 import ChatComposer from '@/src/features/chat/components/ChatComposer';
+import SwapOfferBar from '@/src/features/chat/components/SwapOfferBar';
 
 type ChatScreenProps = {
   conversationId: number | null;
   cardName: string;
   swapName: string;
   swapExplorerId: number | null;
+  offeredCards?: { id: number; name: string }[];
+  creatorId?: number | null;
+  recipientId?: number | null;
 };
 
 export default function ChatScreen({
@@ -34,9 +39,21 @@ export default function ChatScreen({
   cardName,
   swapName,
   swapExplorerId,
+  offeredCards,
+  creatorId,
+  recipientId,
 }: ChatScreenProps) {
   const { explorerId } = useExplorer();
   const insets = useSafeAreaInsets();
+
+  const needFetch = offeredCards == null && conversationId != null;
+  const { cards: fetched, loading: offerLoading } = useOfferableCards({
+    conversationId,
+    creatorId: creatorId ?? null,
+    recipientId: recipientId ?? null,
+    enabled: needFetch,
+  });
+  const offerableCards = offeredCards ?? fetched;
 
   const HEADER_H = 56;
 
@@ -102,6 +119,11 @@ export default function ChatScreen({
 
         <View style={{ width: 28 }} />
       </View>
+
+      <SwapOfferBar
+        cards={offerableCards}
+        loading={needFetch && offerLoading}
+      />
 
       {error ? <Text style={styles.error}>{error}</Text> : null}
       {explorerId == null ? (
