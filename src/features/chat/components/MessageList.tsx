@@ -18,6 +18,7 @@ import {
 
 import { styles } from '@/src/assets/styles/chat.styles';
 import type { Message } from '@/src/features/chat/types/MessageType';
+import { formatMessageTimestamp } from '@/src/utils/dateTime';
 
 type Mode = 'auto' | 'short' | 'long';
 
@@ -126,11 +127,7 @@ const MessageList = forwardRef<MessageListHandle, MessageListProps>(
             </Text>
 
             <Text style={isMine ? styles.timestampMine : styles.timestampOther}>
-              {new Date(item.timestamp).toLocaleString(undefined, {
-                weekday: 'short',
-                hour: '2-digit',
-                minute: '2-digit',
-              })}
+              {formatMessageTimestamp(item.timestamp)}
             </Text>
           </View>
         );
