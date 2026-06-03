@@ -6,13 +6,13 @@ import {
   RefreshControl,
   ActivityIndicator,
   TextInput,
-  Pressable,
 } from 'react-native';
 import { useAuth } from '@clerk/clerk-expo';
 import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
 import { router } from 'expo-router';
 
 import TabChip from '@/src/components/TabChip';
+import SegmentedToggle from '@/src/components/SegmentedToggle';
 import DashboardItem from '@/src/features/dashboard/components/DashboardItem';
 import { styles } from '@/src/assets/styles/dashboard.styles';
 import { AccountButton } from '@/src/components/AccountButton';
@@ -95,17 +95,28 @@ export default function DashboardScreen() {
       </View>
 
       <View style={styles.pillList}>
-        <TabChip
-          label="In progress"
-          count={unreadCounts.inProgress}
-          active={activeTab === 'in-progress'}
-          onPress={() => setActiveTab('in-progress')}
-        />
-        <TabChip
-          label="Past"
-          count={unreadCounts.past}
-          active={activeTab === 'past'}
-          onPress={() => setActiveTab('past')}
+        <View style={styles.tabChips}>
+          <TabChip
+            label="In progress"
+            count={unreadCounts.inProgress}
+            active={activeTab === 'in-progress'}
+            onPress={() => setActiveTab('in-progress')}
+          />
+          <TabChip
+            label="Past"
+            count={unreadCounts.past}
+            active={activeTab === 'past'}
+            onPress={() => setActiveTab('past')}
+          />
+        </View>
+
+        <SegmentedToggle
+          options={[
+            { value: 'date', label: 'Recent' },
+            { value: 'name', label: 'Name' },
+          ]}
+          value={sortBy}
+          onChange={setSortBy}
         />
       </View>
 
@@ -120,49 +131,6 @@ export default function DashboardScreen() {
         returnKeyType="search"
         clearButtonMode="while-editing"
       />
-
-      <View style={styles.filterRow}>
-        <View style={styles.sortSegmentWrap} accessibilityRole="tablist">
-          <Pressable
-            onPress={() => setSortBy('date')}
-            accessibilityRole="tab"
-            accessibilityState={{ selected: sortBy === 'date' }}
-            style={({ pressed }) => [
-              styles.sortSegment,
-              sortBy === 'date' && styles.sortSegmentActive,
-              pressed && styles.sortSegmentPressed,
-            ]}
-          >
-            <Text
-              style={[
-                styles.sortSegmentText,
-                sortBy === 'date' && styles.sortSegmentTextActive,
-              ]}
-            >
-              Recent
-            </Text>
-          </Pressable>
-          <Pressable
-            onPress={() => setSortBy('name')}
-            accessibilityRole="tab"
-            accessibilityState={{ selected: sortBy === 'name' }}
-            style={({ pressed }) => [
-              styles.sortSegment,
-              sortBy === 'name' && styles.sortSegmentActive,
-              pressed && styles.sortSegmentPressed,
-            ]}
-          >
-            <Text
-              style={[
-                styles.sortSegmentText,
-                sortBy === 'name' && styles.sortSegmentTextActive,
-              ]}
-            >
-              Name
-            </Text>
-          </Pressable>
-        </View>
-      </View>
 
       {loadingInitial && listData.length === 0 ? (
         <View style={{ paddingTop: 24 }}>

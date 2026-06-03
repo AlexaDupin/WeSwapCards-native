@@ -1,4 +1,4 @@
-import { Platform, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   searchInput: {
@@ -10,53 +10,10 @@ export const styles = StyleSheet.create({
     marginBottom: 12,
   },
 
-  filterRow: {
+  tabChips: {
     flexDirection: 'row',
-    justifyContent: 'flex-end',
-    marginBottom: 15,
-  },
-
-  sortSegmentWrap: {
-    flexDirection: 'row',
-    backgroundColor: 'rgba(0,0,0,0.06)',
-    borderRadius: 999,
-    padding: 3,
-  },
-  sortSegment: {
-    paddingVertical: 7,
-    paddingHorizontal: 12,
-    borderRadius: 999,
-    minWidth: 64,
     alignItems: 'center',
-    justifyContent: 'center',
-  },
-  sortSegmentActive: {
-    backgroundColor: '#fff',
-    borderWidth: 1,
-    borderColor: 'rgba(0,0,0,0.08)',
-    ...Platform.select({
-      ios: {
-        shadowColor: '#000',
-        shadowOpacity: 0.08,
-        shadowRadius: 10,
-        shadowOffset: { width: 0, height: 4 },
-      },
-      android: {
-        elevation: 2,
-      },
-    }),
-  },
-  sortSegmentPressed: {
-    opacity: 0.9,
-    transform: [{ scale: 0.98 }],
-  },
-  sortSegmentText: {
-    fontSize: 13,
-    fontWeight: '700',
-    opacity: 0.7,
-  },
-  sortSegmentTextActive: {
-    opacity: 1,
+    gap: 10,
   },
   renderRightAccept: {
     backgroundColor: '#34C759',
@@ -146,7 +103,7 @@ export const styles = StyleSheet.create({
   pillList: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    justifyContent: 'space-between',
     marginBottom: 15,
   },
   pill: {

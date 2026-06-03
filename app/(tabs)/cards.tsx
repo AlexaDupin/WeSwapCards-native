@@ -1,7 +1,8 @@
-import { Text, View, Pressable } from 'react-native';
+import { Text, View } from 'react-native';
 import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
 
 import PageLoader from '@/src/components/PageLoader';
+import SegmentedToggle from '@/src/components/SegmentedToggle';
 
 import ChaptersList from '@/src/features/chapters/components/ChaptersList';
 import AZNav from '@/src/features/chapters/components/AZNav';
@@ -35,47 +36,14 @@ export default function Cards() {
       <View style={styles.controlsRow}>
         <Text style={styles.pageTitle}>My cards</Text>
 
-        <View style={styles.sortSegmentWrap} accessibilityRole="tablist">
-          <Pressable
-            onPress={() => setSortLatest(false)}
-            style={({ pressed }) => [
-              styles.sortSegment,
-              !sortLatest && styles.sortSegmentActive,
-              pressed && styles.sortSegmentPressed,
-            ]}
-            accessibilityRole="tab"
-            accessibilityState={{ selected: !sortLatest }}
-          >
-            <Text
-              style={[
-                styles.sortSegmentText,
-                !sortLatest && styles.sortSegmentTextActive,
-              ]}
-            >
-              A–Z
-            </Text>
-          </Pressable>
-
-          <Pressable
-            onPress={() => setSortLatest(true)}
-            style={({ pressed }) => [
-              styles.sortSegment,
-              sortLatest && styles.sortSegmentActive,
-              pressed && styles.sortSegmentPressed,
-            ]}
-            accessibilityRole="tab"
-            accessibilityState={{ selected: sortLatest }}
-          >
-            <Text
-              style={[
-                styles.sortSegmentText,
-                sortLatest && styles.sortSegmentTextActive,
-              ]}
-            >
-              Latest
-            </Text>
-          </Pressable>
-        </View>
+        <SegmentedToggle
+          options={[
+            { value: 'az', label: 'A–Z' },
+            { value: 'latest', label: 'Latest' },
+          ]}
+          value={sortLatest ? 'latest' : 'az'}
+          onChange={(v) => setSortLatest(v === 'latest')}
+        />
       </View>
 
       <View style={styles.azWrap}>
