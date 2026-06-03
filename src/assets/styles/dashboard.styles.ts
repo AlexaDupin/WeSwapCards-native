@@ -13,7 +13,7 @@ export const styles = StyleSheet.create({
   tabChips: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
+    gap: 18,
   },
   renderRightAccept: {
     backgroundColor: '#34C759',

@@ -38,35 +38,36 @@ function TabChip({ label, count = 0, active = false, onPress }: Props) {
   );
 }
 
-const CHIP_HEIGHT = 36;
-
+// Underline tab: no pill background; the active tab is bold charcoal with a
+// charcoal underline indicator. Keeps the row to a single accent blue (the
+// SegmentedToggle), reusing the bottom tab-bar charcoal.
 const styles = StyleSheet.create({
   chip: {
-    height: CHIP_HEIGHT,
-    borderRadius: CHIP_HEIGHT / 2,
-    paddingHorizontal: 14,
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    gap: 6,
+    paddingHorizontal: 2,
+    paddingVertical: 6,
+    borderBottomWidth: 2,
+    borderBottomColor: 'transparent',
   },
-  chipInactive: {
-    backgroundColor: '#F2F4F7',
-  },
+  chipInactive: {},
   chipActive: {
-    backgroundColor: '#E0F2FE',
+    borderBottomColor: '#2563eb',
   },
   chipPressed: {
-    opacity: 0.85,
+    opacity: 0.6,
   },
   text: {
-    fontSize: 14,
+    fontSize: 15,
     fontWeight: '600',
   },
   textInactive: {
-    color: '#344054',
+    color: '#6C757D',
   },
   textActive: {
-    color: '#0369A1',
+    color: '#212529',
+    fontWeight: '800',
   },
   badge: {
     minWidth: 18,
