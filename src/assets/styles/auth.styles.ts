@@ -40,7 +40,7 @@ export const authStyles = StyleSheet.create({
   buttonText: {
     color: '#FFF',
     fontSize: 18,
-    fontWeight: '400',
+    fontWeight: '600',
   },
   footerContainer: {
     flexDirection: 'row',

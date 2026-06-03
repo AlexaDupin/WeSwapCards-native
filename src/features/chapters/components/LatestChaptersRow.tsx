@@ -1,13 +1,7 @@
 import { useEffect, useState } from 'react';
-import {
-  ActivityIndicator,
-  FlatList,
-  Image,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { ActivityIndicator, FlatList, Image, Text, View } from 'react-native';
 import { Link } from 'expo-router';
+import PressableScale from '@/src/components/PressableScale';
 import { getLatestChapters } from '@/src/features/chapters/api/chapters.api';
 import { type LatestChapter } from '@/src/features/chapters/types/chapters.types';
 import { LatestChaptersRowStyles } from '@/src/features/chapters/components/LatestChaptersRow.styles';
@@ -56,7 +50,7 @@ export default function LatestChaptersRow({ limit = 5 }: { limit?: number }) {
         keyExtractor={(it) => String(it.id)}
         renderItem={({ item }) => (
           <Link href="/sign-up" asChild>
-            <TouchableOpacity style={LatestChaptersRowStyles.card}>
+            <PressableScale style={LatestChaptersRowStyles.card}>
               {!!item.image_url && (
                 <Image
                   source={{ uri: item.image_url }}
@@ -67,7 +61,7 @@ export default function LatestChaptersRow({ limit = 5 }: { limit?: number }) {
               <Text numberOfLines={2} style={LatestChaptersRowStyles.name}>
                 {item.name}
               </Text>
-            </TouchableOpacity>
+            </PressableScale>
           </Link>
         )}
         ItemSeparatorComponent={() => <View style={{ height: 14 }} />}

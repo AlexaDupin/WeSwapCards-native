@@ -1,11 +1,24 @@
 import { StyleSheet } from 'react-native';
 
+// Spacing scale — keep the page on a consistent vertical rhythm.
+const S = { xs: 8, sm: 12, md: 16, lg: 24, xl: 32 };
+
+// Shared corner radius + soft card shadow so every surface feels part of one system.
+const RADIUS = 20;
+const cardShadow = {
+  shadowColor: '#000',
+  shadowOpacity: 0.06,
+  shadowRadius: 14,
+  shadowOffset: { width: 0, height: 8 },
+  elevation: 2,
+} as const;
+
 export const homeStyles = StyleSheet.create({
   screen: { flex: 1 },
 
   scrollContent: {
-    paddingHorizontal: 16,
-    paddingTop: 12,
+    paddingHorizontal: S.md,
+    paddingTop: S.lg, // SafeScreen already adds the status-bar inset above this
   },
 
   topBar: {
@@ -18,27 +31,32 @@ export const homeStyles = StyleSheet.create({
 
   heroCard: {
     width: '100%',
-    borderRadius: 22,
-    padding: 18,
+    borderRadius: 28,
+    padding: S.lg,
     backgroundColor: 'rgba(245, 230, 215, 0.55)',
-    marginTop: 14,
+    marginTop: S.lg,
+    shadowColor: '#000',
+    shadowOpacity: 0.08,
+    shadowRadius: 18,
+    shadowOffset: { width: 0, height: 10 },
+    elevation: 3,
   },
 
   heroTitle: {
-    fontSize: 28,
+    fontSize: 34,
     fontWeight: '800',
-    letterSpacing: -0.2,
-    marginBottom: 10,
+    letterSpacing: -0.5,
+    marginBottom: S.sm,
   },
   heroSubtitle: {
     fontSize: 16,
     lineHeight: 22,
     opacity: 0.78,
-    marginBottom: 8,
+    marginBottom: S.xs,
   },
 
   microMeta: {
-    marginBottom: 16,
+    marginBottom: S.md,
   },
   microMetaText: {
     fontSize: 13,
@@ -57,33 +75,30 @@ export const homeStyles = StyleSheet.create({
   signInLink: { fontWeight: '800' },
 
   landingImage: {
-    marginHorizontal: -16,
-    marginTop: 18,
+    marginHorizontal: -S.md,
+    marginTop: S.xl,
   },
 
   sectionBlock: {
     width: '100%',
-    marginTop: 22,
+    marginTop: S.xl,
   },
   sectionHeaderRow: {
     flexDirection: 'row',
     alignItems: 'baseline',
     justifyContent: 'space-between',
-    marginBottom: 12,
+    marginBottom: S.sm,
   },
   sectionTitle: { fontSize: 26, fontWeight: '800' },
   sectionAction: { fontSize: 16, fontWeight: '800', opacity: 0.7 },
 
   stepsCard: {
     width: '100%',
-    borderRadius: 18,
-    paddingVertical: 8,
-    paddingHorizontal: 12,
+    borderRadius: RADIUS,
+    paddingVertical: S.xs,
+    paddingHorizontal: S.sm,
     backgroundColor: 'white',
-    shadowOpacity: 0.06,
-    shadowRadius: 14,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 2,
+    ...cardShadow,
   },
 
   stepRow: {
@@ -104,7 +119,7 @@ export const homeStyles = StyleSheet.create({
 
   stepTextWrap: { flex: 1 },
   stepTitle: { fontSize: 16, fontWeight: '900', marginBottom: 2 },
-  stepSubtitle: { fontSize: 13, opacity: 0.7, lineHeight: 18 },
+  stepSubtitle: { fontSize: 14, opacity: 0.7, lineHeight: 20 },
 
   stepDivider: {
     height: 1,
@@ -113,6 +128,6 @@ export const homeStyles = StyleSheet.create({
   },
 
   footerCta: {
-    marginTop: 14,
+    marginTop: S.md,
   },
 });

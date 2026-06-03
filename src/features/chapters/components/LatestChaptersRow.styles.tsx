@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { Colors } from '@/src/constants/Colors';
 
 export const LatestChaptersRowStyles = StyleSheet.create({
   wrap: { width: '100%' },
@@ -8,7 +9,7 @@ export const LatestChaptersRowStyles = StyleSheet.create({
   kicker: {
     fontSize: 12,
     fontWeight: '700',
-    opacity: 0.55,
+    color: Colors.primary,
     letterSpacing: 0.6,
     marginBottom: 4,
     textTransform: 'uppercase',
@@ -21,13 +22,13 @@ export const LatestChaptersRowStyles = StyleSheet.create({
 
   card: {
     width: '100%',
-    borderRadius: 16,
+    borderRadius: 20,
   },
 
   image: {
     width: '100%',
     height: 150,
-    borderRadius: 16,
+    borderRadius: 20,
   },
 
   name: {

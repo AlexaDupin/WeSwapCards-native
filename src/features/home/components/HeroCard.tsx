@@ -1,12 +1,8 @@
-import {
-  Text,
-  View,
-  TouchableOpacity,
-  useWindowDimensions,
-} from 'react-native';
+import { Text, View, useWindowDimensions } from 'react-native';
 import { Link } from 'expo-router';
 import { homeStyles } from '@/src/assets/styles/home.styles';
 import { authStyles } from '@/src/assets/styles/auth.styles';
+import PressableScale from '@/src/components/PressableScale';
 
 export default function HeroCard() {
   const { height } = useWindowDimensions();
@@ -30,9 +26,9 @@ export default function HeroCard() {
 
       <View style={homeStyles.heroCtas}>
         <Link href="/sign-up" asChild>
-          <TouchableOpacity style={authStyles.button}>
+          <PressableScale style={authStyles.button}>
             <Text style={authStyles.buttonText}>Create an account</Text>
-          </TouchableOpacity>
+          </PressableScale>
         </Link>
         <Text style={homeStyles.signInLine}>
           Already have an account?{' '}

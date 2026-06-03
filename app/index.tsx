@@ -1,4 +1,3 @@
-import { authStyles } from '@/src/assets/styles/auth.styles';
 import { homeStyles } from '@/src/assets/styles/home.styles';
 import PageLoader from '@/src/components/PageLoader';
 import TopBar from '@/src/features/home/components/TopBar';
@@ -7,12 +6,10 @@ import LatestChaptersRow from '@/src/features/chapters/components/LatestChapters
 import HowItWorks from '@/src/features/home/components/HowItWorks';
 
 import { useAuth } from '@clerk/clerk-expo';
-import { Link, Redirect } from 'expo-router';
+import { Redirect } from 'expo-router';
 import {
   Image,
   ScrollView,
-  Text,
-  TouchableOpacity,
   useWindowDimensions,
   View,
 } from 'react-native';
@@ -48,17 +45,11 @@ export default function Index() {
           <LatestChaptersRow limit={5} />
         </View>
 
+        <View style={{ height: 16 }} />
+
         <HowItWorks />
 
-        <View style={homeStyles.footerCta}>
-          <Link href="/sign-up" asChild>
-            <TouchableOpacity style={authStyles.button}>
-              <Text style={authStyles.buttonText}>Create an account</Text>
-            </TouchableOpacity>
-          </Link>
-        </View>
-
-        <View style={{ height: 28 }} />
+        <View style={{ height: 40 }} />
       </ScrollView>
     </View>
   );
