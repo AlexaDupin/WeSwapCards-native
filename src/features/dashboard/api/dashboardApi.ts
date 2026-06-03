@@ -2,18 +2,29 @@ import { axiosInstance } from '@/src/lib/axiosInstance';
 import type {
   PastCursor,
   PastCursorResponse,
+  SortKey,
 } from '@/src/features/dashboard/types/DashboardTypes';
 
 type AuthHeaders = Record<string, string>;
 
+// `search`/`sort` are optional with backend-compatible defaults so existing
+// callers behave exactly as before.
+function filterQuery(search = '', sort: SortKey = 'date') {
+  let qs = `&sort=${sort}`;
+  if (search.trim()) qs += `&search=${encodeURIComponent(search.trim())}`;
+  return qs;
+}
+
 export async function fetchInProgressConversations(args: {
   explorerId: number | null;
   headers: AuthHeaders;
+  search?: string;
+  sort?: SortKey;
 }) {
-  const { explorerId, headers } = args;
+  const { explorerId, headers, search, sort } = args;
 
   const resp = await axiosInstance.get(
-    `/conversation/${explorerId}?page=1&limit=40`,
+    `/conversation/${explorerId}?page=1&limit=40${filterQuery(search, sort)}`,
     { headers },
   );
 
@@ -24,11 +35,14 @@ export async function fetchPastFirstPage(args: {
   explorerId: number | null;
   headers: AuthHeaders;
   pageSize: number;
+  search?: string;
+  sort?: SortKey;
 }) {
-  const { explorerId, headers, pageSize } = args;
+  const { explorerId, headers, pageSize, search, sort } = args;
 
   const resp = await axiosInstance.get<PastCursorResponse>(
-    `/conversation/past/${explorerId}?mode=cursor&limit=${pageSize}`,
+    `/conversation/past/${explorerId}?mode=cursor&limit=${pageSize}` +
+      filterQuery(search, sort),
     { headers, timeout: 20000 },
   );
 
@@ -40,13 +54,24 @@ export async function fetchPastNextPage(args: {
   headers: AuthHeaders;
   pageSize: number;
   cursor: PastCursor;
+  search?: string;
+  sort?: SortKey;
 }) {
-  const { explorerId, headers, pageSize, cursor } = args;
-  const lastMessageAt = cursor.cursor_last_message_at ?? '';
+  const { explorerId, headers, pageSize, cursor, search, sort } = args;
+
+  // Send the cursor field that matches the active sort so the server's keyset
+  // predicate lines up with its ORDER BY.
+  const cursorQs =
+    'cursor_card_name' in cursor
+      ? `&cursor_card_name=${encodeURIComponent(cursor.cursor_card_name ?? '')}`
+      : `&cursor_last_message_at=${encodeURIComponent(
+          cursor.cursor_last_message_at ?? '',
+        )}`;
 
   const qs =
     `mode=cursor&limit=${pageSize}` +
-    `&cursor_last_message_at=${encodeURIComponent(lastMessageAt)}` +
+    filterQuery(search, sort) +
+    cursorQs +
     `&cursor_id=${cursor.cursor_id}`;
 
   const resp = await axiosInstance.get<PastCursorResponse>(

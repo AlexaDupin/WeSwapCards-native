@@ -16,10 +16,13 @@ export type DashboardConversation = {
 
 export type DashboardItemData = DashboardConversation;
 
-export type PastCursor = {
-  cursor_last_message_at: string;
-  cursor_id: number;
-};
+export type SortKey = 'date' | 'name';
+
+// The cursor's primary field tracks the active sort: timestamp for date, lowered
+// card name for name. `cursor_id` is the stable tie-breaker in both cases.
+export type PastCursor =
+  | { cursor_last_message_at: string; cursor_id: number }
+  | { cursor_card_name: string; cursor_id: number };
 
 export type PastCursorResponse = {
   conversations: DashboardConversation[];

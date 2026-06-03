@@ -5,6 +5,8 @@ import {
   FlatList,
   RefreshControl,
   ActivityIndicator,
+  TextInput,
+  Pressable,
 } from 'react-native';
 import { useAuth } from '@clerk/clerk-expo';
 import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
@@ -45,6 +47,10 @@ export default function DashboardScreen() {
     setUiUnread,
     setConversationStatus,
     unreadCounts,
+    searchQuery,
+    setSearchQuery,
+    sortBy,
+    setSortBy,
   } = useDashboard({ explorerId, authHeaders });
 
   const renderItem = useCallback(
@@ -103,7 +109,62 @@ export default function DashboardScreen() {
         />
       </View>
 
-      {loadingInitial ? (
+      <TextInput
+        style={styles.searchInput}
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+        placeholder="Search by name or card"
+        placeholderTextColor="rgba(0,0,0,0.4)"
+        autoCorrect={false}
+        autoCapitalize="none"
+        returnKeyType="search"
+        clearButtonMode="while-editing"
+      />
+
+      <View style={styles.filterRow}>
+        <View style={styles.sortSegmentWrap} accessibilityRole="tablist">
+          <Pressable
+            onPress={() => setSortBy('date')}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: sortBy === 'date' }}
+            style={({ pressed }) => [
+              styles.sortSegment,
+              sortBy === 'date' && styles.sortSegmentActive,
+              pressed && styles.sortSegmentPressed,
+            ]}
+          >
+            <Text
+              style={[
+                styles.sortSegmentText,
+                sortBy === 'date' && styles.sortSegmentTextActive,
+              ]}
+            >
+              Recent
+            </Text>
+          </Pressable>
+          <Pressable
+            onPress={() => setSortBy('name')}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: sortBy === 'name' }}
+            style={({ pressed }) => [
+              styles.sortSegment,
+              sortBy === 'name' && styles.sortSegmentActive,
+              pressed && styles.sortSegmentPressed,
+            ]}
+          >
+            <Text
+              style={[
+                styles.sortSegmentText,
+                sortBy === 'name' && styles.sortSegmentTextActive,
+              ]}
+            >
+              Name
+            </Text>
+          </Pressable>
+        </View>
+      </View>
+
+      {loadingInitial && listData.length === 0 ? (
         <View style={{ paddingTop: 24 }}>
           <ActivityIndicator />
         </View>
@@ -121,21 +182,31 @@ export default function DashboardScreen() {
           onEndReached={activeTab === 'past' ? loadMorePast : undefined}
           onEndReachedThreshold={0.4}
           ListEmptyComponent={
-            <View style={styles.emptyContainer}>
-              <Text style={styles.emptyIcon}>
-                {activeTab === 'in-progress' ? '💬' : '🗂️'}
-              </Text>
-              <Text style={styles.emptyTitle}>
-                {activeTab === 'in-progress'
-                  ? 'No open conversations'
-                  : 'No past conversations'}
-              </Text>
-              <Text style={styles.emptySubtitle}>
-                {activeTab === 'in-progress'
-                  ? 'Start swapping!'
-                  : 'Completed and declined conversations will be archived here.'}
-              </Text>
-            </View>
+            searchQuery.trim() ? (
+              <View style={styles.emptyContainer}>
+                <Text style={styles.emptyIcon}>🔍</Text>
+                <Text style={styles.emptyTitle}>No matches</Text>
+                <Text style={styles.emptySubtitle}>
+                  No conversations match “{searchQuery.trim()}”.
+                </Text>
+              </View>
+            ) : (
+              <View style={styles.emptyContainer}>
+                <Text style={styles.emptyIcon}>
+                  {activeTab === 'in-progress' ? '💬' : '🗂️'}
+                </Text>
+                <Text style={styles.emptyTitle}>
+                  {activeTab === 'in-progress'
+                    ? 'No open conversations'
+                    : 'No past conversations'}
+                </Text>
+                <Text style={styles.emptySubtitle}>
+                  {activeTab === 'in-progress'
+                    ? 'Start swapping!'
+                    : 'Completed and declined conversations will be archived here.'}
+                </Text>
+              </View>
+            )
           }
           ListFooterComponent={
             activeTab === 'past' && loadingMore ? (

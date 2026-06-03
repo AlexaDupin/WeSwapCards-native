@@ -15,6 +15,7 @@ import {
   PAST_PAGE_SIZE,
   type DashboardConversation,
   type PastCursor,
+  type SortKey,
   type TabKey,
 } from '@/src/features/dashboard/types/DashboardTypes';
 
@@ -35,6 +36,16 @@ export function useDashboard(args: UseDashboardArgs) {
   const { explorerId, authHeaders } = args;
 
   const [activeTab, setActiveTab] = useState<TabKey>('in-progress');
+
+  // Search/sort run server-side. `debouncedSearch` is what actually hits the API.
+  const [searchQuery, setSearchQuery] = useState('');
+  const [sortBy, setSortBy] = useState<SortKey>('date');
+  const [debouncedSearch, setDebouncedSearch] = useState('');
+
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedSearch(searchQuery.trim()), 300);
+    return () => clearTimeout(t);
+  }, [searchQuery]);
 
   const [inProgress, setInProgress] = useState<DashboardConversation[]>([]);
   const [past, setPast] = useState<DashboardConversation[]>([]);
@@ -73,10 +84,17 @@ export function useDashboard(args: UseDashboardArgs) {
     return [nextItem, ...without];
   };
 
+  // These callbacks carry the active search/sort, so when either changes their
+  // identity changes and the fetch effects below re-run (refetch + cursor reset).
   const fetchInProgress = useCallback(async () => {
     const headers = await authHeaders();
-    return fetchInProgressConversations({ explorerId, headers });
-  }, [authHeaders, explorerId]);
+    return fetchInProgressConversations({
+      explorerId,
+      headers,
+      search: debouncedSearch,
+      sort: sortBy,
+    });
+  }, [authHeaders, explorerId, debouncedSearch, sortBy]);
 
   const fetchPastFirst = useCallback(async () => {
     const headers = await authHeaders();
@@ -84,8 +102,10 @@ export function useDashboard(args: UseDashboardArgs) {
       explorerId,
       headers,
       pageSize: PAST_PAGE_SIZE,
+      search: debouncedSearch,
+      sort: sortBy,
     });
-  }, [authHeaders, explorerId]);
+  }, [authHeaders, explorerId, debouncedSearch, sortBy]);
 
   const fetchPastNext = useCallback(
     async (cursor: PastCursor) => {
@@ -95,9 +115,11 @@ export function useDashboard(args: UseDashboardArgs) {
         headers,
         pageSize: PAST_PAGE_SIZE,
         cursor,
+        search: debouncedSearch,
+        sort: sortBy,
       });
     },
-    [authHeaders, explorerId],
+    [authHeaders, explorerId, debouncedSearch, sortBy],
   );
 
   const refreshUnreadCounts = useCallback(async () => {
@@ -321,5 +343,9 @@ export function useDashboard(args: UseDashboardArgs) {
     setUiUnread,
     setConversationStatus,
     unreadCounts,
+    searchQuery,
+    setSearchQuery,
+    sortBy,
+    setSortBy,
   };
 }
