@@ -13,6 +13,7 @@
     },
     "android": {
       "package": "com.weswapcards.app",
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"

@@ -38,3 +38,9 @@ yarn-error.*
 *.tsbuildinfo
 
 app-example
+
+# firebase / push notification secrets — never commit
+google-services.json
+google-services*.json
+GoogleService-Info.plist
+*-firebase-adminsdk-*.json

@@ -1,0 +1,32 @@
+# Files EAS Build should NOT upload to the cloud builder.
+#
+# EAS uses this file INSTEAD of .gitignore when it exists. That lets us keep
+# google-services.json and .env out of GitHub (still listed in .gitignore) while
+# STILL shipping them to our own private EAS build, which needs them:
+#   - google-services.json  -> required by android.googleServicesFile at prebuild
+#   - .env                  -> EXPO_PUBLIC_* values inlined into the app bundle
+# (Both are referenced here only by their ABSENCE — anything not listed uploads.)
+
+# Dependencies & build output (don't upload — EAS reinstalls/rebuilds)
+node_modules/
+.expo/
+dist/
+web-build/
+.git/
+
+# Dev cruft
+.metro-health-check*
+*.tsbuildinfo
+.DS_Store
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+app-example
+
+# NEVER upload signing / service-account secrets
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*-firebase-adminsdk-*.json
