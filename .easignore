@@ -14,6 +14,13 @@ dist/
 web-build/
 .git/
 
+# Withhold the lockfile from the cloud build ONLY. With no lockfile present EAS
+# runs the lenient `npm install` instead of the strict `npm ci`, which avoids the
+# npm-version-sensitive "out of sync" failures caused by Clerk's floating version
+# pulling in node-gated optional deps (@solana/web3.js, @wallet-standard/*).
+# The lockfile stays committed in git for local reproducibility.
+package-lock.json
+
 # Dev cruft
 .metro-health-check*
 *.tsbuildinfo
