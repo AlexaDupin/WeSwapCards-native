@@ -1,5 +1,6 @@
 import { axiosInstance } from '@/src/lib/axiosInstance';
 import type {
+  DashboardConversation,
   PastCursor,
   PastCursorResponse,
   SortKey,
@@ -15,6 +16,23 @@ function filterQuery(search = '', sort: SortKey = 'date') {
   return qs;
 }
 
+// Sort In Progress conversations by recency only (no unread priority), matching
+// the server's date tiebreakers: newest first, nulls last, db_id desc. The
+// shared backend pins unread on top for `sort=date`; mobile re-sorts to drop
+// that so ordering is purely by date (web keeps the server ordering).
+function sortByDate(list: DashboardConversation[]): DashboardConversation[] {
+  return [...list].sort((a, b) => {
+    const ta = a.last_message_at ? Date.parse(a.last_message_at) : null;
+    const tb = b.last_message_at ? Date.parse(b.last_message_at) : null;
+    if (ta !== tb) {
+      if (ta === null) return 1; // nulls last
+      if (tb === null) return -1;
+      return tb - ta; // newest first
+    }
+    return b.db_id - a.db_id; // stable tiebreak, newest id first
+  });
+}
+
 export async function fetchInProgressConversations(args: {
   explorerId: number | null;
   headers: AuthHeaders;
@@ -28,7 +46,10 @@ export async function fetchInProgressConversations(args: {
     { headers },
   );
 
-  return resp.data.conversations ?? [];
+  const list: DashboardConversation[] = resp.data.conversations ?? [];
+  // Re-sort the date view client-side so unread conversations aren't pinned on
+  // top (mobile-only). The `name` sort is already plain alphabetical server-side.
+  return (sort ?? 'date') === 'date' ? sortByDate(list) : list;
 }
 
 export async function fetchPastFirstPage(args: {
