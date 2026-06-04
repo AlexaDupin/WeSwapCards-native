@@ -5,6 +5,7 @@ import { Stack } from 'expo-router';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ExplorerHydration } from '@/src/features/auth/components/ExplorerHydration';
 import { ExplorerProvider } from '@/src/features/auth/context/ExplorerContext';
+import { NotificationsProvider } from '@/src/features/notifications/NotificationsProvider';
 
 export default function RootLayout() {
   return (
@@ -15,7 +16,8 @@ export default function RootLayout() {
       >
         <ExplorerProvider>
           <ExplorerHydration>
-            <SafeScreen>
+            <NotificationsProvider>
+              <SafeScreen>
               <Stack screenOptions={{ headerShown: false }}>
                 <Stack.Screen name="index" options={{ headerShown: false }} />
 
@@ -34,7 +36,8 @@ export default function RootLayout() {
 
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
               </Stack>
-            </SafeScreen>
+              </SafeScreen>
+            </NotificationsProvider>
           </ExplorerHydration>
         </ExplorerProvider>
       </ClerkProvider>

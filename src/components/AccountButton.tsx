@@ -4,6 +4,7 @@ import {
   Modal,
   Pressable,
   StyleSheet,
+  Switch,
   Text,
   TouchableOpacity,
   View,
@@ -11,11 +12,16 @@ import {
 import { useClerk, useUser } from '@clerk/clerk-expo';
 import { useRouter } from 'expo-router';
 
+import { useNotifications } from '@/src/features/notifications/NotificationsProvider';
+
 export function AccountButton() {
   const { user } = useUser();
   const { signOut } = useClerk();
   const router = useRouter();
   const [visible, setVisible] = useState(false);
+
+  const { enabled, permission, setEnabled, openSystemSettings } =
+    useNotifications();
 
   const handleSignOut = useCallback(async () => {
     try {
@@ -51,6 +57,24 @@ export function AccountButton() {
                 <Text style={styles.emailText}>{email}</Text>
               </View>
             )}
+
+            <View style={styles.item}>
+              <View style={styles.toggleRow}>
+                <Text style={styles.toggleLabel}>Message notifications</Text>
+                <Switch
+                  value={enabled === true}
+                  disabled={enabled === null}
+                  onValueChange={(next) => {
+                    void setEnabled(next);
+                  }}
+                />
+              </View>
+              {enabled === true && permission === 'blocked' && (
+                <Text style={styles.toggleHint} onPress={openSystemSettings}>
+                  Notifications are turned off for this app. Tap to open Settings.
+                </Text>
+              )}
+            </View>
 
             <Pressable
               style={({ pressed }) => [
@@ -122,6 +146,20 @@ const styles = StyleSheet.create({
   },
   itemPressed: {
     backgroundColor: 'rgba(0,0,0,0.06)',
+  },
+  toggleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  toggleLabel: {
+    fontSize: 16,
+    color: '#111',
+  },
+  toggleHint: {
+    marginTop: 8,
+    fontSize: 13,
+    color: '#2563eb',
   },
   cancelItem: {
     borderBottomWidth: 0,
