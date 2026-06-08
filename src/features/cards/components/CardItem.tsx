@@ -18,8 +18,8 @@ import type {
 type Props = {
   item: CardItemData;
   status: CardStatus;
-  onSelect: () => void;
-  reset?: () => void;
+  onSelect: (id: number) => void;
+  reset?: (id: number) => void;
   readOnly?: boolean;
   cardWidth?: number;
 };
@@ -49,7 +49,7 @@ function CardItem({
         event: LongPressGestureHandlerStateChangeEvent,
       ) => {
         if (event.nativeEvent.state === State.ACTIVE) {
-          reset?.();
+          reset?.(item.id);
         }
       }}
     >
@@ -58,7 +58,7 @@ function CardItem({
         enabled={!readOnly}
         onHandlerStateChange={(event: TapGestureHandlerStateChangeEvent) => {
           if (event.nativeEvent.state === State.END) {
-            onSelect();
+            onSelect(item.id);
           }
         }}
       >

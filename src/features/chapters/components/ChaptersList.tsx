@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { FlatList } from 'react-native';
+import type { ListRenderItem } from 'react-native';
 import type { CardStatus } from '@/src/features/cards/types/CardItemType';
 import type { ChapterUI } from '@/src/features/cards/screens/Cards';
 import ChapterSection from './ChapterSection';
@@ -28,6 +29,33 @@ export default function ChaptersList({
   readOnly = false,
   listRef,
 }: Props) {
+  const renderItem = useCallback<ListRenderItem<ChapterUI>>(
+    ({ item }) => (
+      <ChapterSection
+        chapterId={item.chapterId}
+        chapterName={item.chapterName}
+        cards={item.cards}
+        ownedOrDuplicatedCount={item.ownedOrDuplicatedCount}
+        statuses={statuses}
+        onSelectCard={onSelectCard}
+        onResetCard={onResetCard}
+        onMarkAllOwned={onMarkAllOwned}
+        onMarkAllDuplicated={onMarkAllDuplicated}
+        isPending={isChapterPending?.(item.chapterId) ?? false}
+        readOnly={readOnly}
+      />
+    ),
+    [
+      statuses,
+      onSelectCard,
+      onResetCard,
+      onMarkAllOwned,
+      onMarkAllDuplicated,
+      isChapterPending,
+      readOnly,
+    ],
+  );
+
   return (
     <FlatList
       ref={listRef}
@@ -35,21 +63,11 @@ export default function ChaptersList({
       keyExtractor={(c) => String(c.chapterId)}
       showsVerticalScrollIndicator={false}
       contentContainerStyle={styles.chapterListContent}
-      renderItem={({ item }) => (
-        <ChapterSection
-          chapterId={item.chapterId}
-          chapterName={item.chapterName}
-          cards={item.cards}
-          ownedOrDuplicatedCount={item.ownedOrDuplicatedCount}
-          statuses={statuses}
-          onSelectCard={onSelectCard}
-          onResetCard={onResetCard}
-          onMarkAllOwned={onMarkAllOwned}
-          onMarkAllDuplicated={onMarkAllDuplicated}
-          isPending={isChapterPending?.(item.chapterId) ?? false}
-          readOnly={readOnly}
-        />
-      )}
+      renderItem={renderItem}
+      initialNumToRender={6}
+      maxToRenderPerBatch={6}
+      windowSize={7}
+      updateCellsBatchingPeriod={50}
     />
   );
 }

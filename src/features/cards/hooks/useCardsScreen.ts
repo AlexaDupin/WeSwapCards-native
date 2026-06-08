@@ -60,6 +60,15 @@ export function useCardsScreen({ explorerId }: Params) {
   const listRef = useRef<FlatList<ChapterUI>>(null);
   const pendingChaptersRef = useRef(new Set<number>());
 
+  // Mirror the latest statuses in a ref so the per-card callbacks below can
+  // read the current value without listing `cardStatuses` as a dependency.
+  // Keeping those callbacks stable lets the memoized CardItem skip re-rendering
+  // every card whenever a single card's status changes.
+  const cardStatusesRef = useRef(cardStatuses);
+  useEffect(() => {
+    cardStatusesRef.current = cardStatuses;
+  }, [cardStatuses]);
+
   const fetchAllChapters = useCallback(async () => {
     const places = await fetchPlaces();
     setChapters(places);
@@ -189,18 +198,18 @@ export function useCardsScreen({ explorerId }: Params) {
 
   const onSelectCard = useCallback(
     async (cardId: number) => {
-      const currentStatus = cardStatuses[String(cardId)] ?? 'default';
+      const currentStatus = cardStatusesRef.current[String(cardId)] ?? 'default';
       const nextStatus = getNextStatus(currentStatus);
 
       if (nextStatus === 'owned') return upsertCard(cardId, false);
       if (nextStatus === 'duplicated') return upsertCard(cardId, true);
     },
-    [cardStatuses, upsertCard],
+    [upsertCard],
   );
 
   const onResetCard = useCallback(
     async (cardId: number) => {
-      const current = cardStatuses[String(cardId)] ?? 'default';
+      const current = cardStatusesRef.current[String(cardId)] ?? 'default';
       if (current === 'default') return;
 
       try {
@@ -220,7 +229,7 @@ export function useCardsScreen({ explorerId }: Params) {
         console.error('Error during card deletion', error);
       }
     },
-    [cardStatuses, explorerId, getToken],
+    [explorerId, getToken],
   );
 
   const setChapterStatus = useCallback(

@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { Text, View, useWindowDimensions } from 'react-native';
 import type {
   CardItemData,
@@ -23,7 +23,7 @@ type Props = {
   readOnly?: boolean;
 };
 
-export default function ChapterSection({
+function ChapterSection({
   chapterId,
   chapterName,
   cards,
@@ -80,8 +80,8 @@ export default function ChapterSection({
             key={card.id}
             item={card}
             status={statuses[card.id] || 'default'}
-            onSelect={() => onSelectCard(card.id)}
-            reset={onResetCard ? () => onResetCard(card.id) : undefined}
+            onSelect={onSelectCard}
+            reset={onResetCard}
             readOnly={readOnly}
             cardWidth={cardWidth}
           />
@@ -90,3 +90,5 @@ export default function ChapterSection({
     </View>
   );
 }
+
+export default React.memo(ChapterSection);
