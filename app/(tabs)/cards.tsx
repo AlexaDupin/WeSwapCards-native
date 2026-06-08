@@ -12,9 +12,14 @@ import { useCardsScreen } from '@/src/features/cards/hooks/useCardsScreen';
 
 export default function Cards() {
   const { explorerId } = useExplorer();
-  const cards = useCardsScreen({ explorerId });
 
   if (!explorerId) return <PageLoader />;
+
+  return <CardsScreen explorerId={explorerId} />;
+}
+
+function CardsScreen({ explorerId }: { explorerId: number }) {
+  const cards = useCardsScreen({ explorerId });
 
   const {
     sortLatest,
@@ -46,7 +51,7 @@ export default function Cards() {
         />
       </View>
 
-      <View style={styles.azWrap}>
+      <View>
         <AZNav
           onSelect={scrollToLetter}
           lettersWithContent={lettersWithChapters}

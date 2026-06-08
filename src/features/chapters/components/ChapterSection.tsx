@@ -16,9 +16,9 @@ type Props = {
   ownedOrDuplicatedCount: number;
   statuses: Record<number, CardStatus>;
   onSelectCard: (cardId: number) => void;
-  onResetCard?: (cardId: number) => void;
-  onMarkAllOwned?: (chapterId: number) => void;
-  onMarkAllDuplicated?: (chapterId: number) => void;
+  onResetCard?: ((cardId: number) => void) | undefined;
+  onMarkAllOwned?: ((chapterId: number) => void) | undefined;
+  onMarkAllDuplicated?: ((chapterId: number) => void) | undefined;
   isPending?: boolean;
   readOnly?: boolean;
 };

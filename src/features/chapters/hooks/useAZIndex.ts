@@ -11,7 +11,7 @@ function getFirstLetter(name: string) {
 
 export default function useAZIndexFlatList(params: {
   chapters: ChapterForAZ[];
-  listRef: React.RefObject<FlatList<any>>;
+  listRef: React.RefObject<FlatList<any> | null>;
   enabled?: boolean;
 }) {
   const { chapters, listRef, enabled = true } = params;
@@ -19,7 +19,9 @@ export default function useAZIndexFlatList(params: {
   const letterToIndex = useMemo(() => {
     const map = new Map<string, number>();
     for (let i = 0; i < chapters.length; i++) {
-      const L = getFirstLetter(chapters[i].name);
+      const chapter = chapters[i];
+      if (!chapter) continue;
+      const L = getFirstLetter(chapter.name);
       if (L === '#') continue;
       if (!map.has(L)) map.set(L, i); // first occurrence
     }

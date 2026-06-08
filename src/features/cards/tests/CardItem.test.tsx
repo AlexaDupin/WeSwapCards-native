@@ -1,4 +1,4 @@
-import type { CardItemData } from '@/types/cardItemType';
+import type { CardItemData } from '@/src/features/cards/types/CardItemType';
 import { render, screen, userEvent } from '@testing-library/react-native';
 import React from 'react';
 import CardItem from '../components/CardItem';

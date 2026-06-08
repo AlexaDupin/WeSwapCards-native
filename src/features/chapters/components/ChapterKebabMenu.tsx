@@ -5,8 +5,8 @@ import { styles } from '@/src/assets/styles/cards.styles';
 
 type Props = {
   disabled?: boolean;
-  onMarkAllOwned?: () => void;
-  onMarkAllDuplicated?: () => void;
+  onMarkAllOwned?: (() => void) | undefined;
+  onMarkAllDuplicated?: (() => void) | undefined;
 };
 
 export default function ChapterKebabMenu({

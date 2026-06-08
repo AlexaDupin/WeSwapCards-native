@@ -2,7 +2,7 @@ import React, { useCallback } from 'react';
 import { FlatList } from 'react-native';
 import type { ListRenderItem } from 'react-native';
 import type { CardStatus } from '@/src/features/cards/types/CardItemType';
-import type { ChapterUI } from '@/src/features/cards/screens/Cards';
+import type { ChapterUI } from '@/src/features/cards/hooks/useCardsScreen';
 import ChapterSection from './ChapterSection';
 import { styles } from '@/src/assets/styles/cards.styles';
 
@@ -15,7 +15,7 @@ type Props = {
   onMarkAllDuplicated?: (chapterId: number) => void;
   isChapterPending?: (chapterId: number) => boolean;
   readOnly?: boolean;
-  listRef?: React.RefObject<FlatList<ChapterUI>>;
+  listRef?: React.RefObject<FlatList<ChapterUI> | null>;
 };
 
 export default function ChaptersList({
