@@ -267,6 +267,8 @@ export function useDashboard(args: UseDashboardArgs) {
       } else {
         await loadPastFirstPage();
       }
+    } catch {
+      // Network/server error on refresh: leave the existing list in place.
     } finally {
       setRefreshing(false);
     }
@@ -286,6 +288,10 @@ export function useDashboard(args: UseDashboardArgs) {
         } else {
           await loadPastFirstPage();
         }
+      } catch {
+        // Network/server error (e.g. a 500 from a stale request during rapid
+        // sort/search changes). Swallow so it doesn't surface as an uncaught
+        // rejection; the latest query's load wins.
       } finally {
         if (!cancelled) setLoadingInitial(false);
       }
@@ -344,6 +350,10 @@ export function useDashboard(args: UseDashboardArgs) {
       setPast((prev) => appendUniquePast(prev, data.conversations));
       setPastHasMore(Boolean(data.hasMore));
       setPastCursor(data.nextCursor);
+    } catch {
+      // A page can fail when its cursor no longer matches the active sort/search
+      // (e.g. fired mid-switch, returning a 500). Ignore it; the fresh first
+      // page is loading anyway and will replace the list.
     } finally {
       setLoadingMore(false);
       loadMoreLockRef.current = false;
