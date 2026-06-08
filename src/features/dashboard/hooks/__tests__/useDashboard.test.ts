@@ -187,6 +187,46 @@ describe('useDashboard', () => {
     expect(result.current.loadingInitial).toBe(false);
   });
 
+  it('deduplicates overlapping conversations when loading more past pages', async () => {
+    dashboardApi.getUnreadCounts.mockResolvedValue({ inProgress: 0, past: 0 });
+    dashboardApi.fetchInProgressConversations.mockResolvedValue([]);
+    dashboardApi.fetchPastFirstPage.mockResolvedValue({
+      conversations: [
+        createPastConversation({ db_id: 11 }),
+        createPastConversation({ db_id: 12 }),
+      ],
+      hasMore: true,
+      nextCursor: createPastCursor({ cursor_id: 12 }),
+    });
+    // Page 2 overlaps page 1 on db_id 12 (e.g. a row shifted between fetches).
+    dashboardApi.fetchPastNextPage.mockResolvedValue({
+      conversations: [
+        createPastConversation({ db_id: 12 }),
+        createPastConversation({ db_id: 13 }),
+      ],
+      hasMore: false,
+      nextCursor: null,
+    });
+
+    const { result } = renderUseDashboard();
+    await waitForInitialLoadToFinish(result);
+
+    await act(async () => {
+      result.current.setActiveTab('past');
+    });
+    await waitFor(() => {
+      expect(result.current.listData.map((c) => c.db_id)).toEqual([11, 12]);
+    });
+
+    await act(async () => {
+      await result.current.loadMorePast();
+    });
+
+    await waitFor(() => {
+      expect(result.current.listData.map((c) => c.db_id)).toEqual([11, 12, 13]);
+    });
+  });
+
   it('removes a conversation from in-progress when status becomes Completed', async () => {
     const conversations = [createInProgressConversation({ db_id: 1 })];
 

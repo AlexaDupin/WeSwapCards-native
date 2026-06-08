@@ -32,6 +32,18 @@ type UseDashboardArgs = {
   authHeaders: () => Promise<Record<string, string>>;
 };
 
+// Appends a fetched page while dropping any conversation already in the list.
+// Guards against duplicate keys when a page overlaps what we already have
+// (e.g. rows shifting between pages, or a stale page landing after a reset).
+function appendUniquePast(
+  prev: DashboardConversation[],
+  next: DashboardConversation[],
+): DashboardConversation[] {
+  const seen = new Set(prev.map((c) => c.db_id));
+  const additions = next.filter((c) => !seen.has(c.db_id));
+  return additions.length ? [...prev, ...additions] : prev;
+}
+
 export function useDashboard(args: UseDashboardArgs) {
   const { explorerId, authHeaders } = args;
 
@@ -67,6 +79,11 @@ export function useDashboard(args: UseDashboardArgs) {
   const loadMoreLockRef = useRef(false);
   const inProgressRef = useRef(inProgress);
   const pastRef = useRef(past);
+
+  // Bumped every time the past list is reset to a fresh first page. An in-flight
+  // loadMore captures the value at its start and discards its result if the
+  // generation changed (sort/search/tab switch, refresh) while it was fetching.
+  const pastGenRef = useRef(0);
 
   useEffect(() => {
     inProgressRef.current = inProgress;
@@ -133,6 +150,22 @@ export function useDashboard(args: UseDashboardArgs) {
       past: Number(counts.past ?? 0),
     });
   }, [authHeaders, explorerId]);
+
+  // Loads (or reloads) the first past page as one atomic reset: bump the
+  // generation, clear the cursor synchronously so a concurrent loadMore can't
+  // page off a stale cursor, then apply the result only if still current.
+  const loadPastFirstPage = useCallback(async () => {
+    const gen = ++pastGenRef.current;
+    setPastCursor(null);
+    setPastHasMore(false);
+
+    const data = await fetchPastFirst();
+    if (gen !== pastGenRef.current) return;
+
+    setPast(data.conversations);
+    setPastHasMore(Boolean(data.hasMore));
+    setPastCursor(data.nextCursor);
+  }, [fetchPastFirst]);
 
   const setUiUnread = useCallback(
     async (conversationId: number, next: boolean) => {
@@ -232,15 +265,12 @@ export function useDashboard(args: UseDashboardArgs) {
         const list = await fetchInProgress();
         setInProgress(list);
       } else {
-        const data = await fetchPastFirst();
-        setPast(data.conversations);
-        setPastHasMore(Boolean(data.hasMore));
-        setPastCursor(data.nextCursor);
+        await loadPastFirstPage();
       }
     } finally {
       setRefreshing(false);
     }
-  }, [activeTab, fetchInProgress, fetchPastFirst, refreshUnreadCounts]);
+  }, [activeTab, fetchInProgress, loadPastFirstPage, refreshUnreadCounts]);
 
   useEffect(() => {
     let cancelled = false;
@@ -254,12 +284,7 @@ export function useDashboard(args: UseDashboardArgs) {
           const list = await fetchInProgress();
           if (!cancelled) setInProgress(list);
         } else {
-          const data = await fetchPastFirst();
-          if (!cancelled) {
-            setPast(data.conversations);
-            setPastHasMore(Boolean(data.hasMore));
-            setPastCursor(data.nextCursor);
-          }
+          await loadPastFirstPage();
         }
       } finally {
         if (!cancelled) setLoadingInitial(false);
@@ -269,7 +294,7 @@ export function useDashboard(args: UseDashboardArgs) {
     return () => {
       cancelled = true;
     };
-  }, [activeTab, fetchInProgress, fetchPastFirst, refreshUnreadCounts]);
+  }, [activeTab, fetchInProgress, loadPastFirstPage, refreshUnreadCounts]);
 
   useEffect(() => {
     loadMoreLockRef.current = false;
@@ -285,15 +310,9 @@ export function useDashboard(args: UseDashboardArgs) {
           .then(setInProgress)
           .catch(() => {});
       } else {
-        fetchPastFirst()
-          .then((data) => {
-            setPast(data.conversations);
-            setPastHasMore(Boolean(data.hasMore));
-            setPastCursor(data.nextCursor);
-          })
-          .catch(() => {});
+        loadPastFirstPage().catch(() => {});
       }
-    }, [activeTab, fetchInProgress, fetchPastFirst, refreshUnreadCounts]),
+    }, [activeTab, fetchInProgress, loadPastFirstPage, refreshUnreadCounts]),
   );
 
   useFocusEffect(
@@ -311,12 +330,18 @@ export function useDashboard(args: UseDashboardArgs) {
     if (loadingMore) return;
     if (loadMoreLockRef.current) return;
 
+    const gen = pastGenRef.current;
     loadMoreLockRef.current = true;
     setLoadingMore(true);
 
     try {
       const data = await fetchPastNext(pastCursor);
-      setPast((prev) => [...prev, ...data.conversations]);
+      // The list was reset to a fresh first page (sort/search/tab switch or
+      // refresh) while we were fetching: drop this now-stale page rather than
+      // appending it onto a different query's results.
+      if (gen !== pastGenRef.current) return;
+
+      setPast((prev) => appendUniquePast(prev, data.conversations));
       setPastHasMore(Boolean(data.hasMore));
       setPastCursor(data.nextCursor);
     } finally {
