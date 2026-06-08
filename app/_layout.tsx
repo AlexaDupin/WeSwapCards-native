@@ -8,11 +8,13 @@ import { ExplorerProvider } from '@/src/features/auth/context/ExplorerContext';
 import { NotificationsProvider } from '@/src/features/notifications/NotificationsProvider';
 
 export default function RootLayout() {
+  const publishableKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ClerkProvider
-        tokenCache={tokenCache}
-        publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY}
+        {...(tokenCache ? { tokenCache } : {})}
+        {...(publishableKey ? { publishableKey } : {})}
       >
         <ExplorerProvider>
           <ExplorerHydration>

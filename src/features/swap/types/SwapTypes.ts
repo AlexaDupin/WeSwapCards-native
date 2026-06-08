@@ -1,6 +1,7 @@
 export type SwapChapter = {
   id: number;
   name: string;
+  image_url?: string | null; // backend/web snake_case; banner image, optional
 };
 
 export type SwapCard = {
