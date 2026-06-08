@@ -1,25 +1,17 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { Text, View } from 'react-native';
 import { styles } from '@/src/assets/styles/cards.styles';
 import type {
   CardItemData,
   CardStatus,
 } from '@/src/features/cards/types/CardItemType';
-import {
-  LongPressGestureHandler,
-  TapGestureHandler,
-  State,
-} from 'react-native-gesture-handler';
-import type {
-  LongPressGestureHandlerStateChangeEvent,
-  TapGestureHandlerStateChangeEvent,
-} from 'react-native-gesture-handler';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
 type Props = {
   item: CardItemData;
   status: CardStatus;
   onSelect: (id: number) => void;
-  reset?: (id: number) => void;
+  reset?: ((id: number) => void) | undefined;
   readOnly?: boolean;
   cardWidth?: number;
 };
@@ -36,75 +28,72 @@ function CardItem({
   const isDuplicated = status === 'duplicated';
   const isDefault = status === 'default';
 
-  const longPressRef = useRef<LongPressGestureHandler>(null);
   const longPressEnabled = !readOnly && !isDefault && !!reset;
 
+  const tap = Gesture.Tap()
+    .enabled(!readOnly)
+    .runOnJS(true)
+    .onEnd((_event, success) => {
+      if (success) onSelect(item.id);
+    });
+
+  const longPress = Gesture.LongPress()
+    .enabled(longPressEnabled)
+    .minDuration(450)
+    .shouldCancelWhenOutside(true)
+    .runOnJS(true)
+    .onStart(() => {
+      reset?.(item.id);
+    });
+
+  // Tap waits for the long press to fail before firing (Exclusive gives the
+  // long press priority), matching the previous waitFor behavior.
+  const gesture = Gesture.Exclusive(longPress, tap);
+
   return (
-    <LongPressGestureHandler
-      ref={longPressRef}
-      enabled={longPressEnabled}
-      minDurationMs={450}
-      shouldCancelWhenOutside
-      onHandlerStateChange={(
-        event: LongPressGestureHandlerStateChangeEvent,
-      ) => {
-        if (event.nativeEvent.state === State.ACTIVE) {
-          reset?.(item.id);
-        }
-      }}
-    >
-      <TapGestureHandler
-        waitFor={longPressEnabled ? longPressRef : undefined}
-        enabled={!readOnly}
-        onHandlerStateChange={(event: TapGestureHandlerStateChangeEvent) => {
-          if (event.nativeEvent.state === State.END) {
-            onSelect(item.id);
-          }
-        }}
+    <GestureDetector gesture={gesture}>
+      <View
+        testID={`card-touch-${item.id}`}
+        accessibilityRole="button"
+        accessibilityLabel={`Card ${item.number} (${status})${readOnly ? ' — sign in to log' : ''}`}
+        style={styles.cardItemWrapper}
       >
         <View
-          testID={`card-touch-${item.id}`}
-          accessibilityRole="button"
-          accessibilityLabel={`Card ${item.number} (${status})${readOnly ? ' — sign in to log' : ''}`}
-          style={styles.cardItemWrapper}
+          testID={`card-${item.id}`}
+          style={[
+            styles.cardItem,
+            cardWidth ? { width: cardWidth } : null,
+            isOwned || isDuplicated
+              ? styles.cardItemOwned
+              : styles.cardItemDefault,
+          ]}
         >
           <View
-            testID={`card-${item.id}`}
             style={[
-              styles.cardItem,
-              cardWidth ? { width: cardWidth } : null,
+              styles.cardItemInner,
               isOwned || isDuplicated
-                ? styles.cardItemOwned
-                : styles.cardItemDefault,
+                ? styles.cardItemInnerOwned
+                : styles.cardItemInnerDefault,
             ]}
           >
-            <View
+            <Text
               style={[
-                styles.cardItemInner,
-                isOwned || isDuplicated
-                  ? styles.cardItemInnerOwned
-                  : styles.cardItemInnerDefault,
+                styles.cardNumber,
+                (isOwned || isDuplicated) && styles.cardNumberOwned,
               ]}
             >
-              <Text
-                style={[
-                  styles.cardNumber,
-                  (isOwned || isDuplicated) && styles.cardNumberOwned,
-                ]}
-              >
-                {item.number}
-              </Text>
-            </View>
-
-            {isDuplicated && (
-              <View testID={`badge-${item.id}`} style={styles.duplicateBadge}>
-                <Text style={styles.duplicateBadgeText}>+</Text>
-              </View>
-            )}
+              {item.number}
+            </Text>
           </View>
+
+          {isDuplicated && (
+            <View testID={`badge-${item.id}`} style={styles.duplicateBadge}>
+              <Text style={styles.duplicateBadgeText}>+</Text>
+            </View>
+          )}
         </View>
-      </TapGestureHandler>
-    </LongPressGestureHandler>
+      </View>
+    </GestureDetector>
   );
 }
 
