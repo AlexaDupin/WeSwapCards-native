@@ -33,6 +33,7 @@ function CardItem({
   const tap = Gesture.Tap()
     .enabled(!readOnly)
     .runOnJS(true)
+    .withTestId(`tap-${item.id}`)
     .onEnd((_event, success) => {
       if (success) onSelect(item.id);
     });
@@ -42,6 +43,7 @@ function CardItem({
     .minDuration(450)
     .shouldCancelWhenOutside(true)
     .runOnJS(true)
+    .withTestId(`longpress-${item.id}`)
     .onStart(() => {
       reset?.(item.id);
     });
