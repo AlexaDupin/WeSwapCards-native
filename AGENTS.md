@@ -136,6 +136,20 @@ If a change requires backend support, state the assumption clearly.
 
 ---
 
+## Backend (shared with production web)
+
+The backend API lives in a **separate repository** at `html/weswapcards/back`
+(`/var/www/html/WeSwapCards/back`).
+
+- **Always check the current branch before pushing.** Backend changes needed for
+  the native app must be pushed to the backend's **`native`** branch, not `main`.
+- **The backend is shared with the live production web app.** Any change made for
+  the native app must **not** affect the web version. Before editing, confirm the
+  web uses a different code path (e.g. a different endpoint/mode or function), and
+  keep behavior identical for existing callers.
+
+---
+
 ## Testing
 
 Testing stack:
@@ -145,6 +159,13 @@ Testing stack:
 
 Prefer testing observable behavior.  
 Mock API modules when necessary.
+
+**Before committing**, always run all lints and tests for the native front end
+and make sure they pass:
+
+- `npm run lint`
+- `npm run typecheck`
+- `npm test`
 
 ---
 
