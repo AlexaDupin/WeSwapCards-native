@@ -12,6 +12,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "jest",
+    "bench:cards": "node scripts/bench-card-rerenders.js",
     "typecheck": "tsc --noEmit",
     "prepare": "husky"
   },
