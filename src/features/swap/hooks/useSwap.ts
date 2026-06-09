@@ -290,13 +290,26 @@ export function useSwap(options?: UseSwapOptions) {
         if (!mountedRef.current) return;
         if (oppsReqId.current !== reqId) return;
 
-        setState((prev) => ({
-          ...prev,
-          opportunities: append
-            ? [...prev.opportunities, ...res.items]
-            : res.items,
-          opportunitiesPagination: res.pagination,
-        }));
+        setState((prev) => {
+          // Offset pagination runs over a time-volatile sort (last_active_at /
+          // recently-active bucket), so an explorer shown on an earlier page can
+          // drift past the page boundary and reappear here. Drop ids we already
+          // have to keep keyExtractor (explorer_id) unique.
+          let opportunities: SwapOpportunityItem[];
+          if (append) {
+            const seen = new Set(prev.opportunities.map((o) => o.explorer_id));
+            const fresh = res.items.filter((o) => !seen.has(o.explorer_id));
+            opportunities = [...prev.opportunities, ...fresh];
+          } else {
+            opportunities = res.items;
+          }
+
+          return {
+            ...prev,
+            opportunities,
+            opportunitiesPagination: res.pagination,
+          };
+        });
       } catch (e) {
         if (!mountedRef.current) return;
         if (oppsReqId.current !== reqId) return;

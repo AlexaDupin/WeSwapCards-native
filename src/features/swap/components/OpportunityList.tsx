@@ -108,6 +108,11 @@ export default function OpportunityList({
       }
       onEndReached={opportunities.length > 0 ? onLoadMore : undefined}
       onEndReachedThreshold={0.4}
+      initialNumToRender={6}
+      maxToRenderPerBatch={8}
+      updateCellsBatchingPeriod={50}
+      windowSize={11}
+      removeClippedSubviews={true}
       ListFooterComponent={
         loadingMoreOpportunities ? (
           <View style={styles.loader}>
