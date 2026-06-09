@@ -112,7 +112,6 @@ export default function OpportunityList({
       maxToRenderPerBatch={8}
       updateCellsBatchingPeriod={50}
       windowSize={11}
-      removeClippedSubviews={true}
       ListFooterComponent={
         loadingMoreOpportunities ? (
           <View style={styles.loader}>
