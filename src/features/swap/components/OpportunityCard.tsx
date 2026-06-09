@@ -10,6 +10,9 @@ type Props = {
   onContact: (opportunity: SwapOpportunityItem) => void;
 };
 
+// Cap the offered-cards list; longer lists are collapsed behind a toggle.
+const MAX_VISIBLE_OFFERS = 15;
+
 function isRecentlyActive(lastActiveAt?: string | null) {
   if (!lastActiveAt) return false;
   const last = new Date(lastActiveAt);
@@ -21,6 +24,7 @@ function isRecentlyActive(lastActiveAt?: string | null) {
 
 export default function OpportunityCard({ opportunity, onContact }: Props) {
   const [tooltipOpen, setTooltipOpen] = useState(false);
+  const [offersExpanded, setOffersExpanded] = useState(false);
 
   const active = useMemo(
     () => isRecentlyActive(opportunity.last_active_at),
@@ -30,6 +34,12 @@ export default function OpportunityCard({ opportunity, onContact }: Props) {
   const offeredNames = useMemo(() => {
     return opportunity.opportunities.map((o) => o.card.name).filter(Boolean);
   }, [opportunity.opportunities]);
+
+  const hasMoreOffers = offeredNames.length > MAX_VISIBLE_OFFERS;
+  const visibleNames =
+    hasMoreOffers && !offersExpanded
+      ? offeredNames.slice(0, MAX_VISIBLE_OFFERS)
+      : offeredNames;
 
   return (
     <View style={styles.card}>
@@ -65,7 +75,7 @@ export default function OpportunityCard({ opportunity, onContact }: Props) {
         <View style={styles.offeredSection}>
           <Text style={styles.offeredLabel}>You can offer</Text>
           <View style={styles.tagsWrap}>
-            {offeredNames.map((n) => (
+            {visibleNames.map((n) => (
               <View key={n} style={styles.tag}>
                 <Text style={styles.tagText} numberOfLines={1}>
                   {n}
@@ -73,6 +83,21 @@ export default function OpportunityCard({ opportunity, onContact }: Props) {
               </View>
             ))}
           </View>
+
+          {hasMoreOffers ? (
+            <Pressable
+              onPress={() => setOffersExpanded((open) => !open)}
+              hitSlop={{ top: 6, bottom: 6, left: 6, right: 6 }}
+              accessibilityRole="button"
+              style={styles.expandToggle}
+            >
+              <Text style={styles.expandToggleText}>
+                {offersExpanded
+                  ? 'Show less'
+                  : `Show ${offeredNames.length - MAX_VISIBLE_OFFERS} more`}
+              </Text>
+            </Pressable>
+          ) : null}
         </View>
       ) : (
         <Text style={styles.noOffersText}>
@@ -167,6 +192,15 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontWeight: '600',
     color: 'rgba(0,0,0,0.7)',
+  },
+  expandToggle: {
+    marginTop: 10,
+    alignSelf: 'flex-start',
+  },
+  expandToggleText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: Colors.primary,
   },
   noOffersText: {
     marginTop: 10,
