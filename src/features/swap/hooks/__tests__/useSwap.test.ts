@@ -362,4 +362,64 @@ describe('useSwap', () => {
       cardName: 'Card 5',
     });
   });
+
+  it('sets a contact error and skips the hand-off when looking up the conversation fails', async () => {
+    swapApi.fetchCardsForChapter.mockResolvedValue([createCard({ id: 5 })]);
+    swapApi.fetchSwapOpportunities.mockResolvedValue(
+      createOpportunitiesPage([createOpportunity({ explorer_id: 1 })], 1, 1),
+    );
+    chatApi.getConversation.mockRejectedValue(new Error('lookup failed'));
+    const consoleError = jest
+      .spyOn(console, 'error')
+      .mockImplementation(() => {});
+
+    const onContact = jest.fn();
+    const { result } = await renderReady({ onContact });
+
+    await act(async () => {
+      await result.current.selectChapter(7);
+    });
+    await waitFor(() => expect(result.current.cards).toHaveLength(1));
+    await act(async () => {
+      await result.current.selectCard(5);
+    });
+
+    await act(async () => {
+      await result.current.contact(createOpportunity({ explorer_id: 9 }));
+    });
+
+    expect(result.current.error?.code).toBe('contact_failed');
+    expect(onContact).not.toHaveBeenCalled();
+
+    consoleError.mockRestore();
+  });
+
+  it('resetSwapView clears the chapter, card, opportunities, and error', async () => {
+    swapApi.fetchCardsForChapter.mockResolvedValue([createCard({ id: 5 })]);
+    swapApi.fetchSwapOpportunities.mockResolvedValue(
+      createOpportunitiesPage([createOpportunity({ explorer_id: 1 })], 1, 1),
+    );
+
+    const { result } = await renderReady();
+
+    await act(async () => {
+      await result.current.selectChapter(7);
+    });
+    await waitFor(() => expect(result.current.cards).toHaveLength(1));
+    await act(async () => {
+      await result.current.selectCard(5);
+    });
+    await waitFor(() => expect(result.current.opportunities).toHaveLength(1));
+
+    act(() => {
+      result.current.resetSwapView();
+    });
+
+    expect(result.current.selectedChapterId).toBeNull();
+    expect(result.current.selectedCardId).toBeNull();
+    expect(result.current.cards).toEqual([]);
+    expect(result.current.opportunities).toEqual([]);
+    expect(result.current.opportunitiesPagination).toBeNull();
+    expect(result.current.error).toBeNull();
+  });
 });
