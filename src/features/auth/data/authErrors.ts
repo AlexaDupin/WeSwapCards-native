@@ -26,7 +26,7 @@ export function getSignInErrorMessage(code?: string) {
 export function getSignUpErrorMessage(code?: string, fallback?: string) {
   switch (code) {
     case 'form_identifier_exists':
-      return 'That email address is already in use. Please try another.';
+      return 'That email address is already in use. Please try another or sign in.';
     case 'form_param_format_invalid':
       return 'Please enter a valid email address.';
     case 'form_password_pwned':

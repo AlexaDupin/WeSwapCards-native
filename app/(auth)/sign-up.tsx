@@ -78,7 +78,21 @@ export default function SignUpScreen() {
           {error ? (
             <View style={authStyles.errorBox}>
               <Ionicons name="alert-circle" size={20} color={'#E74C3C'} />
-              <Text style={authStyles.errorText}>{error}</Text>
+              <Text style={authStyles.errorText}>
+                {error.split(/(sign in)/i).map((part, index) =>
+                  /^sign in$/i.test(part) ? (
+                    <Text
+                      key={index}
+                      style={{ fontWeight: '600', textDecorationLine: 'underline' }}
+                      onPress={() => router.push('/sign-in')}
+                    >
+                      {part}
+                    </Text>
+                  ) : (
+                    part
+                  ),
+                )}
+              </Text>
               <TouchableOpacity onPress={clearError}>
                 <Ionicons name="close" size={20} color={'#9A8478'} />
               </TouchableOpacity>
