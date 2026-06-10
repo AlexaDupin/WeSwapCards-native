@@ -72,18 +72,18 @@ const chatApi = jest.requireMock(
 async function selectChapterAndCard() {
   render(<SwapScreen />);
 
-  // Wait until the chapters finish loading (selector label settles).
-  await waitFor(() => expect(screen.getByText('Select a chapter')).toBeTruthy());
-
+  // Wait until the chapters finish loading: the text label only renders once
+  // loadingChapters flips false, which is also when the button stops being
+  // disabled. Pressing the accessibilityLabel any earlier would be a no-op.
+  await screen.findByText('Select a chapter');
   fireEvent.press(screen.getByLabelText('Select a chapter'));
-  fireEvent.press(screen.getByText('Chapter 1'));
 
-  await waitFor(() =>
-    expect(screen.getByLabelText('Select card 5')).toBeTruthy(),
-  );
-  fireEvent.press(screen.getByLabelText('Select card 5'));
+  // Use findBy* for everything that appears after a press so the queries retry
+  // instead of asserting against a single (possibly mid-update) render.
+  fireEvent.press(await screen.findByText('Chapter 1'));
+  fireEvent.press(await screen.findByLabelText('Select card 5'));
 
-  await waitFor(() => expect(screen.getByText('Bob')).toBeTruthy());
+  await screen.findByText('Bob');
 }
 
 // ---- Setup ----
