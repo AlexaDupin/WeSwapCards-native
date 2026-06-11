@@ -91,4 +91,36 @@ function ChapterSection({
   );
 }
 
-export default React.memo(ChapterSection);
+// Custom comparator: the parent recreates the whole `statuses` object on every
+// card tap, which would defeat a shallow-compare memo and re-render every
+// mounted section at once (the cause of VirtualizedList's "slow to update"
+// warning). Re-render a section only when something it actually displays
+// changes — including the status of one of *its own* cards.
+function areEqual(prev: Props, next: Props) {
+  if (
+    prev.chapterId !== next.chapterId ||
+    prev.chapterName !== next.chapterName ||
+    prev.ownedOrDuplicatedCount !== next.ownedOrDuplicatedCount ||
+    prev.cards !== next.cards ||
+    prev.isPending !== next.isPending ||
+    prev.readOnly !== next.readOnly ||
+    prev.onSelectCard !== next.onSelectCard ||
+    prev.onResetCard !== next.onResetCard ||
+    prev.onMarkAllOwned !== next.onMarkAllOwned ||
+    prev.onMarkAllDuplicated !== next.onMarkAllDuplicated
+  ) {
+    return false;
+  }
+
+  // cards is reference-equal here (checked above), so iterating next.cards is
+  // safe and covers exactly this chapter's slice of the statuses map.
+  for (const card of next.cards) {
+    if ((prev.statuses[card.id] ?? 'default') !== (next.statuses[card.id] ?? 'default')) {
+      return false;
+    }
+  }
+
+  return true;
+}
+
+export default React.memo(ChapterSection, areEqual);
