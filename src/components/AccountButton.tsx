@@ -13,6 +13,7 @@ import { useClerk, useUser } from '@clerk/clerk-expo';
 import { useRouter } from 'expo-router';
 
 import { useNotifications } from '@/src/features/notifications/NotificationsProvider';
+import { useDeleteAccount } from '@/src/features/auth/hooks/useDeleteAccount';
 
 export function AccountButton() {
   const { user } = useUser();
@@ -22,6 +23,7 @@ export function AccountButton() {
 
   const { enabled, permission, setEnabled, openSystemSettings } =
     useNotifications();
+  const { deleting, confirmAndDelete } = useDeleteAccount();
 
   const handleSignOut = useCallback(async () => {
     try {
@@ -84,6 +86,19 @@ export function AccountButton() {
               onPress={handleSignOut}
             >
               <Text style={styles.signOutText}>Sign out</Text>
+            </Pressable>
+
+            <Pressable
+              style={({ pressed }) => [
+                styles.item,
+                pressed && styles.itemPressed,
+              ]}
+              onPress={confirmAndDelete}
+              disabled={deleting}
+            >
+              <Text style={[styles.deleteText, deleting && styles.itemDisabled]}>
+                {deleting ? 'Deleting…' : 'Delete account'}
+              </Text>
             </Pressable>
 
             <Pressable
@@ -168,6 +183,14 @@ const styles = StyleSheet.create({
   signOutText: {
     fontSize: 16,
     color: '#C0392B',
+  },
+  deleteText: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#C0392B',
+  },
+  itemDisabled: {
+    opacity: 0.5,
   },
   cancelText: {
     fontSize: 16,

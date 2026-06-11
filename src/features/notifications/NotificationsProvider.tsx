@@ -78,6 +78,9 @@ type NotificationsState = {
   permission: PermissionResult | 'unknown';
   setEnabled: (next: boolean) => Promise<void>;
   openSystemSettings: () => void;
+  // Wipe locally persisted notification state without any server call. Used on
+  // account deletion, where the server-side token is already removed by cascade.
+  clearLocal: () => Promise<void>;
 };
 
 const NotificationsContext = createContext<NotificationsState | null>(null);
@@ -215,9 +218,18 @@ export function NotificationsProvider({
     Linking.openSettings().catch(() => {});
   }, []);
 
+  const clearLocal = useCallback(async () => {
+    registeredForRef.current = null;
+    lastTokenRef.current = null;
+    await Promise.all([
+      SecureStore.deleteItemAsync(ENABLED_KEY).catch(() => {}),
+      SecureStore.deleteItemAsync(TOKEN_KEY).catch(() => {}),
+    ]);
+  }, []);
+
   const value = useMemo(
-    () => ({ enabled, permission, setEnabled, openSystemSettings }),
-    [enabled, permission, setEnabled, openSystemSettings],
+    () => ({ enabled, permission, setEnabled, openSystemSettings, clearLocal }),
+    [enabled, permission, setEnabled, openSystemSettings, clearLocal],
   );
 
   return (

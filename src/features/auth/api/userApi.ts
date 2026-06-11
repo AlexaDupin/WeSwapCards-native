@@ -40,3 +40,13 @@ export async function registerExplorer(params: {
   );
   return resp.data;
 }
+
+// Permanently delete the authenticated user's account. The backend deletes the
+// Clerk identity and cascades the explorer's data (cards, conversations,
+// messages, push tokens). The explorer is derived from the token server-side.
+export async function deleteAccount(params: { token: string }) {
+  await axiosInstance.delete('/account', {
+    headers: { Authorization: `Bearer ${params.token}` },
+    timeout: 15000,
+  });
+}
