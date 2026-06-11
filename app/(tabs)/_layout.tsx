@@ -7,6 +7,13 @@ import PageLoader from '@/src/components/PageLoader';
 import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
 import { Colors } from '@/src/constants/Colors';
 
+// Visual height of the tab bar content (icons + labels), independent of the
+// device's bottom system inset. The inset is added on top: the iOS home
+// indicator (~34px), an Android nav bar (gesture ~16–24px / 3-button ~48px),
+// or 0 on home-button iPhones — so the bar fits every model. Adjust this single
+// value to make the bar taller/shorter uniformly across devices.
+const BASE_TAB_BAR_HEIGHT = 50;
+
 const TabsLayout = () => {
   const { isLoaded, isSignedIn, signOut } = useAuth();
   const { status, errorMessage, resetExplorer } = useExplorer();
@@ -71,18 +78,17 @@ const TabsLayout = () => {
         headerShown: false,
         tabBarActiveTintColor: '#212529',
         tabBarInactiveTintColor: '#6C757D',
-        // Add the bottom safe-area inset to both height and paddingBottom so the
-        // labels clear the Android system nav bar under edge-to-edge (and the
-        // iOS home indicator). A hardcoded height/paddingBottom would suppress
-        // the tab bar's automatic inset handling; this keeps the original 64px
-        // content area and pushes the system-bar region below it.
+        // Height = fixed content height + the device's bottom inset; the inset
+        // is reserved as paddingBottom so labels always sit just above the
+        // system bar / home indicator and never draw behind it (edge-to-edge).
+        // This adapts to every model instead of hardcoding a single height.
         tabBarStyle: {
           backgroundColor: '#FFFFFF',
           borderTopColor: '#E5D3B7',
           borderTopWidth: 1,
           paddingTop: 8,
-          paddingBottom: 8 + insets.bottom,
-          height: 80 + insets.bottom,
+          paddingBottom: insets.bottom,
+          height: BASE_TAB_BAR_HEIGHT + insets.bottom,
         },
         tabBarLabelStyle: {
           fontSize: 11,
