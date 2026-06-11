@@ -10,9 +10,12 @@ import { Colors } from '@/src/constants/Colors';
 // Visual height of the tab bar content (icons + labels), independent of the
 // device's bottom system inset. The inset is added on top: the iOS home
 // indicator (~34px), an Android nav bar (gesture ~16–24px / 3-button ~48px),
-// or 0 on home-button iPhones — so the bar fits every model. Adjust this single
-// value to make the bar taller/shorter uniformly across devices.
-const BASE_TAB_BAR_HEIGHT = 50;
+// or 0 on home-button iPhones — so the bar fits every model.
+//
+// The icon+label render into (BASE_TAB_BAR_HEIGHT − paddingTop); the inset
+// cancels out and never enlarges that area. Keep this >= ~56 so the label
+// isn't clipped (Android needs ~48px of content; below that it overflows).
+const BASE_TAB_BAR_HEIGHT = 56;
 
 const TabsLayout = () => {
   const { isLoaded, isSignedIn, signOut } = useAuth();
