@@ -41,16 +41,34 @@ Notifications.setNotificationHandler({
 });
 
 // Open the conversation referenced by a tapped notification's data payload.
+// The backend enriches `data` with the chat header fields (partner name, card,
+// and the participant ids the offer list is fetched with), so forward whatever
+// is present as route params — mirroring the swap/dashboard entry points. Older
+// notifications that predate the enriched payload still open correctly with just
+// the conversation id (the header simply falls back to its defaults).
 function openConversationFromResponse(
   response: Notifications.NotificationResponse | null,
 ) {
-  const conversationId =
-    response?.notification?.request?.content?.data?.conversationId;
+  const data = response?.notification?.request?.content?.data;
+  const conversationId = data?.conversationId;
   if (conversationId == null) return;
-  router.push({
-    pathname: '/(modal)/chat/[conversationId]',
-    params: { conversationId: String(conversationId) },
-  });
+
+  const params: { conversationId: string; [key: string]: string } = {
+    conversationId: String(conversationId),
+  };
+  const forward = [
+    'cardName',
+    'swapName',
+    'swapExplorerId',
+    'creatorId',
+    'recipientId',
+  ] as const;
+  for (const key of forward) {
+    const value = data?.[key];
+    if (value != null) params[key] = String(value);
+  }
+
+  router.push({ pathname: '/(modal)/chat/[conversationId]', params });
 }
 
 type NotificationsState = {
