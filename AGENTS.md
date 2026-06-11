@@ -92,6 +92,36 @@ useDashboard.ts
 
 ---
 
+## Separation of Concerns
+
+Keep every unit focused on a single responsibility. **Default to extracting, not
+growing a file.** Clean, maintainable structure takes priority over the smallest
+possible diff.
+
+- **Components stay presentational.** They render UI and wire callbacks. Keep
+  orchestration — API calls, multi-step side effects, navigation, error/loading
+  state — out of them.
+- **Logic lives in hooks.** Any non-trivial behavior (data fetching, sequenced
+  effects, state machines) belongs in a `use*` hook the component consumes. Follow
+  existing hooks such as `useNotifications`, `useChatScreen`, `useDeleteAccount`.
+- **Extract a new hook** when a component starts owning logic, when logic is reused,
+  or to make behavior unit-testable in isolation.
+- **Extract a new component** when JSX is reused or a self-contained UI block grows
+  large or independent. Don't fragment a shared `StyleSheet` just to split one
+  element — keep tightly-related markup with its siblings.
+- **One responsibility per file.** When adding a distinct concern to an existing
+  component (e.g. a destructive action with its own flow), create a hook/component
+  instead of inlining it.
+- **Reuse before creating.** Check for an existing hook, component, or util first.
+- Place feature code under `features/<feature>/{api,hooks,components,types}` per the
+  structure above.
+
+Rule of thumb: if a change adds a new responsibility or non-trivial logic, extract
+it rather than inlining. When the right boundary (hook vs component) is genuinely
+ambiguous, ask.
+
+---
+
 ## Navigation Safety
 
 Routing is defined by **Expo Router** in the `app/` directory.
