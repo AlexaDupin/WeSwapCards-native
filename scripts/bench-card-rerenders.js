@@ -5,8 +5,15 @@
  * (React.memo + callback identity), but swaps the native host components
  * (gesture-handler, RN View/Text) for plain test hosts so it runs in Node.
  *
- * It counts how many CardItem component bodies actually execute when a SINGLE
- * card's status is toggled — the exact work the VirtualizedList warning flagged.
+ * It counts how many component bodies actually execute when a SINGLE card's
+ * status is toggled, at BOTH layers of the tree:
+ *   - CardItem      (the leaf — what the original benchmark measured)
+ *   - ChapterSection (the container that maps 9 cards + wires gestures — the
+ *                     work that actually dominates a VirtualizedList update)
+ *
+ * Counting only the leaf hid that a stable-callback fix still left every
+ * section re-rendering on each tap (its memo was defeated by the statuses
+ * object's identity). Counting both layers makes that regression visible.
  *
  * Run: node scripts/bench-card-rerenders.js
  */
@@ -34,6 +41,7 @@ function makeChapters() {
 }
 
 let cardRenderCount = 0;
+let sectionRenderCount = 0;
 
 // ---------------------------------------------------------------------------
 // BEFORE: memo defeated by inline callbacks + unstable hook callback
@@ -44,6 +52,7 @@ const CardItemBefore = memo(function CardItem({ item, status, onSelect }) {
 });
 
 function ChapterSectionBefore({ cards, statuses, onSelectCard }) {
+  sectionRenderCount++;
   return React.createElement(
     'view',
     null,
@@ -89,11 +98,8 @@ const CardItemAfter = memo(function CardItem({ item, status, onSelect }) {
   return React.createElement('view', { 'data-status': status });
 });
 
-const ChapterSectionAfter = memo(function ChapterSection({
-  cards,
-  statuses,
-  onSelectCard,
-}) {
+function ChapterSectionAfterImpl({ cards, statuses, onSelectCard }) {
+  sectionRenderCount++;
   return React.createElement(
     'view',
     null,
@@ -106,6 +112,22 @@ const ChapterSectionAfter = memo(function ChapterSection({
       }),
     ),
   );
+}
+
+// Mirrors the real ChapterSection comparator: the parent recreates `statuses`
+// on every tap, so a shallow-compare memo would still re-render every section.
+// Re-render only when this section's own cards (reference-stable) changed
+// status. Without this, sections re-render 40x even though cards re-render 1x.
+const ChapterSectionAfter = memo(ChapterSectionAfterImpl, (prev, next) => {
+  if (prev.cards !== next.cards || prev.onSelectCard !== next.onSelectCard) {
+    return false;
+  }
+  for (const card of next.cards) {
+    if ((prev.statuses[card.id] || 'default') !== (next.statuses[card.id] || 'default')) {
+      return false;
+    }
+  }
+  return true;
 });
 
 function ScreenAfter({ chapters, onReady }) {
@@ -138,6 +160,7 @@ function measure(Screen, label) {
   const chapters = makeChapters();
   let toggle;
   cardRenderCount = 0;
+  sectionRenderCount = 0;
 
   let renderer;
   act(() => {
@@ -151,25 +174,26 @@ function measure(Screen, label) {
     );
   });
 
-  const initial = cardRenderCount;
   cardRenderCount = 0;
+  sectionRenderCount = 0;
 
   // Toggle ONE card in the first chapter.
   act(() => {
     toggle(1);
   });
 
-  const onToggle = cardRenderCount;
+  const cards = cardRenderCount;
+  const sections = sectionRenderCount;
   renderer.unmount();
 
   console.log(
-    `${label.padEnd(8)} | initial mount: ${String(initial).padStart(
-      4,
-    )} CardItem renders | toggle 1 card: ${String(onToggle).padStart(
-      4,
+    `${label.padEnd(8)} | toggle 1 card -> ${String(sections).padStart(
+      3,
+    )} ChapterSection re-renders, ${String(cards).padStart(
+      3,
     )} CardItem re-renders`,
   );
-  return onToggle;
+  return { cards, sections };
 }
 
 console.log(
@@ -180,6 +204,9 @@ console.log(
 const before = measure(ScreenBefore, 'BEFORE');
 const after = measure(ScreenAfter, 'AFTER');
 console.log(
-  `\nToggling one card re-rendered ${before} CardItems before, ${after} after` +
-    ` — a ${(before / after).toFixed(0)}x reduction.\n`,
+  `\nToggling one card, before -> after:` +
+    `\n  CardItem bodies:      ${before.cards} -> ${after.cards}` +
+    ` (${(before.cards / after.cards).toFixed(0)}x)` +
+    `\n  ChapterSection bodies: ${before.sections} -> ${after.sections}` +
+    ` (${(before.sections / after.sections).toFixed(0)}x)\n`,
 );
