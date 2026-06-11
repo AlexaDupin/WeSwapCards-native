@@ -2,6 +2,7 @@ import { useAuth } from '@clerk/clerk-expo';
 import { Redirect, Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { Text, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import PageLoader from '@/src/components/PageLoader';
 import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
 import { Colors } from '@/src/constants/Colors';
@@ -9,6 +10,7 @@ import { Colors } from '@/src/constants/Colors';
 const TabsLayout = () => {
   const { isLoaded, isSignedIn, signOut } = useAuth();
   const { status, errorMessage, resetExplorer } = useExplorer();
+  const insets = useSafeAreaInsets();
 
   if (!isLoaded) return <PageLoader />;
   if (!isSignedIn) return <Redirect href="/(auth)/sign-in" />;
@@ -69,13 +71,18 @@ const TabsLayout = () => {
         headerShown: false,
         tabBarActiveTintColor: '#212529',
         tabBarInactiveTintColor: '#6C757D',
+        // Add the bottom safe-area inset to both height and paddingBottom so the
+        // labels clear the Android system nav bar under edge-to-edge (and the
+        // iOS home indicator). A hardcoded height/paddingBottom would suppress
+        // the tab bar's automatic inset handling; this keeps the original 64px
+        // content area and pushes the system-bar region below it.
         tabBarStyle: {
           backgroundColor: '#FFFFFF',
           borderTopColor: '#E5D3B7',
           borderTopWidth: 1,
-          paddingBottom: 8,
           paddingTop: 8,
-          height: 80,
+          paddingBottom: 8 + insets.bottom,
+          height: 80 + insets.bottom,
         },
         tabBarLabelStyle: {
           fontSize: 11,
