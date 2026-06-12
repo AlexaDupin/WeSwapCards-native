@@ -195,6 +195,7 @@ and make sure they pass:
 
 - `npm run lint`
 - `npm run typecheck`
+- `npm run format`
 - `npm test`
 
 ---
