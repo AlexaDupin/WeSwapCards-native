@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useClerk, useUser } from '@clerk/clerk-expo';
 import { useRouter } from 'expo-router';
 
@@ -73,7 +74,8 @@ export function AccountButton() {
               </View>
               {enabled === true && permission === 'blocked' && (
                 <Text style={styles.toggleHint} onPress={openSystemSettings}>
-                  Notifications are turned off for this app. Tap to open Settings.
+                  Notifications are turned off for this app. Tap to open
+                  Settings.
                 </Text>
               )}
             </View>
@@ -85,20 +87,31 @@ export function AccountButton() {
               ]}
               onPress={handleSignOut}
             >
-              <Text style={styles.signOutText}>Sign out</Text>
+              <View style={styles.rowContent}>
+                <Ionicons name="log-out-outline" size={20} color={NEUTRAL} />
+                <Text style={styles.signOutText}>Sign out</Text>
+              </View>
             </Pressable>
+
+            <View style={styles.dangerSeparator} />
 
             <Pressable
               style={({ pressed }) => [
                 styles.item,
-                pressed && styles.itemPressed,
+                styles.deleteRow,
+                pressed && styles.deleteRowPressed,
               ]}
               onPress={confirmAndDelete}
               disabled={deleting}
             >
-              <Text style={[styles.deleteText, deleting && styles.itemDisabled]}>
-                {deleting ? 'Deleting…' : 'Delete account'}
-              </Text>
+              <View
+                style={[styles.rowContent, deleting && styles.itemDisabled]}
+              >
+                <Ionicons name="trash-outline" size={20} color={DANGER} />
+                <Text style={styles.deleteText}>
+                  {deleting ? 'Deleting…' : 'Delete account'}
+                </Text>
+              </View>
             </Pressable>
 
             <Pressable
@@ -119,6 +132,10 @@ export function AccountButton() {
 }
 
 const AVATAR_SIZE = 34;
+
+const NEUTRAL = '#111';
+const DANGER = '#C0392B';
+const DANGER_TINT = '#FDECEA';
 
 const styles = StyleSheet.create({
   avatarButton: {
@@ -162,6 +179,21 @@ const styles = StyleSheet.create({
   itemPressed: {
     backgroundColor: 'rgba(0,0,0,0.06)',
   },
+  rowContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+  },
+  dangerSeparator: {
+    height: 8,
+    backgroundColor: 'rgba(0,0,0,0.04)',
+  },
+  deleteRow: {
+    backgroundColor: DANGER_TINT,
+  },
+  deleteRowPressed: {
+    backgroundColor: '#F7D9D4',
+  },
   toggleRow: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -182,12 +214,12 @@ const styles = StyleSheet.create({
   },
   signOutText: {
     fontSize: 16,
-    color: '#C0392B',
+    color: NEUTRAL,
   },
   deleteText: {
     fontSize: 16,
     fontWeight: '600',
-    color: '#C0392B',
+    color: DANGER,
   },
   itemDisabled: {
     opacity: 0.5,
