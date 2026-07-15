@@ -3,6 +3,7 @@ import { Link, useRouter } from 'expo-router';
 import { useState } from 'react';
 import { Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { authStyles } from '../../src/assets/styles/auth.styles';
 import { styles } from '../../src/assets/styles/styles';
 import { useSignUpSubmit } from '@/src/features/auth/hooks/useSignUpSubmit';
@@ -16,6 +17,7 @@ export default function SignUpScreen() {
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
+  const insets = useSafeAreaInsets();
 
   const { onSignUpPress, onVerifyPress } = useSignUpSubmit({
     emailAddress,
@@ -45,7 +47,10 @@ export default function SignUpScreen() {
 
       <KeyboardAwareScrollView
         style={{ flex: 1 }}
-        contentContainerStyle={{ flexGrow: 1 }}
+        // Content is centered so it normally clears the bottom edge, but when
+        // it overflows (keyboard open, large font scale) the scrolled end must
+        // clear the edge-to-edge Android nav/gesture bar.
+        contentContainerStyle={{ flexGrow: 1, paddingBottom: insets.bottom }}
         enableOnAndroid={true}
         enableAutomaticScroll={true}
         extraScrollHeight={30}
