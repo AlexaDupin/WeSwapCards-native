@@ -20,24 +20,32 @@ export default function RootLayout() {
           <ExplorerHydration>
             <NotificationsProvider>
               <SafeScreen>
-              <Stack screenOptions={{ headerShown: false }}>
-                <Stack.Screen name="index" options={{ headerShown: false }} />
+                <Stack screenOptions={{ headerShown: false }}>
+                  <Stack.Screen name="index" options={{ headerShown: false }} />
 
-                <Stack.Screen
-                  name="(auth)"
-                  options={{
-                    presentation: 'modal',
-                    headerShown: false,
-                  }}
-                />
+                  <Stack.Screen
+                    name="onboarding"
+                    options={{ headerShown: false }}
+                  />
 
-                <Stack.Screen
-                  name="(modal)"
-                  options={{ presentation: 'modal', headerShown: false }}
-                />
+                  <Stack.Screen
+                    name="(auth)"
+                    options={{
+                      presentation: 'modal',
+                      headerShown: false,
+                    }}
+                  />
 
-                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-              </Stack>
+                  <Stack.Screen
+                    name="(modal)"
+                    options={{ presentation: 'modal', headerShown: false }}
+                  />
+
+                  <Stack.Screen
+                    name="(tabs)"
+                    options={{ headerShown: false }}
+                  />
+                </Stack>
               </SafeScreen>
             </NotificationsProvider>
           </ExplorerHydration>
