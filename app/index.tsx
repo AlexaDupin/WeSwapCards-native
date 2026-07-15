@@ -8,12 +8,14 @@ import HowItWorks from '@/src/features/home/components/HowItWorks';
 import { useAuth } from '@clerk/clerk-expo';
 import { Redirect } from 'expo-router';
 import { Image, ScrollView, useWindowDimensions, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useOnboarding } from '@/src/features/onboarding/hooks/useOnboarding';
 
 export default function Index() {
   const { isSignedIn, isLoaded } = useAuth();
   const { status: onboardingStatus } = useOnboarding();
   const { width } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
 
   // First-launch onboarding sits strictly ahead of the auth branch: fresh
   // installs see the intro carousel once; the loading guard avoids flashing
@@ -27,7 +29,13 @@ export default function Index() {
   return (
     <View style={homeStyles.screen}>
       <ScrollView
-        contentContainerStyle={homeStyles.scrollContent}
+        // SafeScreen only pads the top inset; reserve the bottom one here so
+        // the end of the scroll content clears the edge-to-edge Android
+        // nav/gesture bar (and the iOS home indicator).
+        contentContainerStyle={[
+          homeStyles.scrollContent,
+          { paddingBottom: insets.bottom },
+        ]}
         showsVerticalScrollIndicator={false}
       >
         <TopBar />
