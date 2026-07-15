@@ -198,7 +198,8 @@ export function useCardsScreen({ explorerId }: Params) {
 
   const onSelectCard = useCallback(
     async (cardId: number) => {
-      const currentStatus = cardStatusesRef.current[String(cardId)] ?? 'default';
+      const currentStatus =
+        cardStatusesRef.current[String(cardId)] ?? 'default';
       const nextStatus = getNextStatus(currentStatus);
 
       if (nextStatus === 'owned') return upsertCard(cardId, false);

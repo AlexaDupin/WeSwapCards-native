@@ -25,7 +25,9 @@ describe('getClerkErrorCode', () => {
 
 describe('getClerkErrorMessage', () => {
   it('returns the first error message', () => {
-    expect(getClerkErrorMessage({ errors: [{ message: 'boom' }] })).toBe('boom');
+    expect(getClerkErrorMessage({ errors: [{ message: 'boom' }] })).toBe(
+      'boom',
+    );
   });
 
   it('returns undefined when there is no error array', () => {

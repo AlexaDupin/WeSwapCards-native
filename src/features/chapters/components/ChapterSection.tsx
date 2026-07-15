@@ -115,7 +115,10 @@ function areEqual(prev: Props, next: Props) {
   // cards is reference-equal here (checked above), so iterating next.cards is
   // safe and covers exactly this chapter's slice of the statuses map.
   for (const card of next.cards) {
-    if ((prev.statuses[card.id] ?? 'default') !== (next.statuses[card.id] ?? 'default')) {
+    if (
+      (prev.statuses[card.id] ?? 'default') !==
+      (next.statuses[card.id] ?? 'default')
+    ) {
       return false;
     }
   }

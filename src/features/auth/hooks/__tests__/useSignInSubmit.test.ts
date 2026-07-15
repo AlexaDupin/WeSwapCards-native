@@ -57,7 +57,9 @@ describe('onSignInPress', () => {
       status: 'complete',
       createdSessionId: 'sess_123',
     });
-    const { result, setError } = setup({ emailAddress: '  user@example.com  ' });
+    const { result, setError } = setup({
+      emailAddress: '  user@example.com  ',
+    });
 
     await act(async () => {
       await result.current.onSignInPress();

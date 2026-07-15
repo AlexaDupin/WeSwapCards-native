@@ -1,6 +1,9 @@
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 
-import { useSwap, type UseSwapOptions } from '@/src/features/swap/hooks/useSwap';
+import {
+  useSwap,
+  type UseSwapOptions,
+} from '@/src/features/swap/hooks/useSwap';
 import type { SwapOpportunitiesResponse } from '@/src/features/swap/types/SwapTypes';
 import {
   createCard,
@@ -89,10 +92,12 @@ describe('useSwap', () => {
     expect(result.current.latestChapters).toEqual([{ id: 9, name: 'Latest' }]);
   });
 
-  it('loads a chapter\'s cards and resets the selected card and opportunities when the chapter changes', async () => {
+  it("loads a chapter's cards and resets the selected card and opportunities when the chapter changes", async () => {
     swapApi.fetchCardsForChapter
       .mockResolvedValueOnce([createCard({ id: 5 })])
-      .mockResolvedValueOnce([createCard({ id: 8, name: 'Card 8', number: 8 })]);
+      .mockResolvedValueOnce([
+        createCard({ id: 8, name: 'Card 8', number: 8 }),
+      ]);
     swapApi.fetchSwapOpportunities.mockResolvedValue(
       createOpportunitiesPage([createOpportunity({ explorer_id: 1 })], 1, 1),
     );

@@ -66,7 +66,10 @@ describe('fetchLatestChapters', () => {
   it('passes limit as a query param and forwards headers', async () => {
     get.mockResolvedValue({ data: { items: [] } });
 
-    await fetchLatestChapters({ headers: { Authorization: 'Bearer t' }, limit: 5 });
+    await fetchLatestChapters({
+      headers: { Authorization: 'Bearer t' },
+      limit: 5,
+    });
 
     expect(get).toHaveBeenCalledWith('/chapters/latest', {
       headers: { Authorization: 'Bearer t' },
@@ -86,7 +89,9 @@ describe('fetchCardsForChapter', () => {
     const cards = [createCard({ id: 5 })];
     get.mockResolvedValue({ data: { cards } });
 
-    await expect(fetchCardsForChapter({ chapterId: 42 })).resolves.toEqual(cards);
+    await expect(fetchCardsForChapter({ chapterId: 42 })).resolves.toEqual(
+      cards,
+    );
     expect(get).toHaveBeenCalledWith('/cards/42', undefined);
   });
 

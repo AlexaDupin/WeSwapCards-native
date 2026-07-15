@@ -55,9 +55,7 @@ beforeEach(() => {
   chatApi.createConversation.mockResolvedValue({ id: 100 });
 });
 
-function setup(
-  args: Partial<Parameters<typeof useChatScreen>[0]> = {},
-) {
+function setup(args: Partial<Parameters<typeof useChatScreen>[0]> = {}) {
   return renderHook(() =>
     useChatScreen({
       conversationId: null,
@@ -95,7 +93,9 @@ describe('initial load', () => {
     chatApi.getAllMessages.mockRejectedValueOnce(new Error('boom'));
     const { result } = setup({ conversationId: 7 });
 
-    await waitFor(() => expect(result.current.error).toBe('Could not load messages'));
+    await waitFor(() =>
+      expect(result.current.error).toBe('Could not load messages'),
+    );
     expect(result.current.loading).toBe(false);
   });
 });

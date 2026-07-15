@@ -49,7 +49,10 @@ function SegmentedToggleInner<T extends string>({
             ]}
           >
             <Text
-              style={[styles.text, active ? styles.textActive : styles.textInactive]}
+              style={[
+                styles.text,
+                active ? styles.textActive : styles.textInactive,
+              ]}
             >
               {opt.label}
             </Text>
@@ -105,6 +108,8 @@ const styles = StyleSheet.create({
 });
 
 // memo keeps the generic signature via a cast.
-const SegmentedToggle = memo(SegmentedToggleInner) as typeof SegmentedToggleInner;
+const SegmentedToggle = memo(
+  SegmentedToggleInner,
+) as typeof SegmentedToggleInner;
 
 export default SegmentedToggle;

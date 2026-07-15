@@ -33,9 +33,9 @@ describe('getAllMessages', () => {
       data: { allMessages, conversationStatus: 'In progress' },
     });
 
-    await expect(getAllMessages({ conversationId: 7, headers })).resolves.toEqual(
-      { allMessages, conversationStatus: 'In progress' },
-    );
+    await expect(
+      getAllMessages({ conversationId: 7, headers }),
+    ).resolves.toEqual({ allMessages, conversationStatus: 'In progress' });
     expect(axiosInstance.get).toHaveBeenCalledWith('/chat/7', {
       headers,
       timeout: 20000,

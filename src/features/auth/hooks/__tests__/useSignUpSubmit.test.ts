@@ -165,13 +165,18 @@ describe('onVerifyPress', () => {
   });
 
   it('requires a code', async () => {
-    const { result, setError } = setup({ pendingVerification: true, code: '  ' });
+    const { result, setError } = setup({
+      pendingVerification: true,
+      code: '  ',
+    });
 
     await act(async () => {
       await result.current.onVerifyPress();
     });
 
-    expect(setError).toHaveBeenCalledWith('Please enter the verification code.');
+    expect(setError).toHaveBeenCalledWith(
+      'Please enter the verification code.',
+    );
     expect(signUp.attemptEmailAddressVerification).not.toHaveBeenCalled();
   });
 
@@ -221,7 +226,9 @@ describe('onVerifyPress', () => {
       await result.current.onVerifyPress();
     });
 
-    expect(setError).toHaveBeenCalledWith('Additional verification is required.');
+    expect(setError).toHaveBeenCalledWith(
+      'Additional verification is required.',
+    );
     expect(setActive).not.toHaveBeenCalled();
   });
 

@@ -123,7 +123,10 @@ const ChapterSectionAfter = memo(ChapterSectionAfterImpl, (prev, next) => {
     return false;
   }
   for (const card of next.cards) {
-    if ((prev.statuses[card.id] || 'default') !== (next.statuses[card.id] || 'default')) {
+    if (
+      (prev.statuses[card.id] || 'default') !==
+      (next.statuses[card.id] || 'default')
+    ) {
       return false;
     }
   }

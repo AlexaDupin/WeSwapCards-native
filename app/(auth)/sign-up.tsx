@@ -83,7 +83,10 @@ export default function SignUpScreen() {
                   /^sign in$/i.test(part) ? (
                     <Text
                       key={index}
-                      style={{ fontWeight: '600', textDecorationLine: 'underline' }}
+                      style={{
+                        fontWeight: '600',
+                        textDecorationLine: 'underline',
+                      }}
                       onPress={() => router.push('/sign-in')}
                     >
                       {part}
