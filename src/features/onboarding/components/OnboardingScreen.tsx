@@ -9,6 +9,7 @@ import {
   type ListRenderItemInfo,
 } from 'react-native';
 import { Image } from 'expo-image';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import SafeScreen from '@/src/components/SafeScreen';
 import PressableScale from '@/src/components/PressableScale';
@@ -21,6 +22,7 @@ import { useOnboardingCarousel } from '@/src/features/onboarding/hooks/useOnboar
 
 const OnboardingScreen = () => {
   const { width } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
   const {
     listRef,
     activeIndex,
@@ -82,7 +84,10 @@ const OnboardingScreen = () => {
           })}
         />
 
-        <View style={styles.footer}>
+        {/* SafeScreen only pads the top inset; edge-to-edge Android draws the
+            nav/gesture bar over the screen, so reserve the bottom inset here —
+            same approach as the tab bar in app/(tabs)/_layout.tsx. */}
+        <View style={[styles.footer, { paddingBottom: 24 + insets.bottom }]}>
           <View style={styles.dotsRow}>
             {onboardingSlides.map((slide, index) => (
               <View
@@ -155,7 +160,7 @@ const styles = StyleSheet.create({
 
   footer: {
     paddingHorizontal: 24,
-    paddingBottom: 24,
+    // paddingBottom is set inline: 24 + the device's bottom safe-area inset.
   },
   dotsRow: {
     flexDirection: 'row',
