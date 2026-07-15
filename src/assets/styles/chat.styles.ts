@@ -21,6 +21,14 @@ export const styles = StyleSheet.create({
 
   error: { padding: 16, color: 'red' },
 
+  blockedHint: {
+    paddingHorizontal: 16,
+    paddingVertical: 6,
+    fontSize: 13,
+    color: '#667085',
+    textAlign: 'center',
+  },
+
   listContent: { padding: 16, paddingBottom: 12 },
 
   bubble: {

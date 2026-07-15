@@ -5,6 +5,7 @@ import { useKeyboardVisible } from '@/src/hooks/useKeyboardVisible';
 import type { Message } from '@/src/features/chat/types/MessageType';
 import type { ConversationStatus } from '@/src/features/chat/types/ConversationStatus';
 import * as chatApi from '@/src/features/chat/api/chatApi';
+import { getSendErrorMessage } from '@/src/features/chat/data/sendErrorMessages';
 
 export function useChatScreen(args: {
   conversationId: number | null; // null = new conversation, created on first send
@@ -158,8 +159,9 @@ export function useChatScreen(args: {
       await chatApi
         .markConversationRead({ conversationId: cid, explorerId, headers })
         .catch(() => {});
-    } catch {
-      setError('Could not send message');
+    } catch (err) {
+      // Text is intentionally kept in the composer on failure so nothing is lost.
+      setError(getSendErrorMessage(err));
     } finally {
       setSending(false);
     }

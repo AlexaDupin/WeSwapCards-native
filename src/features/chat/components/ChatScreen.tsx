@@ -17,6 +17,8 @@ import { useChatScreen } from '@/src/features/chat/hooks/useChatScreen';
 import { useOfferableCards } from '@/src/features/chat/hooks/useOfferableCards';
 import type { ConversationStatus } from '@/src/features/chat/types/ConversationStatus';
 
+import { useBlockUser } from '@/src/features/moderation/hooks/useBlockUser';
+import ChatModerationMenu from '@/src/features/moderation/components/ChatModerationMenu';
 import MessageList, {
   type MessageListHandle,
 } from '@/src/features/chat/components/MessageList';
@@ -77,6 +79,13 @@ export default function ChatScreen({
     cardName,
   });
 
+  // Trust-and-safety state lives here (not in the menu) so the screen can also
+  // show the blocked hint above the composer.
+  const { isBlockedByMe, toggleBlock } = useBlockUser({
+    swapExplorerId,
+    swapName,
+  });
+
   const bottomSpacer = insets.bottom + 8;
 
   const handleSend = useCallback(() => {
@@ -117,7 +126,17 @@ export default function ChatScreen({
           </Text>
         </View>
 
-        <View style={{ width: 28 }} />
+        {swapExplorerId != null ? (
+          <ChatModerationMenu
+            swapExplorerId={swapExplorerId}
+            swapName={swapName}
+            conversationId={conversationId}
+            isBlockedByMe={isBlockedByMe}
+            onToggleBlock={toggleBlock}
+          />
+        ) : (
+          <View style={{ width: 28 }} />
+        )}
       </View>
 
       <SwapOfferBar
@@ -146,6 +165,11 @@ export default function ChatScreen({
           onChangeStatus={handleConversationStatus}
         />
       )}
+      {isBlockedByMe === true ? (
+        <Text style={styles.blockedHint}>
+          You blocked this collector. Unblock to send messages.
+        </Text>
+      ) : null}
       <ChatComposer
         text={text}
         setText={setText}
