@@ -12,6 +12,7 @@ type Params = {
   emailAddress: string;
   password: string;
   code: string;
+  legalAccepted: boolean;
 
   pendingVerification: boolean;
   setPendingVerification: (v: boolean) => void;
@@ -28,6 +29,7 @@ export function useSignUpSubmit({
   emailAddress,
   password,
   code,
+  legalAccepted,
   pendingVerification,
   setPendingVerification,
   isSubmitting,
@@ -47,6 +49,13 @@ export function useSignUpSubmit({
       return;
     }
 
+    if (!legalAccepted) {
+      setError(
+        'Please accept the Terms of Service and Privacy Policy to continue.',
+      );
+      return;
+    }
+
     if (!signUp) {
       setError('Sign-up not available. Please try again.');
       return;
@@ -56,10 +65,11 @@ export function useSignUpSubmit({
     setError('');
 
     try {
+      // Clerk stores the consent timestamp for this — the compliance artifact.
       await signUp.create({
         emailAddress: email,
         password,
-        legalAccepted: true,
+        legalAccepted,
       });
 
       await signUp.prepareEmailAddressVerification({ strategy: 'email_code' });
@@ -77,6 +87,7 @@ export function useSignUpSubmit({
     isSubmitting,
     emailAddress,
     password,
+    legalAccepted,
     signUp,
     setError,
     setIsSubmitting,

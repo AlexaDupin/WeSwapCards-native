@@ -47,6 +47,7 @@ function setup(overrides: Overrides = {}) {
       emailAddress: 'user@example.com',
       password: 'secret',
       code: '',
+      legalAccepted: true,
       pendingVerification: false,
       setPendingVerification,
       isSubmitting: false,
@@ -83,6 +84,19 @@ describe('onSignUpPress', () => {
     });
     expect(setPendingVerification).toHaveBeenCalledWith(true);
     expect(setError).toHaveBeenCalledWith('');
+  });
+
+  it('blocks sign-up until the terms are accepted', async () => {
+    const { result, setError } = setup({ legalAccepted: false });
+
+    await act(async () => {
+      await result.current.onSignUpPress();
+    });
+
+    expect(setError).toHaveBeenCalledWith(
+      'Please accept the Terms of Service and Privacy Policy to continue.',
+    );
+    expect(signUp.create).not.toHaveBeenCalled();
   });
 
   it('validates that email and password are present', async () => {

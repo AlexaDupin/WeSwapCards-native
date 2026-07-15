@@ -1,6 +1,8 @@
 import React, { useState, useCallback } from 'react';
 import {
+  Alert,
   Image,
+  Linking,
   Modal,
   Pressable,
   StyleSheet,
@@ -37,6 +39,12 @@ export function AccountButton() {
   }, [signOut, router]);
 
   const email = user?.emailAddresses?.[0]?.emailAddress ?? null;
+
+  const openExternal = useCallback((url: string, fallbackMessage: string) => {
+    Linking.openURL(url).catch(() => {
+      Alert.alert('Could not open', fallbackMessage);
+    });
+  }, []);
 
   return (
     <>
@@ -79,6 +87,65 @@ export function AccountButton() {
                 </Text>
               )}
             </View>
+
+            <Pressable
+              style={({ pressed }) => [
+                styles.item,
+                pressed && styles.itemPressed,
+              ]}
+              onPress={() =>
+                openExternal(
+                  `mailto:${SUPPORT_EMAIL}`,
+                  `Email us at ${SUPPORT_EMAIL}`,
+                )
+              }
+            >
+              <View style={styles.rowContent}>
+                <Ionicons name="mail-outline" size={20} color={NEUTRAL} />
+                <View>
+                  <Text style={styles.linkItemText}>Contact support</Text>
+                  <Text style={styles.linkItemSubtext}>{SUPPORT_EMAIL}</Text>
+                </View>
+              </View>
+            </Pressable>
+
+            <Pressable
+              style={({ pressed }) => [
+                styles.item,
+                pressed && styles.itemPressed,
+              ]}
+              onPress={() =>
+                openExternal(TERMS_URL, `You can read it at ${TERMS_URL}`)
+              }
+            >
+              <View style={styles.rowContent}>
+                <Ionicons
+                  name="document-text-outline"
+                  size={20}
+                  color={NEUTRAL}
+                />
+                <Text style={styles.linkItemText}>Terms of Service</Text>
+              </View>
+            </Pressable>
+
+            <Pressable
+              style={({ pressed }) => [
+                styles.item,
+                pressed && styles.itemPressed,
+              ]}
+              onPress={() =>
+                openExternal(PRIVACY_URL, `You can read it at ${PRIVACY_URL}`)
+              }
+            >
+              <View style={styles.rowContent}>
+                <Ionicons
+                  name="shield-checkmark-outline"
+                  size={20}
+                  color={NEUTRAL}
+                />
+                <Text style={styles.linkItemText}>Privacy Policy</Text>
+              </View>
+            </Pressable>
 
             <Pressable
               style={({ pressed }) => [
@@ -132,6 +199,11 @@ export function AccountButton() {
 }
 
 const AVATAR_SIZE = 34;
+
+// Published in-app contact + legal pages (store UGC compliance).
+const SUPPORT_EMAIL = 'contact@weswapcards.com';
+const TERMS_URL = 'https://weswapcards.com/terms';
+const PRIVACY_URL = 'https://weswapcards.com/privacy';
 
 const NEUTRAL = '#111';
 const DANGER = '#C0392B';
@@ -215,6 +287,15 @@ const styles = StyleSheet.create({
   signOutText: {
     fontSize: 16,
     color: NEUTRAL,
+  },
+  linkItemText: {
+    fontSize: 16,
+    color: NEUTRAL,
+  },
+  linkItemSubtext: {
+    marginTop: 2,
+    fontSize: 13,
+    color: '#666',
   },
   deleteText: {
     fontSize: 16,

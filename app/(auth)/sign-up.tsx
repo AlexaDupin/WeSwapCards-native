@@ -8,10 +8,12 @@ import { authStyles } from '../../src/assets/styles/auth.styles';
 import { styles } from '../../src/assets/styles/styles';
 import { useSignUpSubmit } from '@/src/features/auth/hooks/useSignUpSubmit';
 import PasswordInput from '@/src/components/PasswordInput';
+import LegalConsentCheckbox from '@/src/features/auth/components/LegalConsentCheckbox';
 
 export default function SignUpScreen() {
   const [emailAddress, setEmailAddress] = useState('');
   const [password, setPassword] = useState('');
+  const [termsAccepted, setTermsAccepted] = useState(false);
   const [pendingVerification, setPendingVerification] = useState(false);
   const [code, setCode] = useState<string>('');
   const [error, setError] = useState('');
@@ -23,6 +25,7 @@ export default function SignUpScreen() {
     emailAddress,
     password,
     code,
+    legalAccepted: termsAccepted,
     pendingVerification,
     setPendingVerification,
     isSubmitting,
@@ -161,10 +164,21 @@ export default function SignUpScreen() {
                 autoComplete="password-new"
               />
 
+              <LegalConsentCheckbox
+                value={termsAccepted}
+                onValueChange={(next) => {
+                  setTermsAccepted(next);
+                  if (error) clearError();
+                }}
+              />
+
               <TouchableOpacity
-                style={[styles.button, isSubmitting && { opacity: 0.6 }]}
+                style={[
+                  styles.button,
+                  (isSubmitting || !termsAccepted) && { opacity: 0.6 },
+                ]}
                 onPress={onSignUpPress}
-                disabled={isSubmitting}
+                disabled={isSubmitting || !termsAccepted}
               >
                 <Text style={styles.buttonText}>
                   {isSubmitting ? 'Creating...' : 'Continue'}
