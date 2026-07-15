@@ -167,6 +167,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     gap: 8,
+    marginTop: 16,
     marginBottom: 24,
   },
   dot: {
