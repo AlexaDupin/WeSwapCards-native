@@ -10,10 +10,18 @@ export const styles = StyleSheet.create({
     backgroundColor: Colors.screenBackground,
   },
 
+  // The row owns the bottom spacing so the help button centres against the
+  // title instead of riding above it.
+  titleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    marginBottom: 16,
+  },
+
   pageTitle: {
     fontSize: 20,
     fontWeight: '700',
-    marginBottom: 16,
   },
 
   chapterListContent: {
