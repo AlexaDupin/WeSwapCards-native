@@ -82,112 +82,116 @@ export default function DashboardScreen() {
   );
 
   return (
-    <View style={{ flex: 1, padding: 16 }}>
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          marginBottom: 16,
-        }}
-      >
-        <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Dashboard</Text>
-        <AccountButton />
+    // The unpadded root anchors the floating tip; the inner view carries the
+    // screen's own padding.
+    <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, padding: 16 }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            marginBottom: 16,
+          }}
+        >
+          <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Dashboard</Text>
+          <AccountButton />
+        </View>
+
+        <View style={styles.pillList}>
+          <View style={styles.tabChips}>
+            <TabChip
+              label="In progress"
+              count={unreadCounts.inProgress}
+              active={activeTab === 'in-progress'}
+              onPress={() => setActiveTab('in-progress')}
+            />
+            <TabChip
+              label="Past"
+              count={unreadCounts.past}
+              active={activeTab === 'past'}
+              onPress={() => setActiveTab('past')}
+            />
+          </View>
+
+          <SegmentedToggle
+            options={[
+              { value: 'date', label: 'Recent' },
+              { value: 'name', label: 'Name' },
+            ]}
+            value={sortBy}
+            onChange={setSortBy}
+          />
+        </View>
+
+        <TextInput
+          style={styles.searchInput}
+          value={searchQuery}
+          onChangeText={setSearchQuery}
+          placeholder="Search by name or card"
+          placeholderTextColor="rgba(0,0,0,0.4)"
+          autoCorrect={false}
+          autoCapitalize="none"
+          returnKeyType="search"
+          clearButtonMode="while-editing"
+        />
+
+        {loadingInitial && listData.length === 0 ? (
+          <View style={{ paddingTop: 24 }}>
+            <ActivityIndicator />
+          </View>
+        ) : (
+          <FlatList
+            style={styles.transactionsList}
+            contentContainerStyle={styles.transactionsListContent}
+            data={listData}
+            renderItem={renderItem}
+            keyExtractor={(item) => String(item.db_id)}
+            showsVerticalScrollIndicator={false}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
+            onEndReached={activeTab === 'past' ? loadMorePast : undefined}
+            onEndReachedThreshold={0.4}
+            ListEmptyComponent={
+              searchQuery.trim() ? (
+                <View style={styles.emptyContainer}>
+                  <Text style={styles.emptyIcon}>🔍</Text>
+                  <Text style={styles.emptyTitle}>No matches</Text>
+                  <Text style={styles.emptySubtitle}>
+                    No conversations match “{searchQuery.trim()}”.
+                  </Text>
+                </View>
+              ) : (
+                <View style={styles.emptyContainer}>
+                  <Text style={styles.emptyIcon}>
+                    {activeTab === 'in-progress' ? '💬' : '🗂️'}
+                  </Text>
+                  <Text style={styles.emptyTitle}>
+                    {activeTab === 'in-progress'
+                      ? 'No open conversations'
+                      : 'No past conversations'}
+                  </Text>
+                  <Text style={styles.emptySubtitle}>
+                    {activeTab === 'in-progress'
+                      ? 'Start swapping!'
+                      : 'Completed and declined conversations will be archived here.'}
+                  </Text>
+                </View>
+              )
+            }
+            ListFooterComponent={
+              activeTab === 'past' && loadingMore ? (
+                <View style={{ paddingVertical: 16 }}>
+                  <ActivityIndicator />
+                </View>
+              ) : null
+            }
+          />
+        )}
       </View>
 
       <TipBubble tipKey="dashboard" />
-
-      <View style={styles.pillList}>
-        <View style={styles.tabChips}>
-          <TabChip
-            label="In progress"
-            count={unreadCounts.inProgress}
-            active={activeTab === 'in-progress'}
-            onPress={() => setActiveTab('in-progress')}
-          />
-          <TabChip
-            label="Past"
-            count={unreadCounts.past}
-            active={activeTab === 'past'}
-            onPress={() => setActiveTab('past')}
-          />
-        </View>
-
-        <SegmentedToggle
-          options={[
-            { value: 'date', label: 'Recent' },
-            { value: 'name', label: 'Name' },
-          ]}
-          value={sortBy}
-          onChange={setSortBy}
-        />
-      </View>
-
-      <TextInput
-        style={styles.searchInput}
-        value={searchQuery}
-        onChangeText={setSearchQuery}
-        placeholder="Search by name or card"
-        placeholderTextColor="rgba(0,0,0,0.4)"
-        autoCorrect={false}
-        autoCapitalize="none"
-        returnKeyType="search"
-        clearButtonMode="while-editing"
-      />
-
-      {loadingInitial && listData.length === 0 ? (
-        <View style={{ paddingTop: 24 }}>
-          <ActivityIndicator />
-        </View>
-      ) : (
-        <FlatList
-          style={styles.transactionsList}
-          contentContainerStyle={styles.transactionsListContent}
-          data={listData}
-          renderItem={renderItem}
-          keyExtractor={(item) => String(item.db_id)}
-          showsVerticalScrollIndicator={false}
-          refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-          }
-          onEndReached={activeTab === 'past' ? loadMorePast : undefined}
-          onEndReachedThreshold={0.4}
-          ListEmptyComponent={
-            searchQuery.trim() ? (
-              <View style={styles.emptyContainer}>
-                <Text style={styles.emptyIcon}>🔍</Text>
-                <Text style={styles.emptyTitle}>No matches</Text>
-                <Text style={styles.emptySubtitle}>
-                  No conversations match “{searchQuery.trim()}”.
-                </Text>
-              </View>
-            ) : (
-              <View style={styles.emptyContainer}>
-                <Text style={styles.emptyIcon}>
-                  {activeTab === 'in-progress' ? '💬' : '🗂️'}
-                </Text>
-                <Text style={styles.emptyTitle}>
-                  {activeTab === 'in-progress'
-                    ? 'No open conversations'
-                    : 'No past conversations'}
-                </Text>
-                <Text style={styles.emptySubtitle}>
-                  {activeTab === 'in-progress'
-                    ? 'Start swapping!'
-                    : 'Completed and declined conversations will be archived here.'}
-                </Text>
-              </View>
-            )
-          }
-          ListFooterComponent={
-            activeTab === 'past' && loadingMore ? (
-              <View style={{ paddingVertical: 16 }}>
-                <ActivityIndicator />
-              </View>
-            ) : null
-          }
-        />
-      )}
     </View>
   );
 }

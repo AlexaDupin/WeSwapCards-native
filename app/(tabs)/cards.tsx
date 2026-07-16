@@ -74,10 +74,6 @@ function CardsScreen({ explorerId }: { explorerId: number }) {
         />
       </View>
 
-      <View style={styles.tipSlot}>
-        <TipBubble tipKey="cards" />
-      </View>
-
       <View>
         <AZNav
           onSelect={scrollToLetter}
@@ -101,6 +97,8 @@ function CardsScreen({ explorerId }: { explorerId: number }) {
         visible={helpVisible}
         onClose={() => setHelpVisible(false)}
       />
+
+      <TipBubble tipKey="cards" />
     </View>
   );
 }

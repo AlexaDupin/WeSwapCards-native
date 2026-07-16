@@ -219,10 +219,4 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
-
-  // Matches the chapter list's gutters so the first-run tip lines up with the
-  // content it describes. Collapses to nothing once the tip is dismissed.
-  tipSlot: {
-    paddingHorizontal: 16,
-  },
 });

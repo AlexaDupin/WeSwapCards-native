@@ -14,8 +14,12 @@ type Props = {
  * while the persisted flag is still being read), so screens can drop it in
  * unconditionally.
  *
- * Deliberately layout-neutral: no horizontal margin, since the three tabs pad
- * their content differently. The host screen places it.
+ * Floats over the bottom of the tab's content rather than displacing it — a
+ * tutorial card the user reads and closes, not part of the layout. Screens sit
+ * above the tab bar, so `bottom` clears the menu without knowing its height.
+ *
+ * Anchors to its parent's content box, so the host must be the screen's
+ * unpadded root (a padded one would double the gutters) and must not scroll.
  */
 export default function TipBubble({ tipKey }: Props) {
   const { status, dismiss } = useTip(tipKey);
@@ -25,12 +29,7 @@ export default function TipBubble({ tipKey }: Props) {
 
   return (
     <View style={styles.bubble}>
-      <Ionicons
-        name={tip.icon}
-        size={18}
-        color={Colors.darkerPrimary}
-        style={styles.icon}
-      />
+      <Ionicons name={tip.icon} size={18} color="#fff" style={styles.icon} />
 
       <View style={styles.copy}>
         <Text style={styles.title}>{tip.title}</Text>
@@ -41,10 +40,10 @@ export default function TipBubble({ tipKey }: Props) {
         onPress={dismiss}
         accessibilityRole="button"
         accessibilityLabel="Dismiss tip"
-        hitSlop={8}
+        hitSlop={10}
         style={({ pressed }) => [styles.close, pressed && styles.closePressed]}
       >
-        <Ionicons name="close" size={16} color={Colors.onboardingMuted} />
+        <Ionicons name="close" size={16} color="rgba(255,255,255,0.75)" />
       </Pressable>
     </View>
   );
@@ -52,15 +51,22 @@ export default function TipBubble({ tipKey }: Props) {
 
 const styles = StyleSheet.create({
   bubble: {
+    position: 'absolute',
+    left: 16,
+    right: 16,
+    bottom: 16,
     flexDirection: 'row',
     alignItems: 'flex-start',
     gap: 10,
-    backgroundColor: Colors.verylightPrimary,
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: Colors.lightPrimary,
-    borderRadius: 12,
-    padding: 12,
-    marginBottom: 16,
+    backgroundColor: Colors.accent,
+    borderRadius: 14,
+    padding: 14,
+    // Reads as floating above the content it covers rather than sitting in it.
+    shadowColor: '#000',
+    shadowOpacity: 0.25,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 4 },
+    elevation: 8,
   },
   // Nudges the icon onto the title's optical baseline.
   icon: {
@@ -72,13 +78,13 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 14,
     fontWeight: '700',
-    color: Colors.onboardingText,
+    color: '#fff',
     marginBottom: 3,
   },
   body: {
     fontSize: 13,
     lineHeight: 18,
-    color: Colors.onboardingMuted,
+    color: 'rgba(255,255,255,0.9)',
   },
   close: {
     padding: 2,

@@ -90,8 +90,6 @@ export default function SwapScreen() {
     <>
       <Text style={styles.title}>Find a card</Text>
 
-      <TipBubble tipKey="swap" />
-
       {error ? (
         <Text style={styles.errorText} onPress={dismissError}>
           {error.message}
@@ -168,6 +166,8 @@ export default function SwapScreen() {
           />
         </View>
       )}
+
+      <TipBubble tipKey="swap" />
     </View>
   );
 }
