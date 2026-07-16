@@ -181,6 +181,8 @@ export function AccountButton() {
               </View>
             </Pressable>
 
+            <View style={styles.dangerSeparator} />
+
             <Pressable
               style={({ pressed }) => [
                 styles.item,
@@ -257,7 +259,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   dangerSeparator: {
-    height: 8,
+    height: 24,
     backgroundColor: 'rgba(0,0,0,0.04)',
   },
   deleteRow: {
