@@ -200,14 +200,11 @@ export default function RegisterUserScreen() {
       </View>
 
       <View style={authStyles.container}>
-        <Text style={authStyles.title}>Choose a username</Text>
+        <Text style={authStyles.title}>Enter your WeWard username</Text>
 
         <View style={authStyles.subtitle}>
           <Text style={authStyles.subtitleText}>
             One last step to finish creating your account.
-          </Text>
-          <Text style={authStyles.subtitleText}>
-            Use your WeWard username to make things easier.
           </Text>
         </View>
 
