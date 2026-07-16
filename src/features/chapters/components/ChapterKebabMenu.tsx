@@ -1,6 +1,7 @@
 // src/features/cards/components/ChapterKebabMenu.tsx
 import React, { useState } from 'react';
 import { Modal, Pressable, Text, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { styles } from '@/src/assets/styles/cards.styles';
 
 type Props = {
@@ -30,7 +31,11 @@ export default function ChapterKebabMenu({
           disabled && styles.kebabDisabled,
         ]}
       >
-        <Text style={styles.kebabText}>⋮</Text>
+        <Ionicons
+          name="ellipsis-vertical"
+          size={18}
+          color="rgba(0,0,0,0.35)"
+        />
       </Pressable>
 
       <Modal

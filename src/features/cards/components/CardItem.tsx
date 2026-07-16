@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, View } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { styles } from '@/src/assets/styles/cards.styles';
 import type {
   CardItemData,
@@ -70,27 +71,18 @@ function CardItem({
               : styles.cardItemDefault,
           ]}
         >
-          <View
+          <Text
             style={[
-              styles.cardItemInner,
-              isOwned || isDuplicated
-                ? styles.cardItemInnerOwned
-                : styles.cardItemInnerDefault,
+              styles.cardNumber,
+              (isOwned || isDuplicated) && styles.cardNumberOwned,
             ]}
           >
-            <Text
-              style={[
-                styles.cardNumber,
-                (isOwned || isDuplicated) && styles.cardNumberOwned,
-              ]}
-            >
-              {item.number}
-            </Text>
-          </View>
+            {item.number}
+          </Text>
 
           {isDuplicated && (
             <View testID={`badge-${item.id}`} style={styles.duplicateBadge}>
-              <Text style={styles.duplicateBadgeText}>+</Text>
+              <Ionicons name="swap-horizontal" size={9} color="#fff" />
             </View>
           )}
         </View>

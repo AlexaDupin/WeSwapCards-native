@@ -38,10 +38,10 @@ jest.mock('@/src/features/cards/api/cardsApi', () => ({
   setChapterCardsStatus: jest.fn().mockResolvedValue({ status: 200 }),
 }));
 
-// The card shows its state via the border color of the `card-<id>` view:
-// default is a faint grey, owned/duplicated use the brand secondary color.
-const DEFAULT_BORDER = 'rgba(0,0,0,0.12)';
-const OWNED_BORDER = Colors.secondary;
+// The card shows its state via the background of the `card-<id>` view:
+// default (missing) is a recessed grey, owned/duplicated are a raised white.
+const DEFAULT_BG = Colors.tileMissingBg;
+const OWNED_BG = '#fff';
 
 const tapCard5 = () =>
   fireGestureHandler<TapGesture>(getByGestureTestId('tap-5'), [
@@ -62,7 +62,7 @@ describe('Cards', () => {
     render(<Cards />);
 
     const card = await screen.findByTestId('card-5');
-    expect(card).toHaveStyle({ borderColor: DEFAULT_BORDER });
+    expect(card).toHaveStyle({ backgroundColor: DEFAULT_BG });
   });
 
   it('changes from default to owned after a tap', async () => {
@@ -73,7 +73,7 @@ describe('Cards', () => {
 
     await waitFor(() =>
       expect(screen.getByTestId('card-5')).toHaveStyle({
-        borderColor: OWNED_BORDER,
+        backgroundColor: OWNED_BG,
       }),
     );
   });
@@ -85,14 +85,14 @@ describe('Cards', () => {
     tapCard5();
     await waitFor(() =>
       expect(screen.getByTestId('card-5')).toHaveStyle({
-        borderColor: OWNED_BORDER,
+        backgroundColor: OWNED_BG,
       }),
     );
 
     tapCard5();
     await waitFor(() => expect(screen.getByTestId('badge-5')).toBeTruthy());
     expect(screen.getByTestId('card-5')).toHaveStyle({
-      borderColor: OWNED_BORDER,
+      backgroundColor: OWNED_BG,
     });
   });
 
@@ -103,7 +103,7 @@ describe('Cards', () => {
     tapCard5();
     await waitFor(() =>
       expect(screen.getByTestId('card-5')).toHaveStyle({
-        borderColor: OWNED_BORDER,
+        backgroundColor: OWNED_BG,
       }),
     );
 
@@ -111,7 +111,7 @@ describe('Cards', () => {
 
     await waitFor(() =>
       expect(screen.getByTestId('card-5')).toHaveStyle({
-        borderColor: DEFAULT_BORDER,
+        backgroundColor: DEFAULT_BG,
       }),
     );
   });

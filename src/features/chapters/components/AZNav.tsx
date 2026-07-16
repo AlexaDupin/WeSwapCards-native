@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
-import { Pressable, ScrollView, Text, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
+import { Colors } from '@/src/constants/Colors';
 
 type Props = {
   onSelect: (letter: string) => void;
@@ -69,24 +70,29 @@ const styles = {
     gap: 8,
   },
   pill: {
-    paddingVertical: 7,
-    paddingHorizontal: 10,
+    width: 30,
+    height: 30,
     borderRadius: 999,
-    backgroundColor: 'rgba(0,0,0,0.06)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#fff',
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: 'rgba(0,0,0,0.08)',
   },
   pillPressed: {
     transform: [{ scale: 0.98 }],
     opacity: 0.9,
   },
   pillDisabled: {
-    backgroundColor: 'rgba(0,0,0,0.03)',
+    backgroundColor: 'transparent',
+    borderWidth: 0,
   },
   pillText: {
     fontSize: 12,
-    fontWeight: '800',
-    opacity: 0.85,
+    fontWeight: '600',
+    color: Colors.textPrimary,
   },
   pillTextDisabled: {
-    opacity: 0.25,
+    color: 'rgba(0,0,0,0.2)',
   },
 } as const;

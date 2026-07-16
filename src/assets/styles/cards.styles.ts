@@ -1,15 +1,13 @@
 import { Colors } from '@/src/constants/Colors';
-import { Platform, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 const TRACK = '#eaeaea';
-const DEFAULT_BORDER = 'rgba(0,0,0,0.12)';
-const DEFAULT_INNER = 'rgba(0,0,0,0.04)';
-const DEFAULT_TEXT = 'rgba(0,0,0,0.8)';
 
 export const styles = StyleSheet.create({
   cardsScreen: {
     flex: 1,
     paddingTop: 16,
+    backgroundColor: Colors.screenBackground,
   },
 
   pageTitle: {
@@ -27,26 +25,26 @@ export const styles = StyleSheet.create({
   },
 
   chapter: {
-    marginBottom: 32,
+    marginBottom: 14,
     backgroundColor: '#fff',
     borderRadius: 16,
     padding: 14,
-    borderWidth: 1,
-    borderColor: 'rgba(0,0,0,0.06)',
+    paddingHorizontal: 16,
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: Colors.cardBorder,
   },
 
   chapterHeaderRow: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 8,
+    marginBottom: 6,
   },
 
   chapterTitle: {
-    fontFamily: 'Lobster_400Regular',
     fontWeight: '600',
-    fontSize: 24,
-    textAlign: 'left',
+    fontSize: 18,
+    color: Colors.textPrimary,
   },
 
   // Progress
@@ -83,15 +81,13 @@ export const styles = StyleSheet.create({
   cardsList: {
     width: '100%',
     flexDirection: 'row',
-    flexWrap: 'wrap',
+    flexWrap: 'nowrap',
     alignItems: 'flex-start',
-    justifyContent: 'space-between',
-    gap: 0,
+    justifyContent: 'flex-start',
+    gap: 5,
   },
 
-  cardItemWrapper: {
-    flexShrink: 1,
-  },
+  cardItemWrapper: {},
 
   cardItemWrapperPressed: {
     opacity: 0.92,
@@ -99,75 +95,46 @@ export const styles = StyleSheet.create({
 
   cardItem: {
     width: 36,
-    height: 60,
-    borderRadius: 5,
-    borderWidth: 1,
-    padding: 3,
+    height: 54,
+    borderRadius: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
     position: 'relative',
   },
 
-  cardItemInner: {
-    width: '100%',
-    height: '100%',
-    borderRadius: 3,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
   cardItemDefault: {
-    borderColor: DEFAULT_BORDER,
+    backgroundColor: Colors.tileMissingBg,
   },
 
   cardItemOwned: {
-    borderColor: Colors.secondary,
-    ...Platform.select({
-      ios: {
-        shadowOpacity: 0.35,
-        shadowRadius: 4,
-        shadowOffset: { width: 0, height: 0 },
-      },
-      android: {
-        elevation: 2,
-      },
-    }),
-  },
-
-  cardItemInnerDefault: {
-    backgroundColor: DEFAULT_INNER,
-  },
-
-  cardItemInnerOwned: {
-    backgroundColor: DEFAULT_INNER,
+    backgroundColor: '#fff',
+    borderWidth: StyleSheet.hairlineWidth,
+    borderColor: Colors.tileOwnedBorder,
   },
 
   cardNumber: {
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: '400',
-    color: DEFAULT_TEXT,
+    color: Colors.tileMissingText,
   },
 
   cardNumberOwned: {
     fontWeight: '600',
-    color: Colors.secondary,
+    color: '#2a2925',
   },
 
   duplicateBadge: {
     position: 'absolute',
-    top: -2,
-    right: -4,
-    width: 12,
-    height: 12,
+    top: -6,
+    right: -5,
+    width: 16,
+    height: 16,
     borderRadius: 999,
+    borderWidth: 2,
+    borderColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: Colors.secondary,
-  },
-
-  duplicateBadgeText: {
-    color: '#fff',
-    fontSize: 10,
-    fontWeight: '600',
-    lineHeight: 12,
+    backgroundColor: Colors.primary,
   },
 
   // Kebab menu
@@ -187,11 +154,6 @@ export const styles = StyleSheet.create({
 
   kebabDisabled: {
     opacity: 0.35,
-  },
-
-  kebabText: {
-    fontSize: 20,
-    lineHeight: 20,
   },
 
   // Modal menu
@@ -248,43 +210,5 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-  },
-
-  controlsLabel: {
-    fontSize: 13,
-    fontWeight: '700',
-    opacity: 0.7,
-  },
-
-  latestPill: {
-    paddingVertical: 8,
-    paddingHorizontal: 14,
-    borderRadius: 999,
-    backgroundColor: 'rgba(0,0,0,0.06)',
-  },
-
-  latestPillActive: {
-    backgroundColor: '#2F6BFF', // pick your brand color
-    shadowColor: '#000',
-    shadowOpacity: 0.12,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 3 },
-    elevation: 3,
-  },
-
-  latestPillPressed: {
-    opacity: 0.9,
-    transform: [{ scale: 0.98 }],
-  },
-
-  latestPillText: {
-    fontSize: 13,
-    fontWeight: '800',
-    opacity: 0.75,
-  },
-
-  latestPillTextActive: {
-    opacity: 1,
-    color: 'white',
   },
 });

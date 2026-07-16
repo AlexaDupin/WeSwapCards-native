@@ -12,4 +12,12 @@ export const Colors = {
   onboardingBackground: '#FCF7F1',
   onboardingText: '#3a2c20',
   onboardingMuted: '#8a7360',
+
+  // Neutral system for the cards screen redesign
+  screenBackground: '#F2F2F2',
+  textPrimary: '#1c1b19',
+  tileMissingBg: 'rgba(0,0,0,0.035)',
+  tileMissingText: '#b5b2ac',
+  tileOwnedBorder: 'rgba(0,0,0,0.12)',
+  cardBorder: 'rgba(0,0,0,0.05)',
 };

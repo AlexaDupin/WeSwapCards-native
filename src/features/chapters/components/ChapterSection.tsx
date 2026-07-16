@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Text, View, useWindowDimensions } from 'react-native';
 import type {
   CardItemData,
@@ -38,21 +38,23 @@ function ChapterSection({
 }: Props) {
   const { width: screenWidth } = useWindowDimensions();
 
-  // Match your chapterListContent paddingHorizontal: 16 (left) + 16 (right)
-  const chapterListPadding = 32;
+  // Measured width of the cards row itself; null until the first layout pass.
+  const [rowWidth, setRowWidth] = useState<number | null>(null);
 
-  // If you add extra padding in cardsList, include it here; otherwise keep 0
-  const cardsListPadding = 0;
-
-  const GAP = 8;
+  // Matches cardsList `gap: 5` — layout and width math must agree.
+  const GAP = 5;
   const COLS = 9;
 
+  // Fallback before onLayout: chapterListContent padding (16+16) plus the
+  // chapter card's own horizontal padding (16+16).
+  const outerPadding = 64;
+
   const cardWidth = useMemo(() => {
-    const usable = screenWidth - chapterListPadding - cardsListPadding;
+    const usable = rowWidth ?? screenWidth - outerPadding;
     const totalGaps = GAP * (COLS - 1);
     const w = Math.floor((usable - totalGaps) / COLS);
     return Math.max(28, w); // safety floor so it never becomes tiny
-  }, [screenWidth]);
+  }, [rowWidth, screenWidth]);
 
   return (
     <View style={styles.chapter}>
@@ -74,7 +76,11 @@ function ChapterSection({
 
       <ChapterProgress value={ownedOrDuplicatedCount} max={9} />
 
-      <View style={styles.cardsList} accessibilityRole="list">
+      <View
+        style={styles.cardsList}
+        accessibilityRole="list"
+        onLayout={(e) => setRowWidth(e.nativeEvent.layout.width)}
+      >
         {cards.map((card) => (
           <CardItem
             key={card.id}
