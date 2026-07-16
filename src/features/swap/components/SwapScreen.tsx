@@ -14,6 +14,7 @@ import CardGrid from '@/src/features/swap/components/CardGrid';
 import LatestChaptersBanners from '@/src/features/swap/components/LatestChaptersBanners';
 import LatestChaptersMiniTiles from '@/src/features/swap/components/LatestChaptersMiniTiles';
 import OpportunityList from '@/src/features/swap/components/OpportunityList';
+import TipBubble from '@/src/features/tips/components/TipBubble';
 import { useSwap } from '@/src/features/swap/hooks/useSwap';
 import type { SwapContactPayload } from '@/src/features/swap/types/SwapTypes';
 
@@ -88,6 +89,8 @@ export default function SwapScreen() {
   const headerContent = (
     <>
       <Text style={styles.title}>Find a card</Text>
+
+      <TipBubble tipKey="swap" />
 
       {error ? (
         <Text style={styles.errorText} onPress={dismissError}>

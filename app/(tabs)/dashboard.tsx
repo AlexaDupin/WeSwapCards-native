@@ -14,6 +14,7 @@ import { router } from 'expo-router';
 import TabChip from '@/src/components/TabChip';
 import SegmentedToggle from '@/src/components/SegmentedToggle';
 import DashboardItem from '@/src/features/dashboard/components/DashboardItem';
+import TipBubble from '@/src/features/tips/components/TipBubble';
 import { styles } from '@/src/assets/styles/dashboard.styles';
 import { AccountButton } from '@/src/components/AccountButton';
 
@@ -93,6 +94,8 @@ export default function DashboardScreen() {
         <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Dashboard</Text>
         <AccountButton />
       </View>
+
+      <TipBubble tipKey="dashboard" />
 
       <View style={styles.pillList}>
         <View style={styles.tabChips}>

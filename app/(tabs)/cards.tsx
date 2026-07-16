@@ -9,6 +9,7 @@ import SegmentedToggle from '@/src/components/SegmentedToggle';
 import ChaptersList from '@/src/features/chapters/components/ChaptersList';
 import AZNav from '@/src/features/chapters/components/AZNav';
 import CardsHelpModal from '@/src/features/cards/components/CardsHelpModal';
+import TipBubble from '@/src/features/tips/components/TipBubble';
 import { styles } from '@/src/assets/styles/cards.styles';
 
 import { useCardsScreen } from '@/src/features/cards/hooks/useCardsScreen';
@@ -71,6 +72,10 @@ function CardsScreen({ explorerId }: { explorerId: number }) {
           value={sortLatest ? 'latest' : 'az'}
           onChange={(v) => setSortLatest(v === 'latest')}
         />
+      </View>
+
+      <View style={styles.tipSlot}>
+        <TipBubble tipKey="cards" />
       </View>
 
       <View>

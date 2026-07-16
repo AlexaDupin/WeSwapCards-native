@@ -8,3 +8,14 @@ import 'react-native-gesture-handler/jestSetup';
 // default and the named `{ Ionicons }` export).
 jest.mock('@expo/vector-icons/Ionicons', () => 'Ionicons');
 jest.mock('@expo/vector-icons', () => ({ Ionicons: 'Ionicons' }));
+
+// Same reason as the icons above: expo-secure-store is ESM that
+// transformIgnorePatterns does not transpile, so any screen reaching it (the
+// first-run tips, the onboarding carousel) would crash the suite. Defaulting
+// getItemAsync to a stored value keeps that one-time UI out of screen tests
+// that aren't about it; suites that exercise it mock this module themselves.
+jest.mock('expo-secure-store', () => ({
+  getItemAsync: jest.fn().mockResolvedValue('true'),
+  setItemAsync: jest.fn().mockResolvedValue(undefined),
+  deleteItemAsync: jest.fn().mockResolvedValue(undefined),
+}));
