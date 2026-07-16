@@ -1,6 +1,8 @@
 import React, { memo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
+import { Colors } from '@/src/constants/Colors';
+
 type Props = {
   label: string;
   count?: number;
@@ -53,7 +55,7 @@ const styles = StyleSheet.create({
   },
   chipInactive: {},
   chipActive: {
-    borderBottomColor: '#2563eb',
+    borderBottomColor: Colors.accent,
   },
   chipPressed: {
     opacity: 0.6,

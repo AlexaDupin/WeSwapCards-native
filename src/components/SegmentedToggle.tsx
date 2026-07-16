@@ -8,6 +8,8 @@ import {
   type ViewStyle,
 } from 'react-native';
 
+import { Colors } from '@/src/constants/Colors';
+
 type Option<T extends string> = { value: T; label: string };
 
 type SegmentedToggleProps<T extends string> = {
@@ -19,7 +21,7 @@ type SegmentedToggleProps<T extends string> = {
 
 // Reuse the blue used for selected tile borders on the Swap screen
 // (LatestChaptersMiniTiles `tileSelected`) so the app keeps a single accent blue.
-const ACCENT = '#2563eb';
+const ACCENT = Colors.accent;
 
 /**
  * A compact segmented control with a "blue-outline pill" active state: a neutral

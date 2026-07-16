@@ -13,6 +13,11 @@ export const Colors = {
   onboardingText: '#3a2c20',
   onboardingMuted: '#8a7360',
 
+  // The single accent blue: segmented toggles, the dashboard's active tab
+  // underline, links, checkboxes, the notification channel light. Distinct from
+  // the iOS system blue (#0A84FF) the chat bubbles use.
+  accent: '#2563eb',
+
   // Neutral system for the cards screen redesign
   screenBackground: '#F2F2F2',
   textPrimary: '#1c1b19',

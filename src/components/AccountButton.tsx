@@ -11,6 +11,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+
+import { Colors } from '@/src/constants/Colors';
 import { Ionicons } from '@expo/vector-icons';
 import { useClerk, useUser } from '@clerk/clerk-expo';
 import { useRouter } from 'expo-router';
@@ -280,7 +282,7 @@ const styles = StyleSheet.create({
   toggleHint: {
     marginTop: 8,
     fontSize: 13,
-    color: '#2563eb',
+    color: Colors.accent,
   },
   cancelItem: {
     borderBottomWidth: 0,

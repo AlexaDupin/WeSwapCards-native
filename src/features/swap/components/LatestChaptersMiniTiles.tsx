@@ -9,6 +9,8 @@ import {
   View,
 } from 'react-native';
 
+import { Colors } from '@/src/constants/Colors';
+
 const PLACEHOLDER =
   'https://res.cloudinary.com/dwf28prby/image/upload/v1760480793/placeholder.jpg';
 
@@ -126,7 +128,7 @@ const styles = StyleSheet.create({
   tileSelected: {
     transform: [{ scale: 0.98 }],
     borderWidth: 2,
-    borderColor: '#2563eb',
+    borderColor: Colors.accent,
   },
   tilePressed: {
     opacity: 0.92,

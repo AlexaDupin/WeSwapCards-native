@@ -11,6 +11,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+
+import { Colors } from '@/src/constants/Colors';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 import {
@@ -151,7 +153,7 @@ export default function ReportUserModal({
   );
 }
 
-const ACCENT = '#2563eb';
+const ACCENT = Colors.accent;
 
 const styles = StyleSheet.create({
   overlay: {

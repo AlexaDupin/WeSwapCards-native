@@ -2,6 +2,8 @@ import React from 'react';
 import { Alert, Linking, Pressable, StyleSheet, Text } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
+import { Colors } from '@/src/constants/Colors';
+
 const TERMS_URL = 'https://weswapcards.com/terms';
 const PRIVACY_URL = 'https://weswapcards.com/privacy';
 
@@ -30,7 +32,7 @@ export default function LegalConsentCheckbox({ value, onValueChange }: Props) {
       <Ionicons
         name={value ? 'checkbox' : 'square-outline'}
         size={22}
-        color={value ? '#2563eb' : '#666'}
+        color={value ? Colors.accent : '#666'}
       />
       <Text style={styles.label}>
         I agree to the{' '}

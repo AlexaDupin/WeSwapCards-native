@@ -1,6 +1,8 @@
 import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
 
+import { Colors } from '@/src/constants/Colors';
+
 import { getProjectId } from './projectId';
 
 export const MESSAGES_CHANNEL_ID = 'default';
@@ -12,7 +14,7 @@ export async function ensureAndroidChannel(): Promise<void> {
     name: 'Messages',
     importance: Notifications.AndroidImportance.MAX,
     vibrationPattern: [0, 250, 250, 250],
-    lightColor: '#2563eb',
+    lightColor: Colors.accent,
   });
 }
 
