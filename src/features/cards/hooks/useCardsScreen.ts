@@ -130,6 +130,11 @@ export function useCardsScreen({ explorerId }: Params) {
   const cardsByPlaceId = useMemo(() => {
     const map: Record<number, CardItemData[]> = {};
     for (const c of cards) (map[c.place_id] ??= []).push(c);
+    // The API returns cards in physical row order, which silently changes when
+    // a row is updated. Without this sort a chapter can render "2 1 3 4 …".
+    for (const list of Object.values(map)) {
+      list.sort((a, b) => a.number - b.number);
+    }
     return map;
   }, [cards]);
 

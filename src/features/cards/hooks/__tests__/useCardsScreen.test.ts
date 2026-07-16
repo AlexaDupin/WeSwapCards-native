@@ -177,4 +177,22 @@ describe('chaptersData', () => {
 
     expect(result.current.chaptersData.map((c) => c.chapterId)).toEqual([2, 1]);
   });
+
+  // Regression: /cards has no ORDER BY server-side, so it returns rows in
+  // physical order — which silently reorders after a row update and made one
+  // chapter render "2 1 3 4 5 6 7 8 9". The shape below mirrors what the live
+  // API actually returned for that chapter.
+  it('orders each chapter by card number regardless of API row order', async () => {
+    cardsApi.fetchCards.mockResolvedValue([
+      { id: 74, name: 'C2', number: 2, place_id: 1 },
+      { id: 73, name: 'C1', number: 1, place_id: 1 },
+      { id: 75, name: 'C3', number: 3, place_id: 1 },
+      { id: 20, name: 'C20', number: 1, place_id: 2 },
+    ]);
+
+    const { result } = await setupLoaded({});
+
+    const ch1 = result.current.chaptersData.find((c) => c.chapterId === 1)!;
+    expect(ch1.cards.map((c) => c.number)).toEqual([1, 2, 3]);
+  });
 });
