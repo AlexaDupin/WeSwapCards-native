@@ -38,12 +38,12 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 6,
+    marginBottom: 2,
   },
 
   chapterTitle: {
-    fontWeight: '600',
-    fontSize: 18,
+    fontWeight: '700',
+    fontSize: 22,
     color: Colors.textPrimary,
   },
 
@@ -52,7 +52,7 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: 10,
-    marginBottom: 12,
+    marginBottom: 16,
   },
 
   progressTrack: {

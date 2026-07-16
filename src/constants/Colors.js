@@ -18,6 +18,6 @@ export const Colors = {
   textPrimary: '#1c1b19',
   tileMissingBg: 'rgba(0,0,0,0.035)',
   tileMissingText: '#b5b2ac',
-  tileOwnedBorder: 'rgba(0,0,0,0.12)',
+  tileOwnedBorder: 'rgba(0,0,0,0.25)',
   cardBorder: 'rgba(0,0,0,0.05)',
 };
