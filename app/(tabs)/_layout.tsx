@@ -129,9 +129,18 @@ const TabsLayout = () => {
       }}
     >
       <Tabs.Screen
+        name="swap"
+        options={{
+          title: 'Search',
+          tabBarIcon: (props) => (
+            <TabIcon {...props} name="search-outline" activeName="search" />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="dashboard"
         options={{
-          title: 'Dashboard',
+          title: 'Messages',
           tabBarIcon: (props) => (
             <TabIcon
               {...props}
@@ -151,15 +160,6 @@ const TabsLayout = () => {
               name="duplicate-outline"
               activeName="duplicate"
             />
-          ),
-        }}
-      />
-      <Tabs.Screen
-        name="swap"
-        options={{
-          title: 'Swap',
-          tabBarIcon: (props) => (
-            <TabIcon {...props} name="search-outline" activeName="search" />
           ),
         }}
       />
