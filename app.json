@@ -4,19 +4,24 @@
     "slug": "weswapcards-native",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./src/assets/images/icon.png",
+    "icon": "./src/assets/images/icon-dark.png",
     "scheme": "weswapcardsnative",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "icon": {
+        "light": "./src/assets/images/icon-light.png",
+        "dark": "./src/assets/images/icon-dark.png"
+      }
     },
     "android": {
       "package": "com.weswapcards.app",
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "foregroundImage": "./src/assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "monochromeImage": "./src/assets/images/adaptive-icon-monochrome.png",
+        "backgroundColor": "#021133"
       },
       "edgeToEdgeEnabled": true
     },
@@ -37,7 +42,13 @@
         }
       ],
       "expo-font",
-      "expo-notifications"
+      [
+        "expo-notifications",
+        {
+          "icon": "./src/assets/images/notification-icon.png",
+          "color": "#F07A1A"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
