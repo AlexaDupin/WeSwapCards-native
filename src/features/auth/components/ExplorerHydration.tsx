@@ -34,7 +34,6 @@ export function ExplorerHydration({ children }: { children: React.ReactNode }) {
   }, []);
 
   useEffect(() => {
-    console.log('[ExplorerHydration] status', status);
     if (!authLoaded) return;
 
     if (!isSignedIn) {
@@ -87,7 +86,6 @@ export function ExplorerHydration({ children }: { children: React.ReactNode }) {
           explorerName: explorer.name ?? null,
         });
       } catch {
-        console.log('[ExplorerHydration] setting error state');
         if (!mountedRef.current) return;
 
         inFlightRef.current = false;
