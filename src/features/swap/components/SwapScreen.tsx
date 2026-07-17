@@ -89,7 +89,9 @@ export default function SwapScreen() {
 
   const headerContent = (
     <>
-      <Text style={styles.title}>Find a card</Text>
+      <View style={styles.titleRow}>
+        <Text style={styles.title}>Find a card</Text>
+      </View>
 
       {error ? (
         <Text style={styles.errorText} onPress={dismissError}>
@@ -189,10 +191,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingBottom: 8,
   },
+  // The Dashboard and My cards titles share a row with a 34px control (the
+  // avatar, the help button), which centres their text a few px down. Swap has
+  // no such control, so the row reserves that height on its own and all three
+  // titles start at the same place.
+  titleRow: {
+    minHeight: 34,
+    justifyContent: 'center',
+    marginBottom: 16,
+  },
   title: {
     fontSize: 20,
     fontWeight: '700',
-    marginBottom: 16,
   },
   errorText: {
     color: '#b00020',
