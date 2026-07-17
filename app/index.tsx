@@ -43,7 +43,7 @@ export default function Index() {
         <HeroCard />
 
         <Image
-          source={require('@/src/assets/images/LandingPageImage.png')}
+          source={require('@/src/assets/images/illustrations/LandingPageImage.png')}
           style={[
             homeStyles.landingImage,
             { width, height: width * (941 / 1672) },

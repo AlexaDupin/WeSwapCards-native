@@ -6,7 +6,7 @@ export default function TopBar() {
     <View style={homeStyles.topBar}>
       <View style={homeStyles.brandRow}>
         <Image
-          source={require('@/src/assets/images/favImage.png')}
+          source={require('@/src/assets/images/brand/favImage.png')}
           style={homeStyles.brandIcon}
         />
         <Text style={homeStyles.brandName}>WeSwapCards</Text>

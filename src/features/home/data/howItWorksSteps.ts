@@ -1,8 +1,8 @@
-import Chat from '@/src/assets/images/chatdeal.svg';
-import Dashboard from '@/src/assets/images/dashboard.svg';
-import Report from '@/src/assets/images/report.svg';
-import Search from '@/src/assets/images/search.svg';
-import Users from '@/src/assets/images/users.svg';
+import Chat from '@/src/assets/images/glyphs/chatdeal.svg';
+import Dashboard from '@/src/assets/images/glyphs/dashboard.svg';
+import Report from '@/src/assets/images/glyphs/report.svg';
+import Search from '@/src/assets/images/glyphs/search.svg';
+import Users from '@/src/assets/images/glyphs/users.svg';
 
 export const howItWorksSteps = [
   {
