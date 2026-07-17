@@ -1,15 +1,16 @@
-import React, { useCallback, useEffect, useRef } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
   FlatList,
+  Platform,
   RefreshControl,
   ActivityIndicator,
   TextInput,
 } from 'react-native';
 import { useAuth } from '@clerk/clerk-expo';
 import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 
 import TabChip from '@/src/components/TabChip';
 import SegmentedToggle from '@/src/components/SegmentedToggle';
@@ -53,6 +54,31 @@ export default function DashboardScreen() {
     sortBy,
     setSortBy,
   } = useDashboard({ explorerId, authHeaders });
+
+  // Nothing to search on a tab with no conversations, so the box only adds
+  // noise to the empty state. Search runs server-side, so an empty list does
+  // NOT mean an empty tab: with a query active it means "no matches", and the
+  // box has to stay or there'd be no way to clear the query. Focus keeps it
+  // through the gap between clearing the query and the refetch landing.
+  const [searchFocused, setSearchFocused] = useState(false);
+  const showSearch =
+    listData.length > 0 || searchQuery.trim().length > 0 || searchFocused;
+
+  // Android gives initial focus to the first focusable view on a screen, which
+  // here is the search box. RN only opens the keyboard for focus it was asked
+  // for, so the result is a caret blinking on a screen the user never touched.
+  // Hand that focus back on every entry to the tab; taps still focus normally.
+  const searchRef = useRef<TextInput>(null);
+
+  useFocusEffect(
+    useCallback(() => {
+      if (Platform.OS !== 'android') return;
+
+      // The grant lands during native layout, after this effect runs.
+      const frame = requestAnimationFrame(() => searchRef.current?.blur());
+      return () => cancelAnimationFrame(frame);
+    }, []),
+  );
 
   const renderItem = useCallback(
     ({ item }: { item: DashboardConversation }) => (
@@ -124,17 +150,22 @@ export default function DashboardScreen() {
           />
         </View>
 
-        <TextInput
-          style={styles.searchInput}
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          placeholder="Search by name or card"
-          placeholderTextColor="rgba(0,0,0,0.4)"
-          autoCorrect={false}
-          autoCapitalize="none"
-          returnKeyType="search"
-          clearButtonMode="while-editing"
-        />
+        {showSearch && (
+          <TextInput
+            ref={searchRef}
+            style={styles.searchInput}
+            value={searchQuery}
+            onChangeText={setSearchQuery}
+            onFocus={() => setSearchFocused(true)}
+            onBlur={() => setSearchFocused(false)}
+            placeholder="Search by name or card"
+            placeholderTextColor="rgba(0,0,0,0.4)"
+            autoCorrect={false}
+            autoCapitalize="none"
+            returnKeyType="search"
+            clearButtonMode="while-editing"
+          />
+        )}
 
         {loadingInitial && listData.length === 0 ? (
           <View style={{ paddingTop: 24 }}>
