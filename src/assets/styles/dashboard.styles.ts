@@ -160,10 +160,23 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 18,
   },
-  // Lifts the subtitle out of the muted grey when it's a link, so it reads as
-  // tappable next to the plain copy the other empty state uses.
-  emptyLink: {
-    color: Colors.accent,
+  // The empty state's call to action. Carries no colour of its own: it reads
+  // as tappable through the white lift off the muted card and the hairline
+  // border, which keeps it from competing with the brand orange. A tinted pill
+  // muddies instead — tint on tint is too small a step to register as a
+  // control. The vertical padding also buys a ~40px tap target from 13px text.
+  emptyAction: {
+    marginTop: 10,
+    paddingVertical: 12,
+    paddingHorizontal: 18,
+    borderRadius: 999,
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: 'rgba(0,0,0,0.1)',
+  },
+  emptyActionText: {
+    fontSize: 13,
     fontWeight: '700',
+    color: Colors.textPrimary,
   },
 });

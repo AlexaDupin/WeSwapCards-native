@@ -13,6 +13,7 @@ import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
 import { Link, router, useFocusEffect } from 'expo-router';
 
 import TabChip from '@/src/components/TabChip';
+import PressableScale from '@/src/components/PressableScale';
 import SegmentedToggle from '@/src/components/SegmentedToggle';
 import DashboardItem from '@/src/features/dashboard/components/DashboardItem';
 import TipBubble from '@/src/features/tips/components/TipBubble';
@@ -204,11 +205,12 @@ export default function DashboardScreen() {
                       : 'No past conversations'}
                   </Text>
                   {activeTab === 'in-progress' ? (
-                    <Link
-                      href="/(tabs)/swap"
-                      style={[styles.emptySubtitle, styles.emptyLink]}
-                    >
-                      Start swapping!
+                    <Link href="/(tabs)/swap" asChild>
+                      <PressableScale style={styles.emptyAction}>
+                        <Text style={styles.emptyActionText}>
+                          Start swapping
+                        </Text>
+                      </PressableScale>
                     </Link>
                   ) : (
                     <Text style={styles.emptySubtitle}>
