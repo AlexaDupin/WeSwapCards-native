@@ -143,9 +143,17 @@ export const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.03)',
     alignItems: 'center',
   },
-  emptyIcon: {
-    fontSize: 36,
-    marginBottom: 12,
+  // Frames the empty state's icon in the same white-on-grey lift as the action
+  // pill, so the card reads as one system. No border, unlike the pill: that
+  // border is an affordance cue, and this badge is decoration, not a control.
+  emptyIconBadge: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: '#FFFFFF',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 14,
   },
   emptyTitle: {
     fontSize: 16,

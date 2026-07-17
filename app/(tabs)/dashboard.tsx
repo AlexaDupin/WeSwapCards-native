@@ -8,6 +8,7 @@ import {
   ActivityIndicator,
   TextInput,
 } from 'react-native';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useAuth } from '@clerk/clerk-expo';
 import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
 import { Link, router, useFocusEffect } from 'expo-router';
@@ -22,6 +23,17 @@ import { AccountButton } from '@/src/components/AccountButton';
 
 import { useDashboard } from '@/src/features/dashboard/hooks/useDashboard';
 import type { DashboardConversation } from '@/src/features/dashboard/types/DashboardTypes';
+
+// The empty states' art. A line icon rather than an emoji: emoji are drawn by
+// the platform, so they carry another vendor's style and shift between iOS and
+// Android. These echo the tab bar's own icons instead.
+function EmptyIcon({ name }: { name: keyof typeof Ionicons.glyphMap }) {
+  return (
+    <View style={styles.emptyIconBadge}>
+      <Ionicons name={name} size={28} color="rgba(0,0,0,0.3)" />
+    </View>
+  );
+}
 
 export default function DashboardScreen() {
   const { getToken } = useAuth();
@@ -188,7 +200,7 @@ export default function DashboardScreen() {
             ListEmptyComponent={
               searchQuery.trim() ? (
                 <View style={styles.emptyContainer}>
-                  <Text style={styles.emptyIcon}>🔍</Text>
+                  <EmptyIcon name="search-outline" />
                   <Text style={styles.emptyTitle}>No matches</Text>
                   <Text style={styles.emptySubtitle}>
                     No conversations match “{searchQuery.trim()}”.
@@ -196,9 +208,13 @@ export default function DashboardScreen() {
                 </View>
               ) : (
                 <View style={styles.emptyContainer}>
-                  <Text style={styles.emptyIcon}>
-                    {activeTab === 'in-progress' ? '💬' : '🗂️'}
-                  </Text>
+                  <EmptyIcon
+                    name={
+                      activeTab === 'in-progress'
+                        ? 'chatbubbles-outline'
+                        : 'archive-outline'
+                    }
+                  />
                   <Text style={styles.emptyTitle}>
                     {activeTab === 'in-progress'
                       ? 'No open conversations'
