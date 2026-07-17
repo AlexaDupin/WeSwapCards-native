@@ -36,6 +36,25 @@ describe('ChapterSelector', () => {
     expect(onSelectChapter).toHaveBeenCalledWith(2);
   });
 
+  it('closes the list when the scrim behind it is tapped', () => {
+    render(
+      <ChapterSelector
+        chapters={chapters}
+        selectedChapterId={null}
+        selectedChapterName={null}
+        loading={false}
+        onSelectChapter={jest.fn()}
+      />,
+    );
+
+    fireEvent.press(screen.getByLabelText('Select a chapter'));
+    expect(screen.getByText('Chapter 2')).toBeTruthy();
+
+    fireEvent.press(screen.getByLabelText('Close the chapter list'));
+
+    expect(screen.queryByText('Chapter 2')).toBeNull();
+  });
+
   it('disables Clear when no chapter is selected', () => {
     render(
       <ChapterSelector
