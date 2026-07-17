@@ -100,12 +100,11 @@ const TabsLayout = () => {
     <Tabs
       screenOptions={{
         headerShown: false,
-        // Charcoal vs. grey is already the strongest-contrast pair available
-        // here (~15.5:1 vs ~4.7:1 on white) — tint was never the weak link.
-        // The tab felt unmarked because tone was the *only* thing that moved:
-        // both states used the outline glyph at the same label weight. The
-        // pill, filled glyph, and bold label below carry the rest.
-        tabBarActiveTintColor: '#212529',
+        // A softer charcoal than near-black: still ~8:1 on white (comfortably
+        // past the 4.5:1 AA floor), but the pill, filled glyph, and bold label
+        // below are carrying the "selected" signal now, so the tint doesn't
+        // have to reach for maximum contrast on its own.
+        tabBarActiveTintColor: '#495057',
         tabBarInactiveTintColor: '#6C757D',
         tabBarLabel: ({ focused, color, children }) => (
           <Text
