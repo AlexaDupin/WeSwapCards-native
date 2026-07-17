@@ -205,6 +205,9 @@ export function useChatScreen(args: {
   );
 
   return {
+    // Callers need the resolved id, not the arg: after a lazy creation the arg
+    // is still null while the conversation now exists.
+    conversationId: resolvedConversationId,
     loading,
     error,
     messages,

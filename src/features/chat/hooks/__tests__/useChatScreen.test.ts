@@ -178,6 +178,21 @@ describe('sendMessage', () => {
     );
   });
 
+  // Guards the reporting path: a report filed right after the first message of
+  // a brand-new conversation must carry the created id, not null.
+  it('exposes the created id so later callers see the resolved conversation', async () => {
+    const { result } = setup({ conversationId: null });
+
+    expect(result.current.conversationId).toBeNull();
+
+    act(() => result.current.setText('first message'));
+    await act(async () => {
+      await result.current.sendMessage();
+    });
+
+    expect(result.current.conversationId).toBe(100);
+  });
+
   it('reports a send failure and stops sending', async () => {
     chatApi.postMessage.mockRejectedValueOnce(new Error('network'));
     const { result } = setup({ conversationId: 7 });

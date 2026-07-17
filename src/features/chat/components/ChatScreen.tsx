@@ -62,6 +62,7 @@ export default function ChatScreen({
   const messageListRef = useRef<MessageListHandle | null>(null);
 
   const {
+    conversationId: resolvedConversationId,
     loading,
     error,
     messages,
@@ -130,7 +131,7 @@ export default function ChatScreen({
           <ChatModerationMenu
             swapExplorerId={swapExplorerId}
             swapName={swapName}
-            conversationId={conversationId}
+            conversationId={resolvedConversationId}
             isBlockedByMe={isBlockedByMe}
             onToggleBlock={toggleBlock}
           />
