@@ -6,9 +6,10 @@
     "orientation": "portrait",
     "icon": "./src/assets/images/brand/icon-dark.png",
     "scheme": "weswapcardsnative",
-    "userInterfaceStyle": "automatic",
+    "userInterfaceStyle": "light",
     "newArchEnabled": true,
     "ios": {
+      "bundleIdentifier": "com.weswapcards.app",
       "supportsTablet": true,
       "icon": {
         "light": "./src/assets/images/brand/icon-light.png",
