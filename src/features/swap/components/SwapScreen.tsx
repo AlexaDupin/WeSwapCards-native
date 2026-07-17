@@ -10,6 +10,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
 
 import ChapterSelector from '@/src/features/swap/components/ChapterSelector';
+import SectionHeading from '@/src/features/swap/components/SectionHeading';
 import CardGrid from '@/src/features/swap/components/CardGrid';
 import LatestChaptersBanners from '@/src/features/swap/components/LatestChaptersBanners';
 import LatestChaptersMiniTiles from '@/src/features/swap/components/LatestChaptersMiniTiles';
@@ -115,7 +116,7 @@ export default function SwapScreen() {
 
       {selectedChapterId == null ? (
         <>
-          <Text style={styles.sectionLabel}>Latest chapters</Text>
+          <SectionHeading kicker="Latest chapters" />
           <LatestChaptersBanners
             chapters={latestChapters}
             loading={loadingLatestChapters}
@@ -192,13 +193,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '700',
     marginBottom: 16,
-  },
-  sectionLabel: {
-    marginTop: 12,
-    marginBottom: 8,
-    opacity: 0.7,
-    fontSize: 14,
-    fontWeight: '600',
   },
   errorText: {
     color: '#b00020',

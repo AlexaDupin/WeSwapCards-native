@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 
 import OpportunityCard from '@/src/features/swap/components/OpportunityCard';
+import SectionHeading from '@/src/features/swap/components/SectionHeading';
 import type { SwapOpportunityItem } from '@/src/features/swap/types/SwapTypes';
 
 type Props = {
@@ -42,14 +43,7 @@ export default function OpportunityList({
 
   const sectionHeader =
     selectedCardId != null ? (
-      <View style={styles.sectionHeader}>
-        <Text style={styles.sectionLabel}>Opportunities for</Text>
-        {selectedCardName ? (
-          <Text style={styles.sectionCardName} numberOfLines={2}>
-            {selectedCardName}
-          </Text>
-        ) : null}
-      </View>
+      <SectionHeading kicker="Opportunities for" title={selectedCardName} />
     ) : null;
 
   const listHeader = (
@@ -133,23 +127,6 @@ const styles = StyleSheet.create({
   },
   separator: {
     height: 10,
-  },
-  sectionHeader: {
-    paddingTop: 10,
-    paddingBottom: 14,
-  },
-  sectionLabel: {
-    fontSize: 11,
-    fontWeight: '600',
-    letterSpacing: 0.6,
-    textTransform: 'uppercase',
-    color: 'rgba(0,0,0,0.4)',
-    marginBottom: 3,
-  },
-  sectionCardName: {
-    fontSize: 20,
-    fontWeight: '800',
-    color: '#000',
   },
   loadingWrap: {
     paddingTop: 10,
