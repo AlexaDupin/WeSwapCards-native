@@ -1,5 +1,7 @@
 import { StyleSheet } from 'react-native';
 
+import { Colors } from '@/src/constants/Colors';
+
 export const styles = StyleSheet.create({
   searchInput: {
     borderRadius: 12,
@@ -157,5 +159,11 @@ export const styles = StyleSheet.create({
     color: 'rgba(0,0,0,0.5)',
     textAlign: 'center',
     lineHeight: 18,
+  },
+  // Lifts the subtitle out of the muted grey when it's a link, so it reads as
+  // tappable next to the plain copy the other empty state uses.
+  emptyLink: {
+    color: Colors.accent,
+    fontWeight: '700',
   },
 });

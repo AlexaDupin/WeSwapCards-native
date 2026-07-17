@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import { useAuth } from '@clerk/clerk-expo';
 import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
-import { router, useFocusEffect } from 'expo-router';
+import { Link, router, useFocusEffect } from 'expo-router';
 
 import TabChip from '@/src/components/TabChip';
 import SegmentedToggle from '@/src/components/SegmentedToggle';
@@ -203,11 +203,19 @@ export default function DashboardScreen() {
                       ? 'No open conversations'
                       : 'No past conversations'}
                   </Text>
-                  <Text style={styles.emptySubtitle}>
-                    {activeTab === 'in-progress'
-                      ? 'Start swapping!'
-                      : 'Completed and declined conversations will be archived here.'}
-                  </Text>
+                  {activeTab === 'in-progress' ? (
+                    <Link
+                      href="/(tabs)/swap"
+                      style={[styles.emptySubtitle, styles.emptyLink]}
+                    >
+                      Start swapping!
+                    </Link>
+                  ) : (
+                    <Text style={styles.emptySubtitle}>
+                      Completed and declined conversations will be archived
+                      here.
+                    </Text>
+                  )}
                 </View>
               )
             }
