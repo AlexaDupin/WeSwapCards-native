@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
 
 import PageLoader from '@/src/components/PageLoader';
@@ -25,6 +26,7 @@ export default function Cards() {
 function CardsScreen({ explorerId }: { explorerId: number }) {
   const cards = useCardsScreen({ explorerId });
   const [helpVisible, setHelpVisible] = useState(false);
+  const insets = useSafeAreaInsets();
 
   const {
     sortLatest,
@@ -42,7 +44,7 @@ function CardsScreen({ explorerId }: { explorerId: number }) {
   } = cards;
 
   return (
-    <View style={styles.cardsScreen}>
+    <View style={[styles.cardsScreen, { paddingTop: 16 + insets.top }]}>
       <View style={styles.controlsRow}>
         <View style={styles.titleRow}>
           <Text style={styles.pageTitle}>My cards</Text>

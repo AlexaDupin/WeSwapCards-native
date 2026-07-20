@@ -8,6 +8,7 @@ import {
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useRouter } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import ChapterSelector from '@/src/features/swap/components/ChapterSelector';
 import SectionHeading from '@/src/features/swap/components/SectionHeading';
@@ -21,6 +22,7 @@ import type { SwapContactPayload } from '@/src/features/swap/types/SwapTypes';
 
 export default function SwapScreen() {
   const router = useRouter();
+  const insets = useSafeAreaInsets();
 
   const isOpeningChat = useRef(false);
 
@@ -133,14 +135,17 @@ export default function SwapScreen() {
     <View style={styles.screen}>
       {selectedChapterId == null ? (
         <ScrollView
-          contentContainerStyle={styles.scrollContent}
+          contentContainerStyle={[
+            styles.scrollContent,
+            { paddingTop: 16 + insets.top },
+          ]}
           keyboardShouldPersistTaps="handled"
           showsVerticalScrollIndicator={false}
         >
           {headerContent}
         </ScrollView>
       ) : loadingCards ? (
-        <View style={styles.scrollContent}>
+        <View style={[styles.scrollContent, { paddingTop: 16 + insets.top }]}>
           {headerContent}
           <View style={styles.loaderWrap}>
             <ActivityIndicator />
@@ -148,7 +153,9 @@ export default function SwapScreen() {
         </View>
       ) : (
         <View style={styles.chapterMode}>
-          <View style={styles.headerWrap}>{headerContent}</View>
+          <View style={[styles.headerWrap, { paddingTop: 16 + insets.top }]}>
+            {headerContent}
+          </View>
 
           <OpportunityList
             selectedCardId={selectedCardId}

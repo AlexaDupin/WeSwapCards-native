@@ -3,6 +3,7 @@ import { View, Text, TextInput, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth, useUser } from '@clerk/clerk-expo';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import PageLoader from '@/src/components/PageLoader';
 import { axiosInstance } from '@/src/lib/axiosInstance';
@@ -17,6 +18,7 @@ export default function RegisterUserScreen() {
   const { user, isLoaded } = useUser();
   const { getToken } = useAuth();
   const { setExplorer } = useExplorer();
+  const insets = useSafeAreaInsets();
 
   const [checkingUser, setCheckingUser] = useState(true);
   const [username, setUsername] = useState('');
@@ -189,7 +191,7 @@ export default function RegisterUserScreen() {
    */
   return (
     <>
-      <View style={{ paddingHorizontal: 16, paddingTop: 8 }}>
+      <View style={{ paddingHorizontal: 16, paddingTop: 8 + insets.top }}>
         <TouchableOpacity
           onPress={() => router.replace('/')}
           style={{ alignSelf: 'flex-start', padding: 8 }}

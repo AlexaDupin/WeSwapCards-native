@@ -29,12 +29,9 @@ export default function Index() {
   return (
     <View style={homeStyles.screen}>
       <ScrollView
-        // SafeScreen only pads the top inset; reserve the bottom one here so
-        // the end of the scroll content clears the edge-to-edge Android
-        // nav/gesture bar (and the iOS home indicator).
         contentContainerStyle={[
           homeStyles.scrollContent,
-          { paddingBottom: insets.bottom },
+          { paddingTop: 24 + insets.top, paddingBottom: insets.bottom },
         ]}
         showsVerticalScrollIndicator={false}
       >

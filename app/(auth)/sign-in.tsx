@@ -30,7 +30,7 @@ export default function SignInScreen() {
 
   return (
     <>
-      <View style={{ paddingHorizontal: 16, paddingTop: 8 }}>
+      <View style={{ paddingHorizontal: 16, paddingTop: 8 + insets.top }}>
         <TouchableOpacity
           onPress={() => router.replace('/')}
           style={{ alignSelf: 'flex-start', padding: 8 }}

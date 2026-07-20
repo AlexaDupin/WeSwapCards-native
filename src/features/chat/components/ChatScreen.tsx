@@ -111,9 +111,9 @@ export default function ChatScreen({
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={HEADER_H}
+      keyboardVerticalOffset={HEADER_H + insets.top}
     >
-      <View style={styles.header}>
+      <View style={[styles.header, { paddingTop: 18 + insets.top }]}>
         <TouchableOpacity onPress={() => router.back()} style={{ padding: 6 }}>
           <Ionicons name="close" size={22} color="#111" />
         </TouchableOpacity>

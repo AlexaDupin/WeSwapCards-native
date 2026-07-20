@@ -18,7 +18,7 @@ export const homeStyles = StyleSheet.create({
 
   scrollContent: {
     paddingHorizontal: S.md,
-    paddingTop: S.lg, // SafeScreen already adds the status-bar inset above this
+    // paddingTop is set inline: S.lg + the device's top safe-area inset.
   },
 
   topBar: {

@@ -12,6 +12,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { useAuth } from '@clerk/clerk-expo';
 import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
 import { Link, router, useFocusEffect } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import TabChip from '@/src/components/TabChip';
 import PressableScale from '@/src/components/PressableScale';
@@ -39,6 +40,7 @@ export default function DashboardScreen() {
   const { getToken } = useAuth();
   const getTokenRef = useRef(getToken);
   const { explorerId } = useExplorer();
+  const insets = useSafeAreaInsets();
 
   useEffect(() => {
     getTokenRef.current = getToken;
@@ -124,7 +126,14 @@ export default function DashboardScreen() {
     // The unpadded root anchors the floating tip; the inner view carries the
     // screen's own padding.
     <View style={{ flex: 1 }}>
-      <View style={{ flex: 1, padding: 16 }}>
+      <View
+        style={{
+          flex: 1,
+          paddingHorizontal: 16,
+          paddingBottom: 16,
+          paddingTop: 16 + insets.top,
+        }}
+      >
         <View
           style={{
             flexDirection: 'row',

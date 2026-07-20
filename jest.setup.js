@@ -19,3 +19,16 @@ jest.mock('expo-secure-store', () => ({
   setItemAsync: jest.fn().mockResolvedValue(undefined),
   deleteItemAsync: jest.fn().mockResolvedValue(undefined),
 }));
+
+// Screens read the device insets to keep their content clear of the status bar
+// and the notch. In the app expo-router mounts the SafeAreaProvider, but screen
+// tests render a screen on its own, and the real hook throws without a
+// provider. Zero insets are the desktop/simulator-without-notch case: layout
+// maths still runs, it just adds nothing.
+jest.mock('react-native-safe-area-context', () => {
+  const actual = jest.requireActual('react-native-safe-area-context');
+  return {
+    ...actual,
+    useSafeAreaInsets: () => ({ top: 0, right: 0, bottom: 0, left: 0 }),
+  };
+});
