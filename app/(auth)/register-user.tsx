@@ -10,6 +10,7 @@ import { axiosInstance } from '@/src/lib/axiosInstance';
 import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
 import { authStyles } from '@/src/assets/styles/auth.styles';
 import { styles } from '@/src/assets/styles/styles';
+import { useAuthLayout } from '@/src/features/auth/hooks/useAuthLayout';
 
 const USERNAME_PATTERN = /^[a-zA-Z0-9_.]{2,20}$/;
 
@@ -19,6 +20,7 @@ export default function RegisterUserScreen() {
   const { getToken } = useAuth();
   const { setExplorer } = useExplorer();
   const insets = useSafeAreaInsets();
+  const layout = useAuthLayout();
 
   const [checkingUser, setCheckingUser] = useState(true);
   const [username, setUsername] = useState('');
@@ -201,11 +203,11 @@ export default function RegisterUserScreen() {
         </TouchableOpacity>
       </View>
 
-      <View style={authStyles.container}>
-        <Text style={authStyles.title}>Enter your WeWard username</Text>
+      <View style={layout.container}>
+        <Text style={layout.title}>Enter your WeWard username</Text>
 
-        <View style={authStyles.subtitle}>
-          <Text style={authStyles.subtitleText}>
+        <View style={layout.subtitle}>
+          <Text style={layout.subtitleText}>
             One last step to finish creating your account.
           </Text>
         </View>
@@ -221,7 +223,7 @@ export default function RegisterUserScreen() {
         ) : null}
 
         <TextInput
-          style={authStyles.input}
+          style={layout.input}
           placeholder="Enter a username"
           autoCapitalize="none"
           autoCorrect={false}
@@ -235,7 +237,7 @@ export default function RegisterUserScreen() {
         />
 
         <TouchableOpacity
-          style={[styles.button, submitting && { opacity: 0.6 }]}
+          style={[layout.button, submitting && { opacity: 0.6 }]}
           onPress={handleCreateUser}
           disabled={submitting}
         >

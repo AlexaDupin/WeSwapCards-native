@@ -104,7 +104,9 @@ export const authStyles = StyleSheet.create({
 
 // Overrides layered on top of authStyles on short devices, so the taller auth
 // screens (sign-up especially) fit between the status bar and the nav bar
-// without the footer link falling below the fold. Opt in with `isCompactAuth`.
+// without the footer link falling below the fold. Don't reach for these
+// directly — useAuthLayout() applies them, so every auth screen switches over
+// at the same breakpoint.
 export const authCompactStyles = StyleSheet.create({
   container: {
     paddingVertical: 12,

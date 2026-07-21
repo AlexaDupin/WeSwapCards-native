@@ -6,6 +6,7 @@ import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { authStyles } from '../../src/assets/styles/auth.styles';
 import { styles } from '../../src/assets/styles/styles';
+import { useAuthLayout } from '@/src/features/auth/hooks/useAuthLayout';
 import { useSignInSubmit } from '@/src/features/auth/hooks/useSignInSubmit';
 import PasswordInput from '@/src/components/PasswordInput';
 
@@ -16,6 +17,7 @@ export default function SignInScreen() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const layout = useAuthLayout();
 
   const { onSignInPress } = useSignInSubmit({
     emailAddress,
@@ -50,14 +52,12 @@ export default function SignInScreen() {
         enableAutomaticScroll={true}
         extraScrollHeight={30}
       >
-        <View style={authStyles.container}>
-          <Text style={authStyles.title}>Sign in</Text>
+        <View style={layout.container}>
+          <Text style={layout.title}>Sign in</Text>
 
-          <View style={authStyles.subtitle}>
-            <Text style={authStyles.subtitleText}>Welcome back!</Text>
-            <Text style={authStyles.subtitleText}>
-              Please sign in to continue
-            </Text>
+          <View style={layout.subtitle}>
+            <Text style={layout.subtitleText}>Welcome back!</Text>
+            <Text style={layout.subtitleText}>Please sign in to continue</Text>
           </View>
 
           {error ? (
@@ -71,7 +71,7 @@ export default function SignInScreen() {
           ) : null}
 
           <TextInput
-            style={authStyles.input}
+            style={layout.input}
             autoCapitalize="none"
             autoCorrect={false}
             keyboardType="email-address"
@@ -94,10 +94,11 @@ export default function SignInScreen() {
             onSubmitEditing={onSignInPress}
             textContentType="password"
             autoComplete="password"
+            compact={layout.compact}
           />
 
           <TouchableOpacity
-            style={[styles.button, isSubmitting && { opacity: 0.6 }]}
+            style={[layout.button, isSubmitting && { opacity: 0.6 }]}
             onPress={onSignInPress}
             disabled={isSubmitting}
           >
