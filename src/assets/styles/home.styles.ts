@@ -26,7 +26,7 @@ export const homeStyles = StyleSheet.create({
     paddingVertical: 10,
   },
   brandRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
-  brandIcon: { width: 34, height: 34, borderRadius: 10 },
+  brandIcon: { width: 36, height: 36 },
   brandName: { fontSize: 22, fontWeight: '900', letterSpacing: 0.2 },
 
   heroCard: {
