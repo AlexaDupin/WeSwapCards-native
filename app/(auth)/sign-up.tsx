@@ -1,10 +1,20 @@
 import { Ionicons } from '@expo/vector-icons';
 import { Link, useRouter } from 'expo-router';
 import { useState } from 'react';
-import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import {
+  Text,
+  TextInput,
+  TouchableOpacity,
+  useWindowDimensions,
+  View,
+} from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { authStyles } from '../../src/assets/styles/auth.styles';
+import {
+  authCompactStyles,
+  authStyles,
+  isCompactAuth,
+} from '../../src/assets/styles/auth.styles';
 import { styles } from '../../src/assets/styles/styles';
 import { useSignUpSubmit } from '@/src/features/auth/hooks/useSignUpSubmit';
 import PasswordInput from '@/src/components/PasswordInput';
@@ -20,6 +30,13 @@ export default function SignUpScreen() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const { height } = useWindowDimensions();
+
+  // Sign-up stacks the most content of any auth screen (title, subtitle, two
+  // inputs, the consent checkbox, the button and the footer link). On short
+  // devices the shared auth spacing pushes "Already have an account?" below the
+  // fold, so tighten it enough for everything to fit without scrolling.
+  const compact = isCompactAuth(height);
 
   const { onSignUpPress, onVerifyPress } = useSignUpSubmit({
     emailAddress,
@@ -58,25 +75,51 @@ export default function SignUpScreen() {
         enableAutomaticScroll={true}
         extraScrollHeight={30}
       >
-        <View style={authStyles.container}>
-          <Text style={authStyles.title}>
+        <View
+          style={[authStyles.container, compact && authCompactStyles.container]}
+        >
+          <Text style={[authStyles.title, compact && authCompactStyles.title]}>
             {pendingVerification ? 'Verify your email' : 'Create an account'}
           </Text>
 
-          <View style={authStyles.subtitle}>
+          <View
+            style={[authStyles.subtitle, compact && authCompactStyles.subtitle]}
+          >
             {pendingVerification ? (
               <>
-                <Text style={authStyles.subtitleText}>
+                <Text
+                  style={[
+                    authStyles.subtitleText,
+                    compact && authCompactStyles.subtitleText,
+                  ]}
+                >
                   We sent you a verification code.
                 </Text>
-                <Text style={authStyles.subtitleText}>
+                <Text
+                  style={[
+                    authStyles.subtitleText,
+                    compact && authCompactStyles.subtitleText,
+                  ]}
+                >
                   Enter it below to finish creating your account.
                 </Text>
               </>
             ) : (
               <>
-                <Text style={authStyles.subtitleText}>Welcome!</Text>
-                <Text style={authStyles.subtitleText}>
+                <Text
+                  style={[
+                    authStyles.subtitleText,
+                    compact && authCompactStyles.subtitleText,
+                  ]}
+                >
+                  Welcome!
+                </Text>
+                <Text
+                  style={[
+                    authStyles.subtitleText,
+                    compact && authCompactStyles.subtitleText,
+                  ]}
+                >
                   Please fill in the details to get started
                 </Text>
               </>
@@ -113,7 +156,7 @@ export default function SignUpScreen() {
           {pendingVerification ? (
             <>
               <TextInput
-                style={authStyles.input}
+                style={[authStyles.input, compact && authCompactStyles.input]}
                 value={code}
                 placeholder="Enter verification code"
                 keyboardType="numeric"
@@ -126,7 +169,11 @@ export default function SignUpScreen() {
               />
 
               <TouchableOpacity
-                style={[styles.button, isSubmitting && { opacity: 0.6 }]}
+                style={[
+                  styles.button,
+                  compact && authCompactStyles.button,
+                  isSubmitting && { opacity: 0.6 },
+                ]}
                 onPress={onVerifyPress}
                 disabled={isSubmitting}
               >
@@ -138,7 +185,7 @@ export default function SignUpScreen() {
           ) : (
             <>
               <TextInput
-                style={authStyles.input}
+                style={[authStyles.input, compact && authCompactStyles.input]}
                 autoCapitalize="none"
                 autoCorrect={false}
                 keyboardType="email-address"
@@ -162,6 +209,7 @@ export default function SignUpScreen() {
                 onSubmitEditing={onSignUpPress}
                 textContentType="newPassword"
                 autoComplete="password-new"
+                compact={compact}
               />
 
               <LegalConsentCheckbox
@@ -175,6 +223,7 @@ export default function SignUpScreen() {
               <TouchableOpacity
                 style={[
                   styles.button,
+                  compact && authCompactStyles.button,
                   (isSubmitting || !termsAccepted) && { opacity: 0.6 },
                 ]}
                 onPress={onSignUpPress}

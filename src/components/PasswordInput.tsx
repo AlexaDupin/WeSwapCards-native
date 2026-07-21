@@ -9,6 +9,8 @@ type Props = {
   textContentType: 'password' | 'newPassword';
   autoComplete: 'password' | 'password-new';
   placeholder?: string;
+  /** Tighter vertical rhythm, matching authCompactStyles on short screens. */
+  compact?: boolean;
 };
 
 export default function PasswordInput({
@@ -18,13 +20,14 @@ export default function PasswordInput({
   textContentType,
   autoComplete,
   placeholder = 'Enter password',
+  compact = false,
 }: Props) {
   const [visible, setVisible] = useState(false);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, compact && styles.containerCompact]}>
       <TextInput
-        style={styles.input}
+        style={[styles.input, compact && styles.inputCompact]}
         value={value}
         placeholder={placeholder}
         secureTextEntry={!visible}
@@ -63,10 +66,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingRight: 12,
   },
+  containerCompact: {
+    marginBottom: 14,
+  },
   input: {
     flex: 1,
     padding: 15,
     fontSize: 16,
+  },
+  inputCompact: {
+    padding: 14,
   },
   toggle: {
     padding: 4,

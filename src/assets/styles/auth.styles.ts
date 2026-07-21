@@ -101,3 +101,35 @@ export const authStyles = StyleSheet.create({
     fontSize: 14,
   },
 });
+
+// Overrides layered on top of authStyles on short devices, so the taller auth
+// screens (sign-up especially) fit between the status bar and the nav bar
+// without the footer link falling below the fold. Opt in with `isCompactAuth`.
+export const authCompactStyles = StyleSheet.create({
+  container: {
+    paddingVertical: 12,
+  },
+  title: {
+    fontSize: 28,
+    marginVertical: 6,
+    marginBottom: 8,
+  },
+  subtitle: {
+    marginBottom: 16,
+  },
+  subtitleText: {
+    fontSize: 17,
+  },
+  input: {
+    padding: 14,
+    marginBottom: 14,
+  },
+  button: {
+    marginTop: 4,
+    marginBottom: 8,
+  },
+});
+
+// Devices below this height (iPhone SE, small/older Androids) get the tighter
+// spacing above.
+export const isCompactAuth = (windowHeight: number) => windowHeight < 720;
