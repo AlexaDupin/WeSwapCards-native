@@ -3,6 +3,7 @@ import { tokenCache } from '@clerk/clerk-expo/token-cache';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { ApiAuthErrorHandler } from '@/src/features/auth/components/ApiAuthErrorHandler';
 import { ExplorerHydration } from '@/src/features/auth/components/ExplorerHydration';
 import { ExplorerProvider } from '@/src/features/auth/context/ExplorerContext';
 import { NotificationsProvider } from '@/src/features/notifications/NotificationsProvider';
@@ -17,6 +18,8 @@ export default function RootLayout() {
         {...(publishableKey ? { publishableKey } : {})}
       >
         <ExplorerProvider>
+          {/* Signs out on API 401s so a server-rejected session can't linger. */}
+          <ApiAuthErrorHandler />
           <ExplorerHydration>
             <NotificationsProvider>
               {/* Every screen's background now runs behind the status bar (see the
