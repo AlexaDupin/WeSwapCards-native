@@ -21,12 +21,14 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useNotifications } from '@/src/features/notifications/NotificationsProvider';
 import { useDeleteAccount } from '@/src/features/auth/hooks/useDeleteAccount';
+import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
 
 export function AccountButton() {
   const { user } = useUser();
   const { signOut } = useClerk();
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const { explorerName } = useExplorer();
   const [visible, setVisible] = useState(false);
 
   const { enabled, permission, setEnabled, openSystemSettings } =
@@ -74,15 +76,43 @@ export function AccountButton() {
           onPress={() => setVisible(false)}
         >
           <Pressable style={styles.sheet}>
-            {email != null && (
-              <View style={styles.emailRow}>
-                <Text style={styles.emailText}>{email}</Text>
+            {(explorerName != null || email != null) && (
+              <View style={styles.header}>
+                <Image
+                  source={{ uri: user?.imageUrl }}
+                  style={styles.headerAvatar}
+                />
+                <View style={styles.headerText}>
+                  {explorerName != null ? (
+                    <>
+                      <Text style={styles.headerName} numberOfLines={1}>
+                        {explorerName}
+                      </Text>
+                      {email != null && (
+                        <Text style={styles.headerEmail} numberOfLines={1}>
+                          {email}
+                        </Text>
+                      )}
+                    </>
+                  ) : (
+                    <Text style={styles.headerName} numberOfLines={1}>
+                      {email}
+                    </Text>
+                  )}
+                </View>
               </View>
             )}
 
             <View style={styles.item}>
               <View style={styles.toggleRow}>
-                <Text style={styles.toggleLabel}>Message notifications</Text>
+                <View style={styles.rowContent}>
+                  <Ionicons
+                    name="notifications-outline"
+                    size={20}
+                    color={NEUTRAL}
+                  />
+                  <Text style={styles.linkItemText}>Message notifications</Text>
+                </View>
                 <Switch
                   value={enabled === true}
                   disabled={enabled === null}
@@ -242,13 +272,30 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     overflow: 'hidden',
   },
-  emailRow: {
-    paddingVertical: 14,
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+    paddingVertical: 16,
     paddingHorizontal: 16,
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderBottomColor: 'rgba(0,0,0,0.12)',
   },
-  emailText: {
+  headerAvatar: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+  },
+  headerText: {
+    flex: 1,
+  },
+  headerName: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: NEUTRAL,
+  },
+  headerEmail: {
+    marginTop: 2,
     fontSize: 13,
     color: '#666',
   },
@@ -280,10 +327,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-  },
-  toggleLabel: {
-    fontSize: 16,
-    color: '#111',
   },
   toggleHint: {
     marginTop: 8,
