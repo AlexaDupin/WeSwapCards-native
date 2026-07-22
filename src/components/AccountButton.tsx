@@ -17,6 +17,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { useClerk, useUser } from '@clerk/clerk-expo';
 import { useRouter } from 'expo-router';
 
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+
 import { useNotifications } from '@/src/features/notifications/NotificationsProvider';
 import { useDeleteAccount } from '@/src/features/auth/hooks/useDeleteAccount';
 
@@ -24,6 +26,7 @@ export function AccountButton() {
   const { user } = useUser();
   const { signOut } = useClerk();
   const router = useRouter();
+  const insets = useSafeAreaInsets();
   const [visible, setVisible] = useState(false);
 
   const { enabled, permission, setEnabled, openSystemSettings } =
@@ -63,7 +66,13 @@ export function AccountButton() {
         animationType="fade"
         onRequestClose={() => setVisible(false)}
       >
-        <Pressable style={styles.overlay} onPress={() => setVisible(false)}>
+        <Pressable
+          style={[
+            styles.overlay,
+            { paddingBottom: Math.max(32, insets.bottom + 16) },
+          ]}
+          onPress={() => setVisible(false)}
+        >
           <Pressable style={styles.sheet}>
             {email != null && (
               <View style={styles.emailRow}>
@@ -162,13 +171,24 @@ export function AccountButton() {
               </View>
             </Pressable>
 
-            <View style={styles.dangerSeparator} />
+            <Pressable
+              style={({ pressed }) => [
+                styles.item,
+                styles.cancelItem,
+                pressed && styles.itemPressed,
+              ]}
+              onPress={() => setVisible(false)}
+            >
+              <Text style={styles.cancelText}>Cancel</Text>
+            </Pressable>
+          </Pressable>
 
+          <Pressable style={[styles.sheet, styles.deleteCard]}>
             <Pressable
               style={({ pressed }) => [
                 styles.item,
                 styles.deleteRow,
-                pressed && styles.deleteRowPressed,
+                pressed && styles.itemPressed,
               ]}
               onPress={confirmAndDelete}
               disabled={deleting}
@@ -181,19 +201,6 @@ export function AccountButton() {
                   {deleting ? 'Deleting…' : 'Delete account'}
                 </Text>
               </View>
-            </Pressable>
-
-            <View style={styles.dangerSeparator} />
-
-            <Pressable
-              style={({ pressed }) => [
-                styles.item,
-                styles.cancelItem,
-                pressed && styles.itemPressed,
-              ]}
-              onPress={() => setVisible(false)}
-            >
-              <Text style={styles.cancelText}>Cancel</Text>
             </Pressable>
           </Pressable>
         </Pressable>
@@ -210,8 +217,7 @@ const TERMS_URL = 'https://weswapcards.com/terms';
 const PRIVACY_URL = 'https://weswapcards.com/privacy';
 
 const NEUTRAL = '#111';
-const DANGER = '#C0392B';
-const DANGER_TINT = '#FDECEA';
+const DANGER = '#B5544B';
 
 const styles = StyleSheet.create({
   avatarButton: {
@@ -260,15 +266,15 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 10,
   },
-  dangerSeparator: {
-    height: 24,
-    backgroundColor: 'rgba(0,0,0,0.04)',
+  deleteCard: {
+    marginTop: 12,
   },
   deleteRow: {
-    backgroundColor: DANGER_TINT,
+    borderBottomWidth: 0,
   },
-  deleteRowPressed: {
-    backgroundColor: '#F7D9D4',
+  deleteText: {
+    fontSize: 16,
+    color: DANGER,
   },
   toggleRow: {
     flexDirection: 'row',
@@ -300,11 +306,6 @@ const styles = StyleSheet.create({
     marginTop: 2,
     fontSize: 13,
     color: '#666',
-  },
-  deleteText: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: DANGER,
   },
   itemDisabled: {
     opacity: 0.5,
