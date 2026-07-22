@@ -43,7 +43,22 @@ const getNextStatus = (current: CardStatus): CardStatus => {
 };
 
 export function useCardsScreen({ explorerId }: Params) {
-  const { getToken } = useAuth();
+  // Clerk's useAuth() returns a NEW getToken function on every render (it is not
+  // memoized). Consumed directly, that unstable identity would churn every
+  // callback that lists it as a dependency — re-running the fetch effect each
+  // render and defeating the ChapterSection/CardItem memoization (every visible
+  // chapter would re-render on every commit). Mirror it in a ref and expose a
+  // stable wrapper so the whole chain downstream stays referentially stable.
+  const { getToken: clerkGetToken } = useAuth();
+  const getTokenRef = useRef(clerkGetToken);
+  useEffect(() => {
+    getTokenRef.current = clerkGetToken;
+  }, [clerkGetToken]);
+  const getToken = useCallback(
+    (...args: Parameters<typeof clerkGetToken>) =>
+      getTokenRef.current(...args),
+    [],
+  );
 
   const [cardStatuses, setCardStatuses] = useState<Record<string, CardStatus>>(
     {},

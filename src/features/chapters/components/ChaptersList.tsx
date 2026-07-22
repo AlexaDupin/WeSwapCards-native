@@ -29,6 +29,22 @@ export default function ChaptersList({
   readOnly = false,
   listRef,
 }: Props) {
+  const onScrollToIndexFailed = useCallback(
+    (info: { index: number; averageItemLength: number }) => {
+      // The target row may not be measured yet when jumping far off-screen.
+      // Jump to an estimated offset, then retry once it has been laid out.
+      listRef?.current?.scrollToOffset({
+        offset: info.averageItemLength * info.index,
+        animated: true,
+      });
+      setTimeout(() => {
+        if (chaptersData.length <= info.index) return;
+        listRef?.current?.scrollToIndex({ index: info.index, animated: true });
+      }, 100);
+    },
+    [listRef, chaptersData.length],
+  );
+
   const renderItem = useCallback<ListRenderItem<ChapterUI>>(
     ({ item }) => (
       <ChapterSection
@@ -64,9 +80,13 @@ export default function ChaptersList({
       showsVerticalScrollIndicator={false}
       contentContainerStyle={styles.chapterListContent}
       renderItem={renderItem}
-      initialNumToRender={6}
-      maxToRenderPerBatch={6}
-      windowSize={7}
+      onScrollToIndexFailed={onScrollToIndexFailed}
+      // Modest virtualization tuning: render fewer rows per batch/window so no
+      // single JS commit does too much work. Kept mild — the real fix for the
+      // per-tap churn was stabilizing getToken in useCardsScreen.
+      initialNumToRender={5}
+      maxToRenderPerBatch={3}
+      windowSize={5}
       updateCellsBatchingPeriod={50}
     />
   );
