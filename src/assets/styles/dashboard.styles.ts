@@ -7,7 +7,7 @@ export const styles = StyleSheet.create({
     borderRadius: 12,
     paddingHorizontal: 14,
     paddingVertical: 10,
-    backgroundColor: '#F2F4F7',
+    backgroundColor: '#F8F9FB',
     fontSize: 16,
     marginBottom: 12,
   },
@@ -23,8 +23,6 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     width: 70,
     alignSelf: 'stretch',
-    borderTopRightRadius: 12,
-    borderBottomRightRadius: 12,
   },
   renderRightDecline: {
     backgroundColor: '#FF3B30',
@@ -38,69 +36,83 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     width: 70,
-    marginBottom: 10,
     alignSelf: 'stretch',
-    borderTopLeftRadius: 12,
-    borderBottomLeftRadius: 12,
   },
   rightActions: {
     flexDirection: 'row',
     alignSelf: 'stretch',
-    marginBottom: 10,
-    borderTopRightRadius: 12,
-    borderBottomRightRadius: 12,
-    overflow: 'hidden',
   },
-  transactionCard: {
-    backgroundColor: 'white',
-    marginBottom: 10,
+  // Flat conversation row. The white list surface + hairline dividers come from
+  // the list container (`transactionsList` / `separator`), not per-row cards.
+  row: {
     flexDirection: 'row',
     alignItems: 'center',
-    shadowOffset: {
-      width: 0,
-      height: 1,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    // Compact target height; minHeight (not height) so the row grows with
+    // Dynamic Type / long text instead of clipping.
+    minHeight: 72,
   },
-  transactionContent: {
+  rowMiddle: {
     flex: 1,
-    flexDirection: 'row',
-    padding: 15,
-    alignItems: 'center',
+    marginLeft: 12,
+    marginRight: 8,
   },
-  categoryIconContainer: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: '#F5F5F5',
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
-  },
-  transactionLeft: {
-    flex: 1,
-  },
-  transactionTitle: {
+  rowUsername: {
     fontSize: 16,
-    fontWeight: '500',
-    marginBottom: 4,
+    fontWeight: '600',
+    color: Colors.textPrimary,
+    marginBottom: 3,
   },
-  transactionCategory: {
+  // Unread emphasis (paired with the dot): heavier name, darker secondary line,
+  // accent-coloured date — the conventional message/mail-list treatment.
+  rowUsernameUnread: {
+    fontWeight: '700',
+  },
+  rowSecondary: {
     fontSize: 14,
+    color: '#6C757D',
   },
-  transactionRight: {
+  rowSecondaryUnread: {
+    color: '#344054',
+    fontWeight: '500',
+  },
+  rowRight: {
+    alignSelf: 'stretch',
     alignItems: 'flex-end',
+    justifyContent: 'space-between',
   },
-  transactionDate: {
+  rowDate: {
     fontSize: 12,
+    color: '#9aa0a6',
   },
+  rowDateUnread: {
+    fontWeight: '600',
+  },
+  // Full-width white list surface. The screen wraps content in 16px horizontal
+  // padding; the negative margin lets the list (and its dividers) run edge to
+  // edge while each row keeps its own 16px padding so content stays aligned
+  // with the header/tabs above.
   transactionsList: {
     flex: 1,
+    marginHorizontal: -16,
+    // Cancel the screen's 16px bottom padding so the surface runs all the way
+    // down to the tab bar (no grey gap). The row content keeps its own bottom
+    // breathing room via transactionsListContent.
+    marginBottom: -16,
+    backgroundColor: '#FFFFFF',
   },
   transactionsListContent: {
     paddingBottom: 20,
+  },
+  // Full-width divider between rows, inset 16 from each edge so it aligns with
+  // the row padding (runs under the avatar).
+  separator: {
+    height: 1,
+    backgroundColor: 'rgba(0,0,0,0.14)',
+    marginLeft: 16,
+    marginRight: 16,
   },
   pillList: {
     flexDirection: 'row',
@@ -122,21 +134,20 @@ export const styles = StyleSheet.create({
     color: '#0369A1',
   },
 
-  unreadIconWrapper: {
-    position: 'relative',
-  },
   unreadDot: {
-    position: 'absolute',
-    top: 0,
-    right: -2,
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#0A84FF',
+    backgroundColor: Colors.accent,
+    // Lift it off the very bottom of the row so it sits a touch higher.
+    marginBottom: 12,
   },
 
   emptyContainer: {
     marginTop: 8,
+    // The list runs edge-to-edge (see transactionsList); keep the empty state
+    // inset so it doesn't touch the screen edges.
+    marginHorizontal: 16,
     paddingVertical: 32,
     paddingHorizontal: 20,
     borderRadius: 16,

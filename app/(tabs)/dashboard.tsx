@@ -100,6 +100,7 @@ export default function DashboardScreen() {
       <DashboardItem
         item={item}
         unread={isUnread(item)}
+        showPastStatus={activeTab === 'past'}
         onMarkUnread={() => setUiUnread(item.db_id, true)}
         onMarkCompleted={() => setConversationStatus(item.db_id, 'Completed')}
         onMarkDeclined={() => setConversationStatus(item.db_id, 'Declined')}
@@ -119,7 +120,7 @@ export default function DashboardScreen() {
         }}
       />
     ),
-    [isUnread, setUiUnread, setConversationStatus],
+    [isUnread, setUiUnread, setConversationStatus, activeTab],
   );
 
   return (
@@ -200,6 +201,7 @@ export default function DashboardScreen() {
             data={listData}
             renderItem={renderItem}
             keyExtractor={(item) => String(item.db_id)}
+            ItemSeparatorComponent={() => <View style={styles.separator} />}
             showsVerticalScrollIndicator={false}
             refreshControl={
               <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />

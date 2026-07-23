@@ -7,6 +7,10 @@ export type DashboardConversation = {
   card_name: string;
   swap_explorer: string;
   swap_explorer_id: number;
+  // Partner avatar resolved from Clerk on the backend (only when they uploaded
+  // one). Optional/nullable: absent on paged/older responses, null when the
+  // partner has no image.
+  swap_explorer_image?: string | null;
   status: ConversationStatus;
   creator_id: number;
   recipient_id: number;
