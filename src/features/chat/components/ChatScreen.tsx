@@ -113,11 +113,19 @@ export default function ChatScreen({
     messageListRef.current?.scrollToBottom(true);
   }, []);
 
+  // The KAV is the root view (the header and offer bar are its children, not
+  // above it), so on Android the vertical offset is 0. A non-zero offset there
+  // over-shrinks the container and pushes the composer behind the keyboard once
+  // the offer bar wraps to several lines. iOS presents this as a modal card
+  // that genuinely needs the header offset.
+  const keyboardVerticalOffset =
+    Platform.OS === 'ios' ? HEADER_H + topInset : 0;
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={HEADER_H + topInset}
+      keyboardVerticalOffset={keyboardVerticalOffset}
     >
       <View style={[styles.header, { paddingTop: 18 + topInset }]}>
         <TouchableOpacity onPress={() => router.back()} style={{ padding: 6 }}>
