@@ -1,6 +1,12 @@
 // Mocks the gesture-handler native module so Gesture/GestureDetector render in tests.
 import 'react-native-gesture-handler/jestSetup';
 
+// The chat screen's KeyboardAvoidingView comes from this native module; its
+// bundled jest mock renders the components without the native bindings.
+jest.mock('react-native-keyboard-controller', () =>
+  require('react-native-keyboard-controller/jest'),
+);
+
 // Render Expo vector icons as lightweight host components in tests. The real
 // module pulls in expo-font ESM that the project's transformIgnorePatterns does
 // not transpile, so importing an icon would otherwise crash any component test.

@@ -16,11 +16,18 @@ type Card = { id: number; name: string };
 type Props = {
   cards: Card[];
   loading?: boolean;
+  // Single scrollable row instead of a wrapping grid — used while the keyboard
+  // is open so the bar stays visible for reference without eating several lines.
+  compact?: boolean;
 };
 
 const COLLAPSE_LIMIT = 3;
 
-export default function SwapOfferBar({ cards, loading = false }: Props) {
+export default function SwapOfferBar({
+  cards,
+  loading = false,
+  compact = false,
+}: Props) {
   const [expanded, setExpanded] = useState(false);
 
   const hasMore = cards.length > COLLAPSE_LIMIT;
@@ -42,6 +49,20 @@ export default function SwapOfferBar({ cards, loading = false }: Props) {
         <ActivityIndicator size="small" style={styles.spinner} />
       ) : cards.length === 0 ? (
         <Text style={styles.empty}>No missing card to exchange</Text>
+      ) : compact ? (
+        <ScrollView
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          contentContainerStyle={styles.compactRow}
+        >
+          {cards.map((card) => (
+            <View key={card.id} style={styles.chip}>
+              <Text style={styles.chipText} numberOfLines={1}>
+                {card.name}
+              </Text>
+            </View>
+          ))}
+        </ScrollView>
       ) : expanded ? (
         <ScrollView
           style={styles.expandedScroll}
@@ -138,6 +159,11 @@ const styles = StyleSheet.create({
   chipsRow: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    alignItems: 'center',
+    gap: 6,
+  },
+  compactRow: {
+    flexDirection: 'row',
     alignItems: 'center',
     gap: 6,
   },

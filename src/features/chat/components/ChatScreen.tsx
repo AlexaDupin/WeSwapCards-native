@@ -1,18 +1,17 @@
 import React, { useCallback, useRef } from 'react';
 import {
   ActivityIndicator,
-  KeyboardAvoidingView,
   Platform,
   Text,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 import { styles } from '@/src/assets/styles/chat.styles';
-import { useKeyboardHeight } from '@/src/hooks/useKeyboardHeight';
 import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
 import { useChatScreen } from '@/src/features/chat/hooks/useChatScreen';
 import { useOfferableCards } from '@/src/features/chat/hooks/useOfferableCards';
@@ -48,7 +47,6 @@ export default function ChatScreen({
 }: ChatScreenProps) {
   const { explorerId } = useExplorer();
   const insets = useSafeAreaInsets();
-  const keyboardHeight = useKeyboardHeight();
 
   const needFetch = offeredCards == null && conversationId != null;
   const { cards: fetched, loading: offerLoading } = useOfferableCards({
@@ -115,21 +113,16 @@ export default function ChatScreen({
     messageListRef.current?.scrollToBottom(true);
   }, []);
 
-  // Android runs edge-to-edge, so the window is not resized for the keyboard
-  // and KeyboardAvoidingView cannot lift the composer reliably (behavior
-  // "height"/"padding" both leave it behind the keyboard once the offer bar
-  // wraps to several lines). Instead we pad the root by the measured keyboard
-  // height, which works regardless of edge-to-edge. iOS is presented as a modal
-  // card where the padding behavior works, so it keeps using KAV.
+  // KeyboardAvoidingView here comes from react-native-keyboard-controller: it
+  // tracks the real, live IME insets (including the suggestion strip and
+  // Android edge-to-edge), which the built-in RN component cannot. iOS is
+  // presented as a modal card that still needs the header as a vertical offset.
   const isIOS = Platform.OS === 'ios';
 
   return (
     <KeyboardAvoidingView
-      style={[
-        styles.container,
-        isIOS ? null : { paddingBottom: keyboardHeight },
-      ]}
-      behavior={isIOS ? 'padding' : undefined}
+      style={styles.container}
+      behavior="padding"
       keyboardVerticalOffset={isIOS ? HEADER_H + topInset : 0}
     >
       <View style={[styles.header, { paddingTop: 18 + topInset }]}>
@@ -159,9 +152,13 @@ export default function ChatScreen({
         )}
       </View>
 
+      {/* Kept visible while typing so users can reference the cards, but
+          compact (single scrollable row) so it doesn't wrap to several lines
+          and push the composer off small screens. */}
       <SwapOfferBar
         cards={offerableCards}
         loading={needFetch && offerLoading}
+        compact={keyboardVisible}
       />
 
       {error ? <Text style={styles.error}>{error}</Text> : null}
@@ -178,7 +175,10 @@ export default function ChatScreen({
         />
       )}
 
-      {conversationStatus == null ? null : (
+      {/* Hide the status actions while typing — they aren't needed mid-message
+          and their row is fixed height that crowds out the composer on small
+          screens. */}
+      {conversationStatus == null || keyboardVisible ? null : (
         <ConversationStatusBar
           updatingStatus={updatingStatus}
           conversationStatus={conversationStatus}
