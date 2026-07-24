@@ -59,6 +59,12 @@ export default function ChatScreen({
 
   const HEADER_H = 56;
 
+  // iOS presents this screen as a modal sheet that already sits below the
+  // status bar, yet safe-area-context still reports the full window top inset
+  // here. Adding it would double-count and leave a large blank gap at the top.
+  // Android shows the modal full-screen, so it still needs the real inset.
+  const topInset = Platform.OS === 'ios' ? 0 : insets.top;
+
   const messageListRef = useRef<MessageListHandle | null>(null);
 
   const {
@@ -111,9 +117,9 @@ export default function ChatScreen({
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={HEADER_H + insets.top}
+      keyboardVerticalOffset={HEADER_H + topInset}
     >
-      <View style={[styles.header, { paddingTop: 18 + insets.top }]}>
+      <View style={[styles.header, { paddingTop: 18 + topInset }]}>
         <TouchableOpacity onPress={() => router.back()} style={{ padding: 6 }}>
           <Ionicons name="close" size={22} color="#111" />
         </TouchableOpacity>
