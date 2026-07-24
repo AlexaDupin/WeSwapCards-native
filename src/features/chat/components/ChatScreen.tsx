@@ -12,6 +12,7 @@ import { router } from 'expo-router';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 import { styles } from '@/src/assets/styles/chat.styles';
+import { useKeyboardHeight } from '@/src/hooks/useKeyboardHeight';
 import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
 import { useChatScreen } from '@/src/features/chat/hooks/useChatScreen';
 import { useOfferableCards } from '@/src/features/chat/hooks/useOfferableCards';
@@ -47,6 +48,7 @@ export default function ChatScreen({
 }: ChatScreenProps) {
   const { explorerId } = useExplorer();
   const insets = useSafeAreaInsets();
+  const keyboardHeight = useKeyboardHeight();
 
   const needFetch = offeredCards == null && conversationId != null;
   const { cards: fetched, loading: offerLoading } = useOfferableCards({
@@ -113,19 +115,22 @@ export default function ChatScreen({
     messageListRef.current?.scrollToBottom(true);
   }, []);
 
-  // The KAV is the root view (the header and offer bar are its children, not
-  // above it), so on Android the vertical offset is 0. A non-zero offset there
-  // over-shrinks the container and pushes the composer behind the keyboard once
-  // the offer bar wraps to several lines. iOS presents this as a modal card
-  // that genuinely needs the header offset.
-  const keyboardVerticalOffset =
-    Platform.OS === 'ios' ? HEADER_H + topInset : 0;
+  // Android runs edge-to-edge, so the window is not resized for the keyboard
+  // and KeyboardAvoidingView cannot lift the composer reliably (behavior
+  // "height"/"padding" both leave it behind the keyboard once the offer bar
+  // wraps to several lines). Instead we pad the root by the measured keyboard
+  // height, which works regardless of edge-to-edge. iOS is presented as a modal
+  // card where the padding behavior works, so it keeps using KAV.
+  const isIOS = Platform.OS === 'ios';
 
   return (
     <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      keyboardVerticalOffset={keyboardVerticalOffset}
+      style={[
+        styles.container,
+        isIOS ? null : { paddingBottom: keyboardHeight },
+      ]}
+      behavior={isIOS ? 'padding' : undefined}
+      keyboardVerticalOffset={isIOS ? HEADER_H + topInset : 0}
     >
       <View style={[styles.header, { paddingTop: 18 + topInset }]}>
         <TouchableOpacity onPress={() => router.back()} style={{ padding: 6 }}>
