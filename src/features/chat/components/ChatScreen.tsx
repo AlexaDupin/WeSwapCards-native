@@ -4,6 +4,7 @@ import {
   Platform,
   Text,
   TouchableOpacity,
+  useWindowDimensions,
   View,
 } from 'react-native';
 import { KeyboardAvoidingView } from 'react-native-keyboard-controller';
@@ -26,6 +27,11 @@ import ConversationStatusBar from '@/src/features/chat/components/ConversationSt
 import ChatComposer from '@/src/features/chat/components/ChatComposer';
 import SwapOfferBar from '@/src/features/chat/components/SwapOfferBar';
 
+// Below this window height (dp) there isn't room for every band plus the
+// keyboard, so the chat collapses its reference/action bands while typing.
+// Most modern phones are taller and keep the full layout. Tunable.
+const SMALL_SCREEN_MAX_HEIGHT = 720;
+
 type ChatScreenProps = {
   conversationId: number | null;
   cardName: string;
@@ -47,6 +53,12 @@ export default function ChatScreen({
 }: ChatScreenProps) {
   const { explorerId } = useExplorer();
   const insets = useSafeAreaInsets();
+  const { height: windowHeight } = useWindowDimensions();
+
+  // Only small screens run out of room for every band once the keyboard is up,
+  // so the space-saving tweaks (compact offer bar, hidden status actions) are
+  // limited to them — larger phones keep the full layout while typing.
+  const isSmallScreen = windowHeight <= SMALL_SCREEN_MAX_HEIGHT;
 
   const needFetch = offeredCards == null && conversationId != null;
   const { cards: fetched, loading: offerLoading } = useOfferableCards({
@@ -152,13 +164,13 @@ export default function ChatScreen({
         )}
       </View>
 
-      {/* Kept visible while typing so users can reference the cards, but
+      {/* On small screens while typing, keep the bar visible for reference but
           compact (single scrollable row) so it doesn't wrap to several lines
-          and push the composer off small screens. */}
+          and push the composer off. Larger screens keep the full grid. */}
       <SwapOfferBar
         cards={offerableCards}
         loading={needFetch && offerLoading}
-        compact={keyboardVisible}
+        compact={keyboardVisible && isSmallScreen}
       />
 
       {error ? <Text style={styles.error}>{error}</Text> : null}
@@ -175,10 +187,10 @@ export default function ChatScreen({
         />
       )}
 
-      {/* Hide the status actions while typing — they aren't needed mid-message
-          and their row is fixed height that crowds out the composer on small
-          screens. */}
-      {conversationStatus == null || keyboardVisible ? null : (
+      {/* Hide the status actions while typing only on small screens, where the
+          row would otherwise crowd out the composer. Larger screens keep them
+          visible so the common "thanks → Complete" flow stays one tap away. */}
+      {conversationStatus == null || (keyboardVisible && isSmallScreen) ? null : (
         <ConversationStatusBar
           updatingStatus={updatingStatus}
           conversationStatus={conversationStatus}
