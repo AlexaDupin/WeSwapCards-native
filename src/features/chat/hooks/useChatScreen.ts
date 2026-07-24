@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { AppState } from 'react-native';
+import { useFocusEffect } from 'expo-router';
 import { useAuth } from '@clerk/clerk-expo';
 import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
 import { useKeyboardVisible } from '@/src/hooks/useKeyboardVisible';
@@ -59,8 +61,16 @@ export function useChatScreen(args: {
       headers,
     });
 
-    setMessages(allMessages);
+    // Polling re-fetches every few seconds; keep the same array reference when
+    // nothing changed so the list doesn't needlessly re-render or lose scroll.
+    setMessages((prev) =>
+      prev.length === allMessages.length &&
+      prev[prev.length - 1]?.id === allMessages[allMessages.length - 1]?.id
+        ? prev
+        : allMessages,
+    );
     setConversationStatusState(conversationStatus);
+    return allMessages;
   }, [authHeaders, canLoad, resolvedConversationId]);
 
   const markRead = useCallback(async () => {
@@ -101,6 +111,52 @@ export function useChatScreen(args: {
       cancelled = true;
     };
   }, [canLoad, refreshMessages, markRead]);
+
+  // Track the current message count so polling can tell when new messages
+  // actually arrived (and only then re-mark the thread read).
+  const messagesLenRef = useRef(0);
+  useEffect(() => {
+    messagesLenRef.current = messages.length;
+  }, [messages]);
+
+  // Poll for new messages every 5s while the chat is focused so incoming
+  // messages appear without leaving the screen. Paused while the app is
+  // backgrounded, and torn down on blur.
+  const [refreshing, setRefreshing] = useState(false);
+  const POLL_MS = 5000;
+
+  useFocusEffect(
+    useCallback(() => {
+      if (!canLoad) return;
+
+      const tick = async () => {
+        if (AppState.currentState !== 'active') return;
+        const before = messagesLenRef.current;
+        try {
+          const next = await refreshMessages();
+          if (next && next.length > before) markRead().catch(() => {});
+        } catch {
+          // Silent: transient poll failures shouldn't surface an error banner.
+        }
+      };
+
+      const id = setInterval(tick, POLL_MS);
+      return () => clearInterval(id);
+    }, [canLoad, refreshMessages, markRead]),
+  );
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true);
+    try {
+      const before = messagesLenRef.current;
+      const next = await refreshMessages();
+      if (next && next.length > before) markRead().catch(() => {});
+    } catch {
+      setError('Could not refresh messages');
+    } finally {
+      setRefreshing(false);
+    }
+  }, [refreshMessages, markRead]);
 
   // canSend does not require a conversationId — user can type before one exists
   const canSend = useMemo(() => {
@@ -213,6 +269,8 @@ export function useChatScreen(args: {
     messages,
     text,
     keyboardVisible,
+    refreshing,
+    onRefresh,
     setText,
     sending,
     canSend,

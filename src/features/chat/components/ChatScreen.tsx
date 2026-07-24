@@ -86,6 +86,8 @@ export default function ChatScreen({
     messages,
     text,
     keyboardVisible,
+    refreshing,
+    onRefresh,
     setText,
     canSend,
     sendMessage,
@@ -188,6 +190,8 @@ export default function ChatScreen({
           explorerId={explorerId}
           bottomSpacer={bottomSpacer}
           conversationId={conversationId ?? 0}
+          refreshing={refreshing}
+          onRefresh={onRefresh}
         />
       )}
 

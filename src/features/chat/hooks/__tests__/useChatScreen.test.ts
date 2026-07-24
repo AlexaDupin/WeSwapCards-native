@@ -1,4 +1,5 @@
 import { act, renderHook, waitFor } from '@testing-library/react-native';
+import { AppState } from 'react-native';
 
 import { useChatScreen } from '@/src/features/chat/hooks/useChatScreen';
 
@@ -24,6 +25,17 @@ jest.mock('@/src/features/auth/context/ExplorerContext', () => ({
 
 jest.mock('@/src/hooks/useKeyboardVisible', () => ({
   useKeyboardVisible: () => false,
+}));
+
+// expo-router's useFocusEffect needs a navigation context; in tests run the
+// focus callback as a plain mount effect so the polling setup is exercised
+// without one.
+jest.mock('expo-router', () => ({
+  useFocusEffect: (cb: () => void | (() => void)) => {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
+    const React = require('react');
+    React.useEffect(() => cb(), [cb]);
+  },
 }));
 
 const chatApi = jest.requireMock(
@@ -205,6 +217,88 @@ describe('sendMessage', () => {
 
     expect(result.current.error).toBe('Could not send message');
     expect(result.current.sending).toBe(false);
+  });
+});
+
+describe('polling and pull-to-refresh', () => {
+  beforeEach(() => {
+    // The poll only fetches while the app is foregrounded.
+    (AppState as unknown as { currentState: string }).currentState = 'active';
+  });
+
+  it('refetches and clears the flag on pull-to-refresh', async () => {
+    const { result } = setup({ conversationId: 7 });
+    await waitFor(() => expect(result.current.loading).toBe(false));
+    chatApi.getAllMessages.mockClear();
+
+    await act(async () => {
+      await result.current.onRefresh();
+    });
+
+    expect(chatApi.getAllMessages).toHaveBeenCalledWith(
+      expect.objectContaining({ conversationId: 7 }),
+    );
+    expect(result.current.refreshing).toBe(false);
+  });
+
+  it('polls every 5s while focused and marks read when new messages arrive', async () => {
+    jest.useFakeTimers();
+    try {
+      const { result } = setup({ conversationId: 7 });
+      // Flush the initial load.
+      await act(async () => {
+        await jest.advanceTimersByTimeAsync(0);
+      });
+      expect(chatApi.getAllMessages).toHaveBeenCalledTimes(1);
+
+      const more = [
+        ...messages,
+        {
+          id: 2,
+          content: 'any news?',
+          timestamp: '2026-06-10T12:05:00.000Z',
+          sender_id: 9,
+          recipient_id: 3,
+          conversation_id: 7,
+        },
+      ];
+      chatApi.getAllMessages.mockResolvedValue({
+        allMessages: more,
+        conversationStatus: 'In progress',
+      });
+      chatApi.markConversationRead.mockClear();
+
+      await act(async () => {
+        await jest.advanceTimersByTimeAsync(5000);
+      });
+
+      expect(chatApi.getAllMessages).toHaveBeenCalledTimes(2);
+      expect(result.current.messages).toEqual(more);
+      expect(chatApi.markConversationRead).toHaveBeenCalled();
+    } finally {
+      jest.useRealTimers();
+    }
+  });
+
+  it('does not re-mark read when a poll brings no new messages', async () => {
+    jest.useFakeTimers();
+    try {
+      setup({ conversationId: 7 });
+      await act(async () => {
+        await jest.advanceTimersByTimeAsync(0);
+      });
+      chatApi.markConversationRead.mockClear();
+
+      // Same messages returned again on the next poll.
+      await act(async () => {
+        await jest.advanceTimersByTimeAsync(5000);
+      });
+
+      expect(chatApi.getAllMessages).toHaveBeenCalledTimes(2);
+      expect(chatApi.markConversationRead).not.toHaveBeenCalled();
+    } finally {
+      jest.useRealTimers();
+    }
   });
 });
 

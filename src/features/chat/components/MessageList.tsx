@@ -12,6 +12,7 @@ import {
   FlatList,
   NativeScrollEvent,
   NativeSyntheticEvent,
+  RefreshControl,
   Text,
   View,
 } from 'react-native';
@@ -33,10 +34,23 @@ type MessageListProps = {
   messages: Message[];
   explorerId: number;
   bottomSpacer: number;
+  refreshing: boolean;
+  onRefresh: () => void;
 };
 
 const MessageList = forwardRef<MessageListHandle, MessageListProps>(
-  ({ conversationId, loading, messages, explorerId, bottomSpacer }, ref) => {
+  (
+    {
+      conversationId,
+      loading,
+      messages,
+      explorerId,
+      bottomSpacer,
+      refreshing,
+      onRefresh,
+    },
+    ref,
+  ) => {
     const listRef = useRef<FlatList<Message> | null>(null);
     const isAtBottomRef = useRef(true);
     const prevLenRef = useRef(0);
@@ -199,6 +213,9 @@ const MessageList = forwardRef<MessageListHandle, MessageListProps>(
             keyboardShouldPersistTaps="handled"
             keyboardDismissMode="interactive"
             onContentSizeChange={(_, h) => decideModeIfReady(undefined, h)}
+            refreshControl={
+              <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+            }
           />
         )}
       </View>
