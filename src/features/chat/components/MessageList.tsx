@@ -39,6 +39,7 @@ const MessageList = forwardRef<MessageListHandle, MessageListProps>(
   ({ conversationId, loading, messages, explorerId, bottomSpacer }, ref) => {
     const listRef = useRef<FlatList<Message> | null>(null);
     const isAtBottomRef = useRef(true);
+    const prevLenRef = useRef(0);
 
     const [listH, setListH] = useState(0);
     const [contentH, setContentH] = useState(0);
@@ -52,6 +53,7 @@ const MessageList = forwardRef<MessageListHandle, MessageListProps>(
       setListH(0);
       setContentH(0);
       isAtBottomRef.current = true;
+      prevLenRef.current = 0;
     }, [conversationId]);
 
     const isLong = mode === 'long';
@@ -92,6 +94,22 @@ const MessageList = forwardRef<MessageListHandle, MessageListProps>(
       },
       [isLong],
     );
+
+    // Keep the newest message in view when the list grows. Always follow the
+    // user's own sent message (they expect to see what they just sent); for
+    // incoming messages only follow if they were already at the bottom, so we
+    // don't yank them away while they're reading history. Skips the initial
+    // load (prevLen 0), where the list already starts at the latest message.
+    useEffect(() => {
+      const prevLen = prevLenRef.current;
+      prevLenRef.current = messages.length;
+
+      if (messages.length <= prevLen || prevLen === 0) return;
+
+      const last = messages[messages.length - 1];
+      const isMine = last?.sender_id === explorerId;
+      if (isMine || isAtBottomRef.current) scrollToBottom(true);
+    }, [messages, explorerId, scrollToBottom]);
 
     const onScroll = useCallback(
       (e: NativeSyntheticEvent<NativeScrollEvent>) => {

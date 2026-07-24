@@ -105,12 +105,16 @@ export default function ChatScreen({
     swapName,
   });
 
-  const bottomSpacer = insets.bottom + 8;
+  // Just breathing room between the newest message and the status bar/composer
+  // below it — no need to include insets.bottom here, since the composer at the
+  // very bottom already clears the home indicator.
+  const bottomSpacer = 8;
 
+  // MessageList scrolls itself to the newest message once it actually lands in
+  // the list, so we just fire the (async) send here. Scrolling from this side
+  // would race the send and scroll before the message exists.
   const handleSend = useCallback(() => {
-    const wasAtBottom = messageListRef.current?.getIsAtBottom() ?? true;
     sendMessage();
-    if (wasAtBottom) messageListRef.current?.scrollToBottom(true);
   }, [sendMessage]);
 
   const handleConversationStatus = useCallback(
