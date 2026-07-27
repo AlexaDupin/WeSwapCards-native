@@ -13,7 +13,11 @@ jest.mock('react-native-keyboard-controller', () =>
 // Covers both import styles used in the app (`@expo/vector-icons/Ionicons`
 // default and the named `{ Ionicons }` export).
 jest.mock('@expo/vector-icons/Ionicons', () => 'Ionicons');
-jest.mock('@expo/vector-icons', () => ({ Ionicons: 'Ionicons' }));
+jest.mock('@expo/vector-icons/MaterialIcons', () => 'MaterialIcons');
+jest.mock('@expo/vector-icons', () => ({
+  Ionicons: 'Ionicons',
+  MaterialIcons: 'MaterialIcons',
+}));
 
 // Same reason as the icons above: expo-secure-store is ESM that
 // transformIgnorePatterns does not transpile, so any screen reaching it (the

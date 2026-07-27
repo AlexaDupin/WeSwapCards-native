@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 
 import { styles as cardsStyles } from '@/src/assets/styles/cards.styles';
 import {
@@ -59,7 +60,7 @@ function HelpRow({ item }: { item: CardsHelpItem }) {
       style={styles.row}
     >
       <View style={styles.gesture}>
-        <Ionicons name={item.gesture} size={20} color="#555" />
+        <MaterialIcons name={item.gesture} size={22} color="#555" />
         {item.modifierIcon ? (
           <Ionicons name={item.modifierIcon} size={12} color="#555" />
         ) : null}
