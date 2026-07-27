@@ -62,6 +62,10 @@ export async function fetchCardsForChapter(args: {
  * Backend response shape (source of truth):
  * { items: [...], pagination: { currentPage, totalPages, totalItems, itemsPerPage } }
  *
+ * `excludeBlocked=1` is opt-in and native-only: it drops collectors involved in
+ * a block (either direction) from both the items and the pagination totals.
+ * Contacting them always fails server-side, so the rows have nothing to offer.
+ *
  * Requires auth.
  */
 export async function fetchSwapOpportunities(args: {
@@ -75,7 +79,7 @@ export async function fetchSwapOpportunities(args: {
 
   const resp = await axiosInstance.get<SwapOpportunitiesResponse>(
     `/opportunities/${explorerId}/card/${cardId}`,
-    { headers, params: { page, limit } },
+    { headers, params: { page, limit, excludeBlocked: 1 } },
   );
 
   return resp.data;

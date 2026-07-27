@@ -116,7 +116,7 @@ describe('fetchCardsForChapter', () => {
 });
 
 describe('fetchSwapOpportunities', () => {
-  it('requests the explorer/card endpoint with paging and headers, returning the raw page', async () => {
+  it('requests the explorer/card endpoint with paging, blocked exclusion and headers, returning the raw page', async () => {
     const page = createOpportunitiesPage(
       [createOpportunity({ explorer_id: 9, explorer_name: 'Bob' })],
       1,
@@ -135,7 +135,7 @@ describe('fetchSwapOpportunities', () => {
     expect(result).toEqual(page);
     expect(get).toHaveBeenCalledWith('/opportunities/9/card/5', {
       headers: { Authorization: 'Bearer t' },
-      params: { page: 1, limit: 20 },
+      params: { page: 1, limit: 20, excludeBlocked: 1 },
     });
   });
 });
