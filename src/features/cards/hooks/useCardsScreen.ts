@@ -66,7 +66,7 @@ export function useCardsScreen({ explorerId }: Params) {
   const [chapters, setChapters] = useState<ChapterData[]>([]);
   const [cards, setCards] = useState<CardItemData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [sortLatest, setSortLatest] = useState(false);
+  const [sortLatest, setSortLatest] = useState(true);
 
   const [pendingChapters, setPendingChapters] = useState<Set<number>>(
     new Set(),

@@ -158,11 +158,11 @@ describe('mark all', () => {
 });
 
 describe('chaptersData', () => {
-  it('counts owned/duplicated cards and sorts by name by default', async () => {
+  it('counts owned/duplicated cards and sorts by most recent by default', async () => {
     const { result } = await setupLoaded({ '10': 'owned', '20': 'duplicated' });
 
     const data = result.current.chaptersData;
-    expect(data.map((c) => c.chapterName)).toEqual(['Alpha', 'Beta']);
+    expect(data.map((c) => c.chapterId)).toEqual([2, 1]);
 
     const ch1 = data.find((c) => c.chapterId === 1)!;
     const ch2 = data.find((c) => c.chapterId === 2)!;
@@ -170,12 +170,15 @@ describe('chaptersData', () => {
     expect(ch2.ownedOrDuplicatedCount).toBe(1); // card 20 duplicated
   });
 
-  it('sorts by most recent chapter id when sortLatest is on', async () => {
+  it('sorts by name when sortLatest is off', async () => {
     const { result } = await setupLoaded({});
 
-    act(() => result.current.setSortLatest(true));
+    act(() => result.current.setSortLatest(false));
 
-    expect(result.current.chaptersData.map((c) => c.chapterId)).toEqual([2, 1]);
+    expect(result.current.chaptersData.map((c) => c.chapterName)).toEqual([
+      'Alpha',
+      'Beta',
+    ]);
   });
 
   // Regression: /cards has no ORDER BY server-side, so it returns rows in
