@@ -166,7 +166,10 @@ export default function DashboardScreen() {
           <SegmentedToggle
             options={[
               { value: 'date', label: 'Recent' },
-              { value: 'name', label: 'Name' },
+              // The `name` sort is alphabetical by card name server-side, but
+              // the row's bold primary line is now the other collector — so
+              // "Name" read as sorting by person. Only the label changes.
+              { value: 'name', label: 'Card' },
             ]}
             value={sortBy}
             onChange={setSortBy}
