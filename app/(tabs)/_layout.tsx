@@ -1,7 +1,13 @@
 import { useAuth } from '@clerk/clerk-expo';
 import { Redirect, Tabs } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import PageLoader from '@/src/components/PageLoader';
 import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
@@ -28,20 +34,25 @@ function TabIcon({ name, activeName, color, size, focused }: TabIconProps) {
   );
 }
 
-// Visual height of the tab bar content (icons + labels), independent of the
-// device's bottom system inset. The inset is added on top: the iOS home
-// indicator (~34px), an Android nav bar (gesture ~16–24px / 3-button ~48px),
-// or 0 on home-button iPhones — so the bar fits every model.
-//
-// The icon+label render into (BASE_TAB_BAR_HEIGHT − paddingTop); the inset
-// cancels out and never enlarges that area. Keep this >= ~56 so the label
-// isn't clipped (Android needs ~48px of content; below that it overflows).
-const BASE_TAB_BAR_HEIGHT = 56;
+const ACTIVE_CIRCLE_SIZE = 40;
+
+// Content height, excluding the device's bottom inset (added on top).
+// Fits 4 paddingTop + 5 item padding + circle + ~14 label + 5 item padding.
+const BASE_TAB_BAR_HEIGHT = 68;
+
+// iOS reserves 34pt for the home indicator, which leaves a dead band under the
+// labels. 20 clears the indicator without the gap. Android keeps its full inset
+// (a 3-button nav bar is real chrome the labels must not sit under).
+const MAX_IOS_BOTTOM_INSET = 20;
 
 const TabsLayout = () => {
   const { isLoaded, isSignedIn, signOut } = useAuth();
   const { status, errorMessage, resetExplorer } = useExplorer();
   const insets = useSafeAreaInsets();
+  const bottomInset =
+    Platform.OS === 'ios'
+      ? Math.min(insets.bottom, MAX_IOS_BOTTOM_INSET)
+      : insets.bottom;
 
   if (!isLoaded) return <PageLoader />;
   if (!isSignedIn) return <Redirect href="/(auth)/sign-in" />;
@@ -113,17 +124,21 @@ const TabsLayout = () => {
             {children}
           </Text>
         ),
+        // Default slot is 31×28; without this the circle spills onto the label.
+        tabBarIconStyle: {
+          width: ACTIVE_CIRCLE_SIZE,
+          height: ACTIVE_CIRCLE_SIZE,
+        },
         // Height = fixed content height + the device's bottom inset; the inset
         // is reserved as paddingBottom so labels always sit just above the
         // system bar / home indicator and never draw behind it (edge-to-edge).
-        // This adapts to every model instead of hardcoding a single height.
         tabBarStyle: {
           backgroundColor: '#FFFFFF',
           borderTopColor: '#E5D3B7',
           borderTopWidth: 1,
-          paddingTop: 8,
-          paddingBottom: insets.bottom,
-          height: BASE_TAB_BAR_HEIGHT + insets.bottom,
+          paddingTop: 4,
+          paddingBottom: bottomInset,
+          height: BASE_TAB_BAR_HEIGHT + bottomInset,
         },
       }}
     >
@@ -169,13 +184,10 @@ const TabsLayout = () => {
 export default TabsLayout;
 
 const styles = StyleSheet.create({
-  // 30px keeps the pill inside the tab bar's tight content budget (48px for
-  // icon + label, see BASE_TAB_BAR_HEIGHT) — a taller pill risks clipping the
-  // label under it on Android.
   iconWrap: {
-    width: 30,
-    height: 30,
-    borderRadius: 15,
+    width: ACTIVE_CIRCLE_SIZE,
+    height: ACTIVE_CIRCLE_SIZE,
+    borderRadius: ACTIVE_CIRCLE_SIZE / 2,
     alignItems: 'center',
     justifyContent: 'center',
   },
