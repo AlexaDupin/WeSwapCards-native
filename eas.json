@@ -8,6 +8,7 @@
       "developmentClient": true,
       "distribution": "internal",
       "node": "22.16.0",
+      "environment": "development",
       "env": {
         "HUSKY": "0"
       },
@@ -18,12 +19,14 @@
     "preview": {
       "distribution": "internal",
       "node": "22.16.0",
+      "environment": "preview",
       "android": {
         "buildType": "apk"
       }
     },
     "production": {
       "node": "22.16.0",
+      "environment": "production",
       "autoIncrement": true
     }
   },

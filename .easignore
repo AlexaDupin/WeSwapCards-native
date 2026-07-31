@@ -1,11 +1,17 @@
 # Files EAS Build should NOT upload to the cloud builder.
 #
 # EAS uses this file INSTEAD of .gitignore when it exists. That lets us keep
-# google-services.json and .env out of GitHub (still listed in .gitignore) while
-# STILL shipping them to our own private EAS build, which needs them:
-#   - google-services.json  -> required by android.googleServicesFile at prebuild
-#   - .env                  -> EXPO_PUBLIC_* values inlined into the app bundle
-# (Both are referenced here only by their ABSENCE — anything not listed uploads.)
+# google-services.json out of GitHub (still listed in .gitignore) while STILL
+# shipping it to our own private EAS build, which needs it: it is required by
+# android.googleServicesFile at prebuild. It is referenced here only by its
+# ABSENCE — anything not listed uploads.
+#
+# .env is deliberately NOT uploaded. Build-time values come from the EAS
+# environment bound to each profile in eas.json ("environment": development |
+# preview | production). Uploading .env as well would leave two sources for the
+# same variables and make it ambiguous which one a build actually used — the
+# exact way a production build could end up quietly pointing at the test stack.
+# .env stays on disk for local `expo start`.
 
 # Dependencies & build output (don't upload — EAS reinstalls/rebuilds)
 node_modules/
@@ -13,13 +19,6 @@ node_modules/
 dist/
 web-build/
 .git/
-
-# Withhold the lockfile from the cloud build ONLY. With no lockfile present EAS
-# runs the lenient `npm install` instead of the strict `npm ci`, which avoids the
-# npm-version-sensitive "out of sync" failures caused by Clerk's floating version
-# pulling in node-gated optional deps (@solana/web3.js, @wallet-standard/*).
-# The lockfile stays committed in git for local reproducibility.
-package-lock.json
 
 # Dev cruft
 .metro-health-check*
@@ -30,6 +29,10 @@ yarn-debug.*
 yarn-error.*
 app-example
 
+# Local-only environment values (see the header). Globbed so that a future
+# .env.local or .env.production can't start leaking into builds unnoticed.
+.env*
+
 # NEVER upload signing / service-account secrets
 *.jks
 *.p8
@@ -37,3 +40,4 @@ app-example
 *.key
 *.mobileprovision
 *-firebase-adminsdk-*.json
+play-service-account*.json
