@@ -11,21 +11,21 @@ verifying against something outside this repo.
 
 ---
 
-## Apple — App Store Connect
+## Apple: App Store Connect
 
 | Field | Limit | Value |
 | --- | --- | --- |
 | App name | 30 | `WeSwapCards` |
 | Subtitle | 30 | `Swap your duplicate cards` |
 | Keywords | 100 | see below |
-| Support URL | — | `https://weswapcards.com/contact` |
-| Marketing URL | — | `https://weswapcards.com` |
-| Privacy policy URL | — | `https://weswapcards.com/privacy` |
-| Copyright | — | `2026 WeSwapCards` |
-| Primary category | — | `Lifestyle` |
-| Secondary category | — | **DECIDE**: `Social Networking`, or leave unset |
+| Support URL | n/a | `https://weswapcards.com/contact` |
+| Marketing URL | n/a | `https://weswapcards.com` |
+| Privacy policy URL | n/a | `https://weswapcards.com/privacy` |
+| Copyright | n/a | `2026 WeSwapCards` |
+| Primary category | n/a | `Lifestyle` |
+| Secondary category | n/a | **DECIDE**: `Social Networking`, or leave unset |
 
-Not Entertainment — the app is a collection-management and matching utility, not
+Not Entertainment. The app is a collection-management and matching utility, not
 entertainment content. Secondary `Social Networking` is defensible given the
 matching and messaging, but it also invites closer UGC scrutiny; leaving it unset is
 the quieter option.
@@ -37,8 +37,8 @@ collector,collection,tracker,trading,doubles,missing,complete,exchange,collectib
 ```
 
 Apple indexes the app name and subtitle separately, so `swap`, `duplicate`, and
-`cards` are deliberately absent — they already appear there and repeating them wastes
-the budget. `duplicate` sits in the subtitle and `doubles` here, covering both words
+`cards` are deliberately absent, since they already appear there and repeating
+them wastes the budget. `duplicate` sits in the subtitle and `doubles` here, covering both words
 collectors actually type. `chapter` was dropped: it is meaningful inside the app but
 weak as a discovery term, and the space went to the utility words (`tracker`,
 `inventory`, `album`) that describe what someone would search for. No third-party
@@ -55,10 +55,11 @@ Log your cards and doubles, find who has what you are missing, and agree a swap.
 ```
 
 Both figures are confirmed and describe the WeSwapCards community as a whole, not
-activity through the native app specifically — which is what the wording says. Keep
-that framing if the numbers are refreshed later. The same claim appears in the app's
-onboarding (`src/features/onboarding/data/onboardingSlides.ts`); update both
-together so a reviewer never sees two different totals.
+activity through the native app specifically, which is what the wording says. Keep
+that framing if the numbers are refreshed later. The app's onboarding
+(`src/features/onboarding/data/onboardingSlides.ts`) states only the swaps total,
+which is a subset of this claim rather than a contradiction. If the swaps figure is
+ever refreshed, update it in both places.
 
 ### Description (4000)
 
@@ -66,7 +67,7 @@ together so a reviewer never sees two different totals.
 WeSwapCards helps card collectors complete their collections.
 
 Log what you own and what you have spare, then find the people who can fill your
-gaps — and who need the doubles sitting in yours.
+gaps, and who need the doubles sitting in yours.
 
 LOG YOUR CARDS
 Mark the cards you own and the ones you have doubles of. Browse by chapter to see
@@ -78,7 +79,7 @@ too: find the people who need the doubles you are holding.
 
 CHAT AND SWAP
 Message another collector directly and agree on a swap. Conversations are private
-and one to one. The swap itself happens in the app where your cards live —
+and one to one. The swap itself happens in the app where your cards live.
 WeSwapCards is where collectors find each other and settle the details.
 
 KEEP TRACK
@@ -89,7 +90,7 @@ still open. Notifications tell you when someone replies.
 No pricing sentence: the product page already states the price, and a claim in the
 description would go stale the moment that changes.
 
-**DECIDE — factual mention of the source platform.** The description never names it.
+**DECIDE: factual mention of the source platform.** The description never names it.
 A single factual sentence (that the app is an independent companion for collectors
 of a particular card set, not affiliated with or endorsed by its publisher) would
 help users understand what the app is for, but it is a legal/metadata decision.
@@ -104,17 +105,17 @@ See [Naming and IP](#naming-and-ip).
 | App name | 30 | `WeSwapCards: Card Swaps` |
 | Short description | 80 | `Log your cards, find collectors who have what you need, and swap.` |
 | Full description | 4000 | reuse the Apple description above |
-| Category | — | `Social` |
-| Contact email | — | `contact@weswapcards.com` |
-| Contact website | — | `https://weswapcards.com` |
-| Privacy policy URL | — | `https://weswapcards.com/privacy` |
-| **Account deletion URL** | — | `https://weswapcards.com/delete-account` |
+| Category | n/a | `Social` |
+| Contact email | n/a | `contact@weswapcards.com` |
+| Contact website | n/a | `https://weswapcards.com` |
+| Privacy policy URL | n/a | `https://weswapcards.com/privacy` |
+| **Account deletion URL** | n/a | `https://weswapcards.com/delete-account` |
 
 Category is chosen independently of Apple's. Play describes Lifestyle with examples
 like style guides and event planning; `Social` is the closer functional match for an
 app whose core loop is finding and messaging other people.
 
-Play has no keyword field — it indexes the title and both descriptions, so the terms
+Play has no keyword field. It indexes the title and both descriptions, so the terms
 have to read naturally in the prose rather than being listed.
 
 ---
@@ -137,7 +138,7 @@ have to read naturally in the prose rather than being listed.
 | Crash logs, traces | ⚠ Backend `@sentry/node`, active only when `SENTRY_DSN` is set. Confirm the dashboard PII setting and retention, and whether the DSN will be set on o2switch. |
 | Server logs, IP | ⚠ o2switch. Confirm retention and what the logs are used for. |
 
-**Not collected** — nothing in the code or dependencies supports these: location,
+**Not collected.** Nothing in the code or dependencies supports these: location,
 contacts, health, financial info, browsing history, advertising identifiers,
 analytics. The app requests no runtime permission other than notifications.
 
@@ -173,7 +174,7 @@ Transparency does not apply.
 code. Clerk and Expo are the ones in the app; walk their SDK data disclosures before
 finalizing.
 
-### Selling, sharing, and processors — three different questions
+### Selling, sharing, and processors are three different questions
 
 Do not collapse these into "we don't share data":
 
@@ -188,7 +189,7 @@ Do not collapse these into "we don't share data":
 ### Encryption in transit
 
 ⚠ Do not answer "yes" globally on the strength of our own API. `app.config.ts`
-enforces HTTPS for the production base URL, which proves *our* endpoint — it says
+enforces HTTPS for the production base URL, which proves *our* endpoint. It says
 nothing about Clerk, Expo push, SMTP, Sentry, or any server-to-server hop. Confirm
 each before answering.
 
@@ -237,19 +238,19 @@ and what is retained is documented at https://weswapcards.com/delete-account
 ```
 
 The deletion paragraph deliberately points at the page rather than asserting
-"deletes the account and its data" — an absolute claim we would have to be able to
+"deletes the account and its data", an absolute claim we would have to be able to
 defend line by line. See the checklist below.
 
 ---
 
-## Deletion claims — verify before submitting
+## Deletion claims to verify before submitting
 
 Both stores expect account-associated data to be deleted, including content shared
 with other users, unless retention is legally required *and disclosed*.
 
 The backend and both migrations are deployed to production before submission, so
 the schema in the repo is what production enforces, and the FK actions below are
-the behavior — not a prediction:
+the behavior, not a prediction:
 
 | Item | Behavior | Source |
 | --- | --- | --- |
@@ -258,15 +259,15 @@ the behavior — not a prediction:
 | Card collection | `explorer_has_cards` cascades | schema |
 | Push tokens | `push_token` cascades | `migrations/push-token.sql` |
 | Blocks | `user_block` cascades, both directions | `migrations/moderation.sql` |
-| Reports **you filed** | `user_report.reporter_id` cascades — destroyed with the account | `migrations/moderation.sql:44` |
+| Reports **you filed** | `user_report.reporter_id` cascades, destroying them with the account | `migrations/moderation.sql:44` |
 | Reports **about you** | `reported_id` set null, `reported_name` snapshot **retained** | `migrations/moderation.sql:45` |
 | Conversations and messages | Cascade, once `account-deletion-cascade.sql` is applied in Stage 2 | `migrations/account-deletion-cascade.sql` |
 
 Still genuinely external, so still worth checking once:
 
-- **Profile photo** — held by Clerk, expected to go with the Clerk user.
-- **Sentry / server logs** — provider retention, and disclose whatever it is.
-- **The partial-failure window** — Clerk deletion succeeds, the backend purge
+- **Profile photo.** Held by Clerk, expected to go with the Clerk user.
+- **Sentry and server logs.** Provider retention, and disclose whatever it is.
+- **The partial-failure window.** Clerk deletion succeeds, the backend purge
   fails, and the `user.deleted` webhook has to recover it. Test it deliberately
   rather than assuming the backstop works.
 
@@ -283,7 +284,7 @@ confirm it still reads that way after any edit.
 ## Pre-submission link check
 
 ⚠ As of the last check, `/delete-account` is **not live**. The deployed bundle
-(`main.9590cce0.js`) contains no reference to it — the page exists only on the
+(`main.9590cce0.js`) contains no reference to it. The page exists only on the
 `native` branch and goes live with the backend deploy.
 
 All four pages return the same 967-byte shell to `curl`, because the site is a React
@@ -310,7 +311,7 @@ confirm it renders:
 Requirements:
 
 - **Email and password sign-in, no one-time codes.** ⚠ Verify on the production
-  Clerk instance — a default that prefers email codes will block a reviewer.
+  Clerk instance, where a default that prefers email codes will block a reviewer.
 - Both accounts hold a **card collection with doubles**, so search returns results
   rather than an empty state.
 - A **conversation already exists** between them, so report and block can be tried
@@ -337,10 +338,10 @@ Working decisions, carried into every field above:
 
 ⚠ Open review items, none of which are copy decisions:
 
-- `src/features/home/components/HeroCard.tsx:23` — user-facing "with WeWard".
-- `app/(auth)/register-user.tsx:207` — "Enter your WeWard username". Arguably
+- `src/features/home/components/HeroCard.tsx:23`, user-facing "with WeWard".
+- `app/(auth)/register-user.tsx:207`, "Enter your WeWard username". Arguably
   functionally necessary, unlike the hero copy.
-- `src/assets/images/illustrations/onboarding-*.png` and `LandingPageImage.png` —
+- `src/assets/images/illustrations/onboarding-*.png` and `LandingPageImage.png`,
   panda mascot artwork. The concern is cumulative rather than any single element.
 - Chapter imagery comes from **Pexels**;
   `back/app/services/imageIngestionService.js` stores an `image_credit` string that
@@ -350,7 +351,7 @@ Working decisions, carried into every field above:
 
 ## Submit configuration
 
-Not added to `eas.json` until the store records exist — an incomplete block fails
+Not added to `eas.json` until the store records exist. An incomplete block fails
 confusingly, and placeholders invite committing real identifiers later.
 
 `submit.production.ios` needs `appleId`, `ascAppId`, `appleTeamId`.

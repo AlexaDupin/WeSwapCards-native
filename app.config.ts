@@ -7,7 +7,7 @@ import type { ExpoConfig } from 'expo/config';
 
 type AppEnv = 'development' | 'preview' | 'production';
 
-// The full base URL the production build must point at, path included — two
+// The full base URL the production build must point at, path included. Two
 // builds can share a host and still differ in the API path that actually works.
 // Set this before the first production build; until then a production build
 // fails the check below rather than accepting whatever it is handed.
@@ -54,7 +54,11 @@ function appEnv(): AppEnv {
     return 'development';
   }
 
-  if (value === 'development' || value === 'preview' || value === 'production') {
+  if (
+    value === 'development' ||
+    value === 'preview' ||
+    value === 'production'
+  ) {
     return value;
   }
 
@@ -70,10 +74,11 @@ function validateEnvironment(): void {
 
   // eas-cli resolves this config for commands like `env:list`, with no .env
   // loaded and only the selected environment's variables injected. Missing
-  // values are not an error there — only a real build, or a configuration
+  // values are not an error there. Only a real build, or a configuration
   // claiming to be production, has to have them in hand. A local run without
   // .env is still caught at runtime by src/lib/axiosInstance.ts.
-  const mustBeComplete = process.env.EAS_BUILD === 'true' || env === 'production';
+  const mustBeComplete =
+    process.env.EAS_BUILD === 'true' || env === 'production';
   if (!mustBeComplete) return;
 
   if (!baseUrl) fail('EXPO_PUBLIC_BASE_URL is not set.');
