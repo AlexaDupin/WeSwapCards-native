@@ -200,6 +200,34 @@ and make sure they pass:
 
 ---
 
+## Voice rules (enforce in any generated prose)
+
+- No em dashes anywhere in prose
+- No "isn't X, it's Y" constructions
+
+---
+
+## Commit conventions
+
+Use Conventional Commits for every commit message. Format: `type(scope): subject`.
+
+Common types: `feat`, `fix`, `chore`, `docs`, `style`, `refactor`, `test`,
+`build`, `ci`.
+
+Scope is optional but encouraged when the change is localized (e.g.
+`feat(nav): ...`, `fix(hero): ...`).
+
+Subject is lowercase, imperative mood, no trailing period. Keep under ~70 chars.
+
+Examples:
+
+- `feat(nav): add shared nav component`
+- `fix(hero): correct mobile breakpoint for two-column layout`
+
+Automatically push when commit is approved.
+
+---
+
 ## Agent Guidelines
 
 When making changes:
