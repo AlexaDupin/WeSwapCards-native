@@ -50,22 +50,15 @@ launch, so treat it as a first iteration.
 ### Promotional text (170)
 
 ```
-Join a community that has arranged over 16,000 swaps. Log your cards and doubles,
-find the collectors who have what you are missing, and agree a swap by message.
+More than 1,000 collectors have joined WeSwapCards and completed over 16,000 swaps.
+Log your cards and doubles, find who has what you are missing, and agree a swap.
 ```
 
-⚠ **Confirm the 16,000 figure before publishing it.** The number is currently in the
-app's own onboarding copy (`src/features/onboarding/data/onboardingSlides.ts`), but
-nothing in this repo defines what it counts. Before it goes on a store page, settle:
-
-- what it measures — completed swaps, agreed swaps, conversations, or rows in a
-  table;
-- whether it comes from the existing web community rather than the native app;
-- whether you can reproduce the calculation if a reviewer asks.
-
-The wording above is deliberately phrased as a community total precisely so it does
-not imply 16,000 swaps happened through the native app. If the figure turns out to
-mean something narrower, change the sentence rather than the framing.
+Both figures are confirmed and describe the WeSwapCards community as a whole, not
+activity through the native app specifically — which is what the wording says. Keep
+that framing if the numbers are refreshed later. The same claim appears in the app's
+onboarding (`src/features/onboarding/data/onboardingSlides.ts`); update both
+together so a reviewer never sees two different totals.
 
 ### Description (4000)
 
@@ -252,24 +245,34 @@ defend line by line. See the checklist below.
 ## Deletion claims — verify before submitting
 
 Both stores expect account-associated data to be deleted, including content shared
-with other users, unless retention is legally required *and disclosed*. Confirm each
-against the production database, not the test stack:
+with other users, unless retention is legally required *and disclosed*.
 
-| Item | Expected | Status |
+The backend and both migrations are deployed to production before submission, so
+the schema in the repo is what production enforces, and the FK actions below are
+the behavior — not a prediction:
+
+| Item | Behavior | Source |
 | --- | --- | --- |
-| Clerk account | Deleted first, via `clerkClient.users.deleteUser` | ⚠ verify |
-| `explorer` row | `DELETE FROM explorer` | ⚠ verify |
-| Card collection | `explorer_has_cards` cascades | ⚠ verify |
-| Push tokens | `push_token` cascades | ⚠ verify |
-| Blocks | `user_block` cascades both directions | ⚠ verify |
-| Reports **you filed** | `user_report.reporter_id` cascades — they are destroyed | ⚠ verify, and note this is asymmetric |
-| Reports **about you** | `reported_id` set null, `reported_name` snapshot **retained** | disclosed on the deletion page |
-| Conversations and messages | **Cascade only after `account-deletion-cascade.sql`.** Production is still `SET NULL`, so content survives today | ⚠ blocker until applied |
-| Profile photo | Held by Clerk, removed with the Clerk user | ⚠ verify |
-| Sentry / server logs | Provider retention | ⚠ verify and disclose |
+| Clerk account | Deleted first, via `clerkClient.users.deleteUser` | `controllers/api/user.js` |
+| `explorer` row | `DELETE FROM explorer` | `models/user.js:52` |
+| Card collection | `explorer_has_cards` cascades | schema |
+| Push tokens | `push_token` cascades | `migrations/push-token.sql` |
+| Blocks | `user_block` cascades, both directions | `migrations/moderation.sql` |
+| Reports **you filed** | `user_report.reporter_id` cascades — destroyed with the account | `migrations/moderation.sql:44` |
+| Reports **about you** | `reported_id` set null, `reported_name` snapshot **retained** | `migrations/moderation.sql:45` |
+| Conversations and messages | Cascade, once `account-deletion-cascade.sql` is applied in Stage 2 | `migrations/account-deletion-cascade.sql` |
 
-Also verify the **partial-failure window**: Clerk deletion succeeds, the backend
-purge fails, and the `user.deleted` webhook has to recover it. Test it deliberately.
+Still genuinely external, so still worth checking once:
+
+- **Profile photo** — held by Clerk, expected to go with the Clerk user.
+- **Sentry / server logs** — provider retention, and disclose whatever it is.
+- **The partial-failure window** — Clerk deletion succeeds, the backend purge
+  fails, and the `user.deleted` webhook has to recover it. Test it deliberately
+  rather than assuming the backstop works.
+
+Note the asymmetry in the two report rows: it is deliberate (a user cannot erase
+reports against themselves by deleting their account) and the deletion page
+discloses the retained snapshot. Worth being able to explain if asked.
 
 ⚠ The Play deletion URL must let a **signed-out** user request deletion without
 reinstalling or opening the app. The page satisfies this through the email route;
