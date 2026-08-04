@@ -55,8 +55,7 @@ export function useCardsScreen({ explorerId }: Params) {
     getTokenRef.current = clerkGetToken;
   }, [clerkGetToken]);
   const getToken = useCallback(
-    (...args: Parameters<typeof clerkGetToken>) =>
-      getTokenRef.current(...args),
+    (...args: Parameters<typeof clerkGetToken>) => getTokenRef.current(...args),
     [],
   );
 

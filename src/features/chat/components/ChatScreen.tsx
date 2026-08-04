@@ -198,7 +198,8 @@ export default function ChatScreen({
       {/* Hide the status actions while typing only on small screens, where the
           row would otherwise crowd out the composer. Larger screens keep them
           visible so the common "thanks → Complete" flow stays one tap away. */}
-      {conversationStatus == null || (keyboardVisible && isSmallScreen) ? null : (
+      {conversationStatus == null ||
+      (keyboardVisible && isSmallScreen) ? null : (
         <ConversationStatusBar
           updatingStatus={updatingStatus}
           conversationStatus={conversationStatus}

@@ -31,11 +31,7 @@ export default function ChapterKebabMenu({
           disabled && styles.kebabDisabled,
         ]}
       >
-        <Ionicons
-          name="ellipsis-vertical"
-          size={18}
-          color="rgba(0,0,0,0.35)"
-        />
+        <Ionicons name="ellipsis-vertical" size={18} color="rgba(0,0,0,0.35)" />
       </Pressable>
 
       <Modal

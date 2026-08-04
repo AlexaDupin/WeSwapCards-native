@@ -28,7 +28,7 @@ export function getInitials(name: string): string {
   const firstWord = words[0] ?? '';
   const lastWord = words[words.length - 1] ?? '';
   const first = firstWord[0] ?? '';
-  const last = words.length > 1 ? lastWord[0] ?? '' : '';
+  const last = words.length > 1 ? (lastWord[0] ?? '') : '';
   const initials = (first + last).toUpperCase();
   return initials || '?';
 }
@@ -42,7 +42,8 @@ export function getAvatarSeed(
   id: string | number | null | undefined,
   name: string,
 ): string {
-  if (id !== null && id !== undefined && String(id).length > 0) return String(id);
+  if (id !== null && id !== undefined && String(id).length > 0)
+    return String(id);
   return name ?? '';
 }
 
