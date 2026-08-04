@@ -115,6 +115,9 @@ export default function DashboardScreen() {
               swapExplorerId: String(item.swap_explorer_id),
               creatorId: String(item.creator_id),
               recipientId: String(item.recipient_id),
+              ...(item.swap_explorer_image
+                ? { swapExplorerImage: item.swap_explorer_image }
+                : {}),
             },
           });
         }}

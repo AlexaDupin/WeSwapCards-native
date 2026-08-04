@@ -20,6 +20,7 @@ import type { ConversationStatus } from '@/src/features/chat/types/ConversationS
 
 import { useBlockUser } from '@/src/features/moderation/hooks/useBlockUser';
 import ChatModerationMenu from '@/src/features/moderation/components/ChatModerationMenu';
+import ConversationAvatar from '@/src/features/dashboard/components/ConversationAvatar';
 import MessageList, {
   type MessageListHandle,
 } from '@/src/features/chat/components/MessageList';
@@ -37,6 +38,7 @@ type ChatScreenProps = {
   cardName: string;
   swapName: string;
   swapExplorerId: number | null;
+  swapExplorerImage?: string | null;
   offeredCards?: { id: number; name: string }[];
   creatorId?: number | null;
   recipientId?: number | null;
@@ -47,6 +49,7 @@ export default function ChatScreen({
   cardName,
   swapName,
   swapExplorerId,
+  swapExplorerImage,
   offeredCards,
   creatorId,
   recipientId,
@@ -148,7 +151,14 @@ export default function ChatScreen({
           <Ionicons name="close" size={22} color="#111" />
         </TouchableOpacity>
 
-        <View style={{ flex: 1, marginHorizontal: 12 }}>
+        <ConversationAvatar
+          imageUrl={swapExplorerImage}
+          name={swapName}
+          seed={swapExplorerId}
+          size={36}
+        />
+
+        <View style={{ flex: 1, marginHorizontal: 10 }}>
           <Text numberOfLines={1} style={styles.headerTitle}>
             {swapName}
           </Text>

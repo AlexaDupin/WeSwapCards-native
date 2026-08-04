@@ -8,6 +8,7 @@ export default function ChatModalRoute() {
     cardName,
     swapName,
     swapExplorerId,
+    swapExplorerImage,
     offeredCards: offeredCardsParam,
     creatorId: creatorIdParam,
     recipientId: recipientIdParam,
@@ -16,6 +17,7 @@ export default function ChatModalRoute() {
     cardName?: string;
     swapName?: string;
     swapExplorerId?: string;
+    swapExplorerImage?: string;
     offeredCards?: string;
     creatorId?: string;
     recipientId?: string;
@@ -48,6 +50,7 @@ export default function ChatModalRoute() {
       cardName={cardName ?? ''}
       swapName={swapName ?? 'Chat'}
       swapExplorerId={swapExplorerId ? Number(swapExplorerId) : null}
+      swapExplorerImage={swapExplorerImage ?? null}
       creatorId={parsedCreatorId}
       recipientId={parsedRecipientId}
       {...(parsedOfferedCards !== undefined
