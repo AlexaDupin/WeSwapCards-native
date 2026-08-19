@@ -8,10 +8,8 @@ import {
   View,
 } from 'react-native';
 
+import { CHAPTER_IMAGE_PLACEHOLDER } from '@/src/features/chapters/constants';
 import type { SwapChapter } from '@/src/features/swap/types/SwapTypes';
-
-const PLACEHOLDER =
-  'https://res.cloudinary.com/dwf28prby/image/upload/v1760480793/placeholder.jpg';
 
 type Props = {
   chapters: SwapChapter[];
@@ -45,7 +43,7 @@ export default function LatestChaptersBanners({
           accessibilityLabel={`Open ${chapter.name}`}
         >
           <ImageBackground
-            source={{ uri: chapter.image_url || PLACEHOLDER }}
+            source={{ uri: chapter.image_url || CHAPTER_IMAGE_PLACEHOLDER }}
             style={styles.image}
             imageStyle={styles.imageInner}
             resizeMode="cover"
