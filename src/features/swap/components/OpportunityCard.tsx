@@ -74,7 +74,18 @@ export default function OpportunityCard({ opportunity, onContact }: Props) {
 
       {offeredNames.length > 0 ? (
         <View style={styles.offeredSection}>
-          <Text style={styles.offeredLabel}>You can offer</Text>
+          {/* Same icon-and-label row the chat screen uses for the cards to
+              exchange in return (see SwapOfferBar). */}
+          <View style={styles.offeredLabelRow}>
+            <Ionicons
+              name="swap-horizontal"
+              size={15}
+              color={Colors.primary}
+              accessibilityElementsHidden
+              importantForAccessibility="no-hide-descendants"
+            />
+            <Text style={styles.offeredLabel}>You can offer</Text>
+          </View>
           <View style={styles.tagsWrap}>
             {visibleNames.map((n) => (
               <View key={n} style={styles.tag}>
@@ -171,6 +182,12 @@ const styles = StyleSheet.create({
   offeredSection: {
     marginTop: 12,
   },
+  offeredLabelRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+    marginBottom: 12,
+  },
   offeredLabel: {
     fontFamily: Fonts.body.semibold,
     fontSize: 11,
@@ -178,7 +195,6 @@ const styles = StyleSheet.create({
     letterSpacing: 0.4,
     textTransform: 'uppercase',
     color: 'rgba(0,0,0,0.4)',
-    marginBottom: 8,
   },
   tagsWrap: {
     flexDirection: 'row',
