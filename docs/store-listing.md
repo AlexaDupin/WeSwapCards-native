@@ -7,8 +7,27 @@ both stores stay consistent and nothing is improvised into a web form.
 manager; see [Reviewer accounts](#reviewer-accounts).
 
 Items marked ⚠ need verifying against something outside this repo. Decisions that
-were open are now recorded inline with the date they were settled, so the
-reasoning survives rather than just the answer.
+were open are recorded inline with the date they were settled, so the reasoning
+survives rather than just the answer.
+
+### How to read the source tags
+
+Claims here are tagged by what actually backs them, because a store doc mixes
+things that were checked with things that were assumed, and the two look
+identical once written down.
+
+| Tag | Means |
+| --- | --- |
+| `[cmd]` | Verified by running something, named inline, on the date given |
+| `[repo]` | Read out of a file in this repo, cited by path |
+| `[web]` | Fetched from the vendor's own live documentation, dated and linked |
+| `[user]` | Confirmed by Alexa against a system I cannot reach, e.g. prod DB or a console |
+| `[model]` | General knowledge, **checked against nothing.** Treat as a lead |
+
+`[model]` is not a synonym for wrong, but it is the tag to re-check first, and
+nothing tagged `[model]` should be typed into a store form as fact.
+
+Untagged prose is reasoning and drafted copy rather than a factual claim.
 
 ---
 
@@ -22,10 +41,15 @@ submission today, roughly in the order it has to be dealt with:
 2. ⚠ **No reviewer accounts.** Still `PLACEHOLDER`, and email/password sign-in is
    unverified on the production Clerk instance.
    See [Reviewer accounts](#reviewer-accounts).
-3. Remaining ⚠ verifications that are answers rather than work: the Sentry DSN
-   and log retention questions in [App Privacy](#app-privacy-apple-and-data-safety-play),
-   and the partial-failure window on deletion.
-4. The store records themselves do not exist yet, which is why
+3. ⚠ **Both privacy category mappings are `[model]` guesses.** They have to be
+   walked against the real App Privacy and Data Safety forms before being
+   answered. See [App Privacy](#app-privacy-apple-and-data-safety-play).
+4. ⚠ **`moderation.sql` is unconfirmed in prod.** One query settles it, the same
+   shape as the cascade check.
+   See [Deletion claims](#deletion-claims-to-verify-before-submitting).
+5. Remaining ⚠ verifications that are answers rather than work: the Sentry DSN
+   and log retention questions, and the partial-failure window on deletion.
+6. The store records themselves do not exist yet, which is why
    `submit.production` in `eas.json` is still empty.
 
 Settled since the first draft: the account-deletion cascade is confirmed live in
@@ -82,7 +106,7 @@ More than 1,000 collectors have joined WeSwapCards and completed over 16,000 swa
 Log your cards and doubles, find who has what you are missing, and agree a swap.
 ```
 
-Both figures are confirmed and describe the WeSwapCards community as a whole, not
+`[user]` Both figures are confirmed by Alexa and describe the WeSwapCards community as a whole, not
 activity through the native app specifically, which is what the wording says. Keep
 that framing if the numbers are refreshed later. The app's onboarding
 (`src/features/onboarding/data/onboardingSlides.ts`) states only the swaps total,
@@ -153,6 +177,9 @@ have to read naturally in the prose rather than being listed.
 
 ### What the code actually stores
 
+`[repo]` throughout, except the three ⚠ rows, which name what is external about
+them. The evidence column is a table or a service, not an inference.
+
 | Data | Evidence |
 | --- | --- |
 | Email address | Clerk |
@@ -173,6 +200,12 @@ analytics. The app requests no runtime permission other than notifications.
 
 ### Apple category mapping
 
+⚠ `[model]` **This whole table is unverified.** The left column is `[repo]` fact,
+but every mapping on the right is my reading of Apple's taxonomy, checked against
+no current Apple documentation. Apple has reorganised these categories before.
+Walk the actual App Privacy questionnaire in App Store Connect and correct this
+table against the form's own wording before answering it.
+
 | Our data | Apple category |
 | --- | --- |
 | Email address | Contact Info → Email Address |
@@ -188,6 +221,9 @@ analytics. The app requests no runtime permission other than notifications.
 Transparency does not apply.
 
 ### Play category mapping
+
+⚠ `[model]` Same caveat as the Apple table above: the mappings are unverified
+against the current Data Safety form. Correct them against the console.
 
 | Our data | Play category |
 | --- | --- |
@@ -210,17 +246,22 @@ Do not collapse these into "we don't share data":
 - **Selling:** no. Nothing is sold, under either store's definition.
 - **Processors:** Clerk (authentication), Expo (push delivery), the SMTP provider
   (report alerts), Sentry (if enabled), o2switch (hosting).
-- **Store-defined "sharing":** Play generally excludes qualifying service providers
-  from its "shared" definition, so most of the above likely count as processing
-  rather than sharing. Apple still expects integrated third-party partners to be
-  accounted for in its answers. Answer each store's question in its own terms.
+- **Store-defined "sharing":** `[model]` Play generally excludes qualifying service
+  providers from its "shared" definition, so most of the above likely count as
+  processing rather than sharing. Apple still expects integrated third-party
+  partners to be accounted for in its answers. Answer each store's question in its
+  own terms, and check this against each form's current definition rather than
+  against this paragraph.
+
+The processor list itself is `[repo]`: those are the services the code talks to.
 
 ### Encryption in transit
 
-⚠ Do not answer "yes" globally on the strength of our own API. `app.config.ts`
-enforces HTTPS for the production base URL, which proves *our* endpoint. It says
-nothing about Clerk, Expo push, SMTP, Sentry, or any server-to-server hop. Confirm
-each before answering.
+⚠ Do not answer "yes" globally on the strength of our own API. `[repo]`
+`app.config.ts` enforces HTTPS for the production base URL, which proves *our*
+endpoint and nothing else. It says nothing about Clerk, Expo push, SMTP, Sentry,
+or any server-to-server hop, none of which have been checked. Confirm each before
+answering.
 
 ⚠ **Keep this section and the published Privacy Policy in step.** If Sentry is
 enabled on o2switch, the Privacy Policy must say so before these forms claim it.
@@ -277,11 +318,15 @@ defend line by line. See the checklist below.
 Both stores expect account-associated data to be deleted, including content shared
 with other users, unless retention is legally required *and disclosed*.
 
-✅ **Verified against o2switch production, 2026-08-19.**
-`account-deletion-cascade.sql` is applied. All four participant FKs report
-`confdeltype = 'c'`, so production cascades rather than nulling, and the schema
-in the repo is what production enforces. The FK actions below are the behavior,
-not a prediction.
+✅ `[user]` **Verified against o2switch production, 2026-08-19,** by Alexa running
+the query below directly on the prod DB. `account-deletion-cascade.sql` is
+applied: all four participant FKs report `confdeltype = 'c'`, so production
+cascades rather than nulling.
+
+This one is `[user]` and not `[cmd]` on purpose. I have no route to that
+database, and an earlier draft of this section asserted the opposite state as
+"re-verified" on the strength of a month-old note. The tag records who actually
+looked.
 
 This is worth re-running before each submission, since it is the one claim the
 stores and the public deletion page both depend on:
@@ -299,14 +344,21 @@ repeat it.
 
 | Item | Behavior | Source |
 | --- | --- | --- |
-| Clerk account | Deleted first, via `clerkClient.users.deleteUser` | `controllers/api/user.js` |
-| `explorer` row | `DELETE FROM explorer` | `models/user.js:52` |
-| Card collection | `explorer_has_cards` cascades | schema |
-| Push tokens | `push_token` cascades | `migrations/push-token.sql` |
-| Blocks | `user_block` cascades, both directions | `migrations/moderation.sql` |
-| Reports **you filed** | `user_report.reporter_id` cascades, destroying them with the account | `migrations/moderation.sql:44` |
-| Reports **about you** | `reported_id` set null, `reported_name` snapshot **retained** | `migrations/moderation.sql:45` |
-| Conversations and messages | Cascade, verified live in prod | `migrations/account-deletion-cascade.sql` |
+| Clerk account | Deleted first, via `clerkClient.users.deleteUser` | `[repo]` `controllers/api/user.js` |
+| `explorer` row | `DELETE FROM explorer` | `[repo]` `models/user.js:52` |
+| Card collection | `explorer_has_cards` cascades | `[repo]` schema |
+| Push tokens | `push_token` cascades | `[repo]` `migrations/push-token.sql` |
+| Blocks | `user_block` cascades, both directions | `[repo]` `migrations/moderation.sql` ⚠ |
+| Reports **you filed** | `user_report.reporter_id` cascades, destroying them with the account | `[repo]` `migrations/moderation.sql:44` ⚠ |
+| Reports **about you** | `reported_id` set null, `reported_name` snapshot **retained** | `[repo]` `migrations/moderation.sql:45` ⚠ |
+| Conversations and messages | Cascade | `[user]` prod query, 2026-08-19 |
+
+⚠ **The three `moderation.sql` rows describe the migration file, not production.**
+Nobody has run the equivalent `pg_constraint` check for `user_block` and
+`user_report`. The report and block features do work in the app, which is decent
+circumstantial evidence the migration went in, but it is not the same as looking.
+Extend the query above to those constraint names and settle it before the Data
+Safety answers lean on these rows.
 
 Still genuinely external, so still worth checking once:
 
@@ -328,9 +380,14 @@ confirm it still reads that way after any edit.
 
 ## Pre-submission link check
 
-✅ Resolved 2026-08-19. The `native` branch is merged into `main` (zero commits
-ahead) and the front end is deployed: the live bundle is now `main.b683065e.js`
-and contains all four routes, `/delete-account` included. All four return 200.
+✅ `[cmd]` Resolved 2026-08-19. `git rev-list --count main..native` returns 0, so
+the branch is merged, and `curl` confirms the deploy: the live bundle is
+`main.b683065e.js`, it contains all four route strings including
+`/delete-account`, and all four URLs return HTTP 200.
+
+`[cmd]` covers reachability and that the route exists in the bundle. It does not
+cover whether the pages *render* correctly, which is why the manual check below
+still stands.
 
 All four pages return the same small shell to `curl`, because the site is a React
 SPA that renders client-side. That is expected and fine for a reviewer using a
@@ -350,18 +407,35 @@ confirm it renders:
 ⚠ **None of this exists yet.** The repo has brand assets under
 `src/assets/images/brand/` (app icon, adaptive icon, splash) which the build
 consumes, but no store screenshots and no feature graphic. Both consoles block on
-these, so they are the largest remaining piece of work after the deletion blocker.
+these, so they are the largest remaining piece of work.
 
-| Asset | Store | Requirement |
-| --- | --- | --- |
-| iPhone 6.9" screenshots | Apple | 1290×2796, at least 1, up to 10 |
-| iPad screenshots | Apple | **Not needed.** `supportsTablet: false` in `app.config.ts` |
-| App icon 1024×1024 | Apple | Taken from the binary, no separate upload |
-| Phone screenshots | Play | 1080×1920 or similar 9:16, **at least 2**, up to 8 |
-| App icon 512×512 | Play | PNG, uploaded to the console |
-| Feature graphic 1024×500 | Play | Required, shown at the top of the listing |
+| Asset | Store | Requirement | Source |
+| --- | --- | --- | --- |
+| iPhone screenshots | Apple | One set, 6.9" **or** 6.5". 1 to 10 per set. `.png`/`.jpg`/`.jpeg`, **no alpha channel** | `[web]` |
+| 6.9" portrait size | Apple | Any of `1260×2736`, `1290×2796`, `1320×2868` | `[web]` |
+| 6.5" portrait size | Apple | `1284×2778` or `1242×2688` | `[web]` |
+| iPad screenshots | Apple | Not needed, `supportsTablet: false` | `[repo]` `app.config.ts:129` |
+| App icon 1024×1024 | Apple | Taken from the binary, no separate upload | `[model]` |
+| Phone screenshots | Play | **At least 2**, up to 8 per device type. Min edge 320px, max 3840px, and the long edge may not exceed twice the short one | `[web]` |
+| Play screenshot format | Play | JPEG or **24-bit PNG, no alpha**. Recommended: four at `1080×1920` (9:16 portrait) | `[web]` |
+| App icon 512×512 | Play | **32-bit PNG with alpha**, max 1024KB | `[web]` |
+| Feature graphic | Play | `1024×500`, JPEG or 24-bit PNG, no alpha. Required | `[web]` |
 
-Apple scales the 6.9" set down to the smaller sizes, so one set is enough.
+Apple specs fetched from
+[App Store Connect Help](https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/)
+on 2026-08-19; Play specs from
+[Play Console Help](https://support.google.com/googleplay/android-developer/answer/9866151)
+the same day. Re-fetch before submitting: Apple has changed which display size is
+the required one before, and this table is the kind of thing that silently ages.
+
+**One iPhone set is enough to submit.** 6.5" is required only if 6.9" is absent,
+and Apple scales down the cascade (6.9" → 6.5" → 6.3" → 6.1" → …) for any size
+you skip. Apple's own recommendation is to supply both 6.9" and 6.5" for quality,
+which is a judgement call about how the listing looks, not a submission blocker.
+
+Note the alpha-channel trap: Play wants the app icon **with** alpha and everything
+else **without**, and Apple rejects alpha in screenshots outright. Export
+accordingly.
 
 Shoot the same four screens for both stores, matching the review-notes flow:
 My cards, search results for a card, a conversation, and the home or dashboard
@@ -408,9 +482,9 @@ Working decisions, carried into every field above:
   disclaimer does not by itself create permission to use someone's mark. The web
   Terms already carry one (§7, "No Affiliation with Third-Party Platform").
 
-⚠ Open review items, none of which are copy decisions. Re-checked 2026-08-19,
-after the landing page was rebuilt on the web v2 design, which moved these lines
-and added one:
+⚠ Open review items, none of which are copy decisions. `[repo]` `grep` over
+`src/` and `app/` on 2026-08-19, after the landing page was rebuilt on the web v2
+design, which moved these lines and added one:
 
 - `src/features/home/components/Hero.tsx:44`, "Not affiliated with the official
   WeWard app." Names the platform, but in a disclaimer.
@@ -421,15 +495,15 @@ and added one:
   closest to plain referential use.
 - `app/(auth)/register-user.tsx:207`, "Enter your WeWard username". Arguably
   functionally necessary, unlike the marketing copy.
-
-The old `HeroCard.tsx` reference this list used to carry no longer exists. Net
-change since the last review: the two most prominent mentions now carry an
-explicit non-affiliation statement in the app itself, matching web Terms §7.
 - `src/assets/images/illustrations/onboarding-*.png` and `LandingPageImage.png`,
   panda mascot artwork. The concern is cumulative rather than any single element.
 - Chapter imagery comes from **Pexels**;
   `back/app/services/imageIngestionService.js` stores an `image_credit` string that
   the app never displays. Confirm the licence terms against actual use.
+
+The old `HeroCard.tsx` reference this list used to carry no longer exists. Net
+change since the last review: the two most prominent mentions now carry an
+explicit non-affiliation statement in the app itself, matching web Terms §7.
 
 ---
 
@@ -438,8 +512,12 @@ explicit non-affiliation statement in the app itself, matching web Terms §7.
 Not added to `eas.json` until the store records exist. An incomplete block fails
 confusingly, and placeholders invite committing real identifiers later.
 
-`submit.production.ios` needs `appleId`, `ascAppId`, `appleTeamId`.
-`submit.production.android` needs `serviceAccountKeyPath` and `track`.
+`[model]` `submit.production.ios` needs `appleId`, `ascAppId`, `appleTeamId`.
+`submit.production.android` needs `serviceAccountKeyPath` and `track`. Unverified
+against the current EAS submit schema — check `eas submit --help` or the Expo docs
+when you fill it in, rather than trusting this line.
 
-The Play service-account JSON is already covered by `.gitignore` and `.easignore`
-as `play-service-account*.json`. Keep it out of the repo.
+`[repo]` The Play service-account JSON is already covered by `.gitignore` and
+`.easignore` as `play-service-account*.json`. Keep it out of the repo.
+
+`[cmd]` `submit.production` in `eas.json` is currently `{}`, confirmed 2026-08-19.
