@@ -1,5 +1,6 @@
 import { Colors } from '@/src/constants/Colors';
 import { StyleSheet } from 'react-native';
+import { Fonts } from '@/src/constants/typography';
 
 const TRACK = '#eaeaea';
 
@@ -20,6 +21,7 @@ export const styles = StyleSheet.create({
   },
 
   pageTitle: {
+    fontFamily: Fonts.head.bold,
     fontSize: 20,
     fontWeight: '700',
   },
@@ -50,6 +52,7 @@ export const styles = StyleSheet.create({
   },
 
   chapterTitle: {
+    fontFamily: Fonts.head.bold,
     fontWeight: '700',
     fontSize: 22,
     color: Colors.textPrimary,
@@ -82,6 +85,7 @@ export const styles = StyleSheet.create({
   },
 
   progressLabel: {
+    fontFamily: Fonts.body.regular,
     fontSize: 12,
     opacity: 0.75,
   },
@@ -121,12 +125,14 @@ export const styles = StyleSheet.create({
   },
 
   cardNumber: {
+    fontFamily: Fonts.body.regular,
     fontSize: 13,
     fontWeight: '400',
     color: Colors.tileMissingText,
   },
 
   cardNumberOwned: {
+    fontFamily: Fonts.body.semibold,
     fontWeight: '600',
     color: '#2a2925',
   },
@@ -180,6 +186,7 @@ export const styles = StyleSheet.create({
   },
 
   modalTitle: {
+    fontFamily: Fonts.head.bold,
     fontSize: 14,
     fontWeight: '700',
     marginBottom: 6,
@@ -197,6 +204,7 @@ export const styles = StyleSheet.create({
   },
 
   modalItemText: {
+    fontFamily: Fonts.body.regular,
     fontSize: 16,
   },
 
@@ -207,6 +215,7 @@ export const styles = StyleSheet.create({
   },
 
   modalCancelText: {
+    fontFamily: Fonts.body.semibold,
     fontSize: 16,
     fontWeight: '600',
     opacity: 0.8,

@@ -10,6 +10,7 @@ import { useAuthLayout } from '@/src/features/auth/hooks/useAuthLayout';
 import { useSignUpSubmit } from '@/src/features/auth/hooks/useSignUpSubmit';
 import PasswordInput from '@/src/components/PasswordInput';
 import LegalConsentCheckbox from '@/src/features/auth/components/LegalConsentCheckbox';
+import { Fonts } from '@/src/constants/typography';
 
 export default function SignUpScreen() {
   const [emailAddress, setEmailAddress] = useState('');
@@ -98,6 +99,7 @@ export default function SignUpScreen() {
                     <Text
                       key={index}
                       style={{
+                        fontFamily: Fonts.body.semibold,
                         fontWeight: '600',
                         textDecorationLine: 'underline',
                       }}
@@ -199,7 +201,15 @@ export default function SignUpScreen() {
 
             <Link href="/sign-in" asChild>
               <TouchableOpacity>
-                <Text style={{ fontWeight: '600', fontSize: 16 }}>Sign in</Text>
+                <Text
+                  style={{
+                    fontFamily: Fonts.body.semibold,
+                    fontWeight: '600',
+                    fontSize: 16,
+                  }}
+                >
+                  Sign in
+                </Text>
               </TouchableOpacity>
             </Link>
           </View>

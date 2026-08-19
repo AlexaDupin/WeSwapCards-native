@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, TextInput, TouchableOpacity, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { Fonts } from '@/src/constants/typography';
 
 type Props = {
   value: string;
@@ -70,6 +71,7 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
   input: {
+    fontFamily: Fonts.body.regular,
     flex: 1,
     padding: 15,
     fontSize: 16,

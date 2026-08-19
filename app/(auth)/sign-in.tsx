@@ -9,6 +9,7 @@ import { styles } from '../../src/assets/styles/styles';
 import { useAuthLayout } from '@/src/features/auth/hooks/useAuthLayout';
 import { useSignInSubmit } from '@/src/features/auth/hooks/useSignInSubmit';
 import PasswordInput from '@/src/components/PasswordInput';
+import { Fonts } from '@/src/constants/typography';
 
 export default function SignInScreen() {
   const [emailAddress, setEmailAddress] = useState('');
@@ -114,7 +115,15 @@ export default function SignInScreen() {
 
             <Link href="/sign-up" asChild>
               <TouchableOpacity>
-                <Text style={{ fontWeight: '600', fontSize: 16 }}>Sign up</Text>
+                <Text
+                  style={{
+                    fontFamily: Fonts.body.semibold,
+                    fontWeight: '600',
+                    fontSize: 16,
+                  }}
+                >
+                  Sign up
+                </Text>
               </TouchableOpacity>
             </Link>
           </View>

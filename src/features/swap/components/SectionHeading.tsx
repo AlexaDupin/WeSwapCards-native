@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from 'react-native';
 
 import { Colors } from '@/src/constants/Colors';
+import { Fonts } from '@/src/constants/typography';
 
 type Props = {
   /** The section's label, e.g. "Opportunities for" or "Latest chapters". */
@@ -42,6 +43,7 @@ const styles = StyleSheet.create({
     paddingBottom: 12,
   },
   kicker: {
+    fontFamily: Fonts.head.semibold,
     fontSize: 11,
     fontWeight: '600',
     letterSpacing: 0.6,
@@ -50,11 +52,13 @@ const styles = StyleSheet.create({
     marginBottom: 3,
   },
   kickerStandalone: {
+    fontFamily: Fonts.head.regular,
     fontSize: 13,
     color: 'rgba(0,0,0,0.55)',
     marginBottom: 0,
   },
   title: {
+    fontFamily: Fonts.head.extrabold,
     fontSize: 18,
     fontWeight: '800',
     color: Colors.textPrimary,

@@ -13,6 +13,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 
 import { Colors } from '@/src/constants/Colors';
 import type { SwapChapter } from '@/src/features/swap/types/SwapTypes';
+import { Fonts } from '@/src/constants/typography';
 
 type Props = {
   chapters: SwapChapter[];
@@ -251,12 +252,14 @@ const styles = StyleSheet.create({
     opacity: 0.9,
   },
   selectorText: {
+    fontFamily: Fonts.body.semibold,
     fontSize: 14,
     fontWeight: '600',
     flex: 1,
     color: Colors.textPrimary,
   },
   selectorTextPlaceholder: {
+    fontFamily: Fonts.body.medium,
     color: 'rgba(0,0,0,0.45)',
     fontWeight: '500',
   },
@@ -278,6 +281,7 @@ const styles = StyleSheet.create({
     opacity: 0.7,
   },
   clearText: {
+    fontFamily: Fonts.body.bold,
     fontSize: 13,
     fontWeight: '700',
   },
@@ -325,11 +329,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.08)',
   },
   itemText: {
+    fontFamily: Fonts.body.semibold,
     fontSize: 14,
     fontWeight: '600',
     flex: 1,
   },
   itemTextSelected: {
+    fontFamily: Fonts.body.bold,
     fontWeight: '800',
   },
 });

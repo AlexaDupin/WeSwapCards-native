@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
 
 import ReportUserModal from '@/src/features/moderation/components/ReportUserModal';
+import { Fonts } from '@/src/constants/typography';
 
 type Props = {
   swapExplorerId: number;
@@ -113,6 +114,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.06)',
   },
   kebabText: {
+    fontFamily: Fonts.body.regular,
     fontSize: 20,
     lineHeight: 20,
   },
@@ -129,6 +131,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
   },
   modalTitle: {
+    fontFamily: Fonts.head.bold,
     fontSize: 14,
     fontWeight: '700',
     marginBottom: 6,
@@ -143,6 +146,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.06)',
   },
   modalItemText: {
+    fontFamily: Fonts.body.regular,
     fontSize: 16,
   },
   blockText: {
@@ -154,6 +158,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalCancelText: {
+    fontFamily: Fonts.body.semibold,
     fontSize: 16,
     fontWeight: '600',
     opacity: 0.8,

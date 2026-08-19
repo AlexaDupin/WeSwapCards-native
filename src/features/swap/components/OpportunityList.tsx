@@ -10,6 +10,7 @@ import {
 import OpportunityCard from '@/src/features/swap/components/OpportunityCard';
 import SectionHeading from '@/src/features/swap/components/SectionHeading';
 import type { SwapOpportunityItem } from '@/src/features/swap/types/SwapTypes';
+import { Fonts } from '@/src/constants/typography';
 
 type Props = {
   selectedCardId: number | null;
@@ -144,10 +145,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   emptyIcon: {
+    fontFamily: Fonts.body.regular,
     fontSize: 36,
     marginBottom: 12,
   },
   emptyTitle: {
+    fontFamily: Fonts.head.bold,
     fontSize: 16,
     fontWeight: '700',
     color: 'rgba(0,0,0,0.7)',
@@ -155,12 +158,14 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   emptySubtitle: {
+    fontFamily: Fonts.body.regular,
     fontSize: 13,
     color: 'rgba(0,0,0,0.5)',
     textAlign: 'center',
     lineHeight: 18,
   },
   emptyCardName: {
+    fontFamily: Fonts.head.bold,
     fontWeight: '700',
     color: 'rgba(0,0,0,0.7)',
   },

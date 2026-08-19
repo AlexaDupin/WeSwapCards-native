@@ -7,6 +7,7 @@ import {
   getAvatarSeed,
   getInitials,
 } from '@/src/features/dashboard/utils/avatar';
+import { Fonts } from '@/src/constants/typography';
 
 type Props = {
   imageUrl?: string | null | undefined;
@@ -75,6 +76,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   initials: {
+    fontFamily: Fonts.body.semibold,
     fontWeight: '600',
   },
 });

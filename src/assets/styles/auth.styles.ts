@@ -1,6 +1,7 @@
 // styles/auth.styles.js
 import { Colors } from '@/src/constants/Colors';
 import { StyleSheet } from 'react-native';
+import { Fonts } from '@/src/constants/typography';
 
 export const authStyles = StyleSheet.create({
   container: {
@@ -9,6 +10,7 @@ export const authStyles = StyleSheet.create({
     justifyContent: 'center',
   },
   title: {
+    fontFamily: Fonts.head.semibold,
     fontSize: 32,
     fontWeight: '600',
     marginVertical: 15,
@@ -19,10 +21,12 @@ export const authStyles = StyleSheet.create({
     marginBottom: 50,
   },
   subtitleText: {
+    fontFamily: Fonts.body.regular,
     fontSize: 20,
     textAlign: 'center',
   },
   input: {
+    fontFamily: Fonts.body.regular,
     borderRadius: 12,
     padding: 15,
     marginBottom: 26,
@@ -38,6 +42,7 @@ export const authStyles = StyleSheet.create({
     marginBottom: 8,
   },
   buttonText: {
+    fontFamily: Fonts.head.semibold,
     color: '#FFF',
     fontSize: 18,
     fontWeight: '600',
@@ -49,6 +54,7 @@ export const authStyles = StyleSheet.create({
     gap: 8,
   },
   footerText: {
+    fontFamily: Fonts.body.regular,
     fontSize: 16,
   },
 
@@ -96,6 +102,7 @@ export const authStyles = StyleSheet.create({
     width: '100%',
   },
   errorText: {
+    fontFamily: Fonts.body.regular,
     marginLeft: 8,
     flex: 1,
     fontSize: 14,
@@ -112,6 +119,7 @@ export const authCompactStyles = StyleSheet.create({
     paddingVertical: 12,
   },
   title: {
+    fontFamily: Fonts.head.regular,
     fontSize: 28,
     marginVertical: 6,
     marginBottom: 8,
@@ -120,6 +128,7 @@ export const authCompactStyles = StyleSheet.create({
     marginBottom: 16,
   },
   subtitleText: {
+    fontFamily: Fonts.body.regular,
     fontSize: 17,
   },
   input: {

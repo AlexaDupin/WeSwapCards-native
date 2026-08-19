@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 
 import { Colors } from '@/src/constants/Colors';
+import { Fonts } from '@/src/constants/typography';
 
 const PLACEHOLDER =
   'https://res.cloudinary.com/dwf28prby/image/upload/v1760480793/placeholder.jpg';
@@ -142,6 +143,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.22)',
   },
   label: {
+    fontFamily: Fonts.body.semibold,
     position: 'absolute',
     left: 8,
     right: 8,

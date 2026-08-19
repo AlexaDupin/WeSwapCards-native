@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Pressable, ScrollView, StyleSheet, Text, View } from 'react-native';
 import { Colors } from '@/src/constants/Colors';
+import { Fonts } from '@/src/constants/typography';
 
 type Props = {
   onSelect: (letter: string) => void;
@@ -88,6 +89,7 @@ const styles = {
     borderWidth: 0,
   },
   pillText: {
+    fontFamily: Fonts.body.semibold,
     fontSize: 12,
     fontWeight: '600',
     color: Colors.textPrimary,

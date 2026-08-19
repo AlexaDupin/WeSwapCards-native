@@ -4,6 +4,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 
 import { Colors } from '@/src/constants/Colors';
 import type { SwapOpportunityItem } from '@/src/features/swap/types/SwapTypes';
+import { Fonts } from '@/src/constants/typography';
 
 type Props = {
   opportunity: SwapOpportunityItem;
@@ -135,6 +136,7 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   name: {
+    fontFamily: Fonts.head.extrabold,
     fontSize: 18,
     fontWeight: '800',
     flex: 1,
@@ -161,6 +163,7 @@ const styles = StyleSheet.create({
     elevation: 4,
   },
   tooltipText: {
+    fontFamily: Fonts.body.semibold,
     color: '#fff',
     fontSize: 12,
     fontWeight: '600',
@@ -169,6 +172,7 @@ const styles = StyleSheet.create({
     marginTop: 12,
   },
   offeredLabel: {
+    fontFamily: Fonts.body.semibold,
     fontSize: 11,
     fontWeight: '600',
     letterSpacing: 0.4,
@@ -189,6 +193,7 @@ const styles = StyleSheet.create({
     maxWidth: '100%',
   },
   tagText: {
+    fontFamily: Fonts.body.semibold,
     fontSize: 13,
     fontWeight: '600',
     color: 'rgba(0,0,0,0.7)',
@@ -198,11 +203,13 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   expandToggleText: {
+    fontFamily: Fonts.body.bold,
     fontSize: 13,
     fontWeight: '700',
     color: Colors.primary,
   },
   noOffersText: {
+    fontFamily: Fonts.body.regular,
     marginTop: 10,
     fontSize: 12,
     color: 'rgba(0,0,0,0.45)',
@@ -219,6 +226,7 @@ const styles = StyleSheet.create({
   },
   buttonPressed: { opacity: 0.8 },
   buttonText: {
+    fontFamily: Fonts.head.bold,
     color: 'white',
     fontSize: 14,
     fontWeight: '700',

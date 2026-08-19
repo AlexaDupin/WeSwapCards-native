@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { Fonts } from '@/src/constants/typography';
 
 export const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: 'white' },
@@ -14,14 +15,24 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
 
-  headerTitle: { fontSize: 22, fontWeight: '700', marginBottom: 4 },
-  headerSubtitle: { fontSize: 17, color: '#667085' },
+  headerTitle: {
+    fontFamily: Fonts.head.bold,
+    fontSize: 22,
+    fontWeight: '700',
+    marginBottom: 4,
+  },
+  headerSubtitle: {
+    fontFamily: Fonts.body.regular,
+    fontSize: 17,
+    color: '#667085',
+  },
 
   body: { flex: 1 },
 
   error: { padding: 16, color: 'red' },
 
   blockedHint: {
+    fontFamily: Fonts.body.regular,
     paddingHorizontal: 16,
     paddingVertical: 6,
     fontSize: 13,
@@ -42,16 +53,28 @@ export const styles = StyleSheet.create({
   bubbleMine: { alignSelf: 'flex-end', backgroundColor: '#0A84FF' },
   bubbleOther: { alignSelf: 'flex-start', backgroundColor: '#E9EEF3' },
 
-  bubbleTextMine: { color: 'white', fontSize: 17, lineHeight: 22 },
-  bubbleTextOther: { color: '#111', fontSize: 17, lineHeight: 22 },
+  bubbleTextMine: {
+    fontFamily: Fonts.body.regular,
+    color: 'white',
+    fontSize: 17,
+    lineHeight: 22,
+  },
+  bubbleTextOther: {
+    fontFamily: Fonts.body.regular,
+    color: '#111',
+    fontSize: 17,
+    lineHeight: 22,
+  },
 
   timestampMine: {
+    fontFamily: Fonts.body.regular,
     marginTop: 6,
     fontSize: 11,
     color: 'rgba(255,255,255,0.85)',
     alignSelf: 'flex-end',
   },
   timestampOther: {
+    fontFamily: Fonts.body.regular,
     marginTop: 6,
     fontSize: 11,
     color: '#667085',
@@ -68,6 +91,7 @@ export const styles = StyleSheet.create({
   },
 
   input: {
+    fontFamily: Fonts.body.regular,
     flex: 1,
     minHeight: 42,
     paddingHorizontal: 14,
@@ -112,6 +136,7 @@ export const styles = StyleSheet.create({
   },
 
   statusButtonText: {
+    fontFamily: Fonts.head.bold,
     fontSize: 14,
     fontWeight: '700',
     color: 'white',

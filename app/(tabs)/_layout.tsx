@@ -12,6 +12,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import PageLoader from '@/src/components/PageLoader';
 import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
 import { Colors } from '@/src/constants/Colors';
+import { Fonts } from '@/src/constants/typography';
 
 type TabIconProps = {
   name: keyof typeof Ionicons.glyphMap;
@@ -72,7 +73,12 @@ const TabsLayout = () => {
       >
         <View style={{ maxWidth: 320, width: '100%', gap: 16 }}>
           <Text
-            style={{ fontSize: 18, fontWeight: '600', textAlign: 'center' }}
+            style={{
+              fontFamily: Fonts.head.semibold,
+              fontSize: 18,
+              fontWeight: '600',
+              textAlign: 'center',
+            }}
           >
             Something went wrong
           </Text>
@@ -90,7 +96,15 @@ const TabsLayout = () => {
               alignItems: 'center',
             }}
           >
-            <Text style={{ color: '#fff', fontWeight: '600' }}>Retry</Text>
+            <Text
+              style={{
+                fontFamily: Fonts.head.semibold,
+                color: '#fff',
+                fontWeight: '600',
+              }}
+            >
+              Retry
+            </Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -119,7 +133,12 @@ const TabsLayout = () => {
         tabBarInactiveTintColor: '#6C757D',
         tabBarLabel: ({ focused, color, children }) => (
           <Text
-            style={{ fontSize: 11, fontWeight: focused ? '700' : '400', color }}
+            style={{
+              fontFamily: focused ? Fonts.head.bold : Fonts.head.regular,
+              fontSize: 11,
+              fontWeight: focused ? '700' : '400',
+              color,
+            }}
           >
             {children}
           </Text>

@@ -10,6 +10,7 @@ import {
 
 import { CHAPTER_IMAGE_PLACEHOLDER } from '@/src/features/chapters/constants';
 import type { SwapChapter } from '@/src/features/swap/types/SwapTypes';
+import { Fonts } from '@/src/constants/typography';
 
 type Props = {
   chapters: SwapChapter[];
@@ -97,6 +98,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.35)',
   },
   title: {
+    fontFamily: Fonts.head.bold,
     color: '#fff',
     fontSize: 16,
     fontWeight: '700',

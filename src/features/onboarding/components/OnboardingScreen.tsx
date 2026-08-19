@@ -19,6 +19,7 @@ import {
   type OnboardingSlide,
 } from '@/src/features/onboarding/data/onboardingSlides';
 import { useOnboardingCarousel } from '@/src/features/onboarding/hooks/useOnboardingCarousel';
+import { Fonts } from '@/src/constants/typography';
 
 const OnboardingScreen = () => {
   const { width } = useWindowDimensions();
@@ -123,6 +124,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   skip: {
+    fontFamily: Fonts.body.regular,
     fontSize: 16,
     color: Colors.onboardingMuted,
   },
@@ -143,12 +145,14 @@ const styles = StyleSheet.create({
     height: 150,
   },
   headline: {
+    fontFamily: Fonts.head.bold,
     fontSize: 28,
     fontWeight: '700',
     textAlign: 'center',
     color: Colors.onboardingText,
   },
   body: {
+    fontFamily: Fonts.body.regular,
     marginTop: 12,
     fontSize: 16,
     lineHeight: 24,
@@ -190,6 +194,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   ctaLabel: {
+    fontFamily: Fonts.head.bold,
     color: '#fff',
     fontSize: 18,
     fontWeight: '700',

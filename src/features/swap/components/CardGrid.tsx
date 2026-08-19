@@ -4,6 +4,7 @@ import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Colors } from '@/src/constants/Colors';
 
 import type { SwapCard } from '@/src/features/swap/types/SwapTypes';
+import { Fonts } from '@/src/constants/typography';
 
 type Props = {
   cards: SwapCard[];
@@ -103,6 +104,7 @@ const styles = StyleSheet.create({
     opacity: 0.9,
   },
   selectorText: {
+    fontFamily: Fonts.body.bold,
     fontSize: 13,
     fontWeight: '800',
     color: 'rgba(0,0,0,0.75)',

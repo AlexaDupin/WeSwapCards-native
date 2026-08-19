@@ -17,6 +17,7 @@ import {
   cardsHelpItems,
   type CardsHelpItem,
 } from '@/src/features/cards/data/cardsHelpItems';
+import { Fonts } from '@/src/constants/typography';
 
 type Props = {
   visible: boolean;
@@ -124,6 +125,7 @@ const styles = StyleSheet.create({
     maxHeight: '85%',
   },
   title: {
+    fontFamily: Fonts.head.bold,
     fontSize: 16,
     fontWeight: '700',
     marginBottom: 12,
@@ -142,6 +144,7 @@ const styles = StyleSheet.create({
     gap: 2,
   },
   modifierText: {
+    fontFamily: Fonts.body.semibold,
     fontSize: 12,
     fontWeight: '600',
     color: '#555',
@@ -150,11 +153,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   captionTitle: {
+    fontFamily: Fonts.body.semibold,
     fontSize: 15,
     fontWeight: '600',
     marginBottom: 2,
   },
   captionText: {
+    fontFamily: Fonts.body.regular,
     fontSize: 13,
     color: '#555',
     lineHeight: 18,
@@ -165,6 +170,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   closeText: {
+    fontFamily: Fonts.body.semibold,
     fontSize: 15,
     fontWeight: '600',
     opacity: 0.8,

@@ -3,6 +3,7 @@ import { Alert, Linking, Pressable, StyleSheet, Text } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 import { Colors } from '@/src/constants/Colors';
+import { Fonts } from '@/src/constants/typography';
 
 const TERMS_URL = 'https://weswapcards.com/terms';
 const PRIVACY_URL = 'https://weswapcards.com/privacy';
@@ -70,12 +71,14 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   label: {
+    fontFamily: Fonts.body.regular,
     flex: 1,
     fontSize: 14,
     color: '#333',
     lineHeight: 20,
   },
   link: {
+    fontFamily: Fonts.body.semibold,
     fontWeight: '600',
     textDecorationLine: 'underline',
   },

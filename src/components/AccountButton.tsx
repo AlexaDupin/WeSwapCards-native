@@ -22,6 +22,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNotifications } from '@/src/features/notifications/NotificationsProvider';
 import { useDeleteAccount } from '@/src/features/auth/hooks/useDeleteAccount';
 import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
+import { Fonts } from '@/src/constants/typography';
 
 export function AccountButton() {
   const { user } = useUser();
@@ -290,11 +291,13 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   headerName: {
+    fontFamily: Fonts.head.bold,
     fontSize: 16,
     fontWeight: '700',
     color: NEUTRAL,
   },
   headerEmail: {
+    fontFamily: Fonts.body.regular,
     marginTop: 2,
     fontSize: 13,
     color: '#666',
@@ -320,6 +323,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 0,
   },
   deleteText: {
+    fontFamily: Fonts.body.regular,
     fontSize: 16,
     color: DANGER,
   },
@@ -329,6 +333,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   toggleHint: {
+    fontFamily: Fonts.body.regular,
     marginTop: 8,
     fontSize: 13,
     color: Colors.accent,
@@ -338,14 +343,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   signOutText: {
+    fontFamily: Fonts.body.regular,
     fontSize: 16,
     color: NEUTRAL,
   },
   linkItemText: {
+    fontFamily: Fonts.body.regular,
     fontSize: 16,
     color: NEUTRAL,
   },
   linkItemSubtext: {
+    fontFamily: Fonts.body.regular,
     marginTop: 2,
     fontSize: 13,
     color: '#666',
@@ -354,6 +362,7 @@ const styles = StyleSheet.create({
     opacity: 0.5,
   },
   cancelText: {
+    fontFamily: Fonts.body.semibold,
     fontSize: 16,
     fontWeight: '600',
     color: '#111',

@@ -4,6 +4,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { Colors } from '@/src/constants/Colors';
 import { tips, type TipKey } from '@/src/features/tips/data/tips';
 import { useTip } from '@/src/features/tips/hooks/useTip';
+import { Fonts } from '@/src/constants/typography';
 
 type Props = {
   tipKey: TipKey;
@@ -76,12 +77,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   title: {
+    fontFamily: Fonts.head.bold,
     fontSize: 14,
     fontWeight: '700',
     color: '#fff',
     marginBottom: 3,
   },
   body: {
+    fontFamily: Fonts.body.regular,
     fontSize: 13,
     lineHeight: 18,
     color: 'rgba(255,255,255,0.9)',

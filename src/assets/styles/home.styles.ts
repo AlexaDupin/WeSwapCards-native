@@ -1,6 +1,7 @@
 import { StyleSheet } from 'react-native';
 
 import { Colors } from '@/src/constants/Colors';
+import { Fonts } from '@/src/constants/typography';
 
 // Spacing scale — keep the page on a consistent vertical rhythm.
 const S = { xs: 8, sm: 12, md: 16, lg: 24, xl: 32, xxl: 48, huge: 64 };
@@ -24,6 +25,8 @@ export const homeStyles = StyleSheet.create({
   brandRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   brandIcon: { width: 36, height: 36 },
   brandName: {
+    // The one place Plus Jakarta Sans is used, matching the web's wordmark.
+    fontFamily: Fonts.wordmark,
     fontSize: 21,
     fontWeight: '800',
     letterSpacing: -0.2,
@@ -63,6 +66,7 @@ export const homeStyles = StyleSheet.create({
     marginTop: 6,
   },
   pillText: {
+    fontFamily: Fonts.body.bold,
     flexShrink: 1,
     fontSize: 13,
     lineHeight: 19,
@@ -71,6 +75,7 @@ export const homeStyles = StyleSheet.create({
   },
 
   heroTitle: {
+    fontFamily: Fonts.head.bold,
     fontSize: 38,
     lineHeight: 41,
     fontWeight: '700',
@@ -81,6 +86,7 @@ export const homeStyles = StyleSheet.create({
   heroTitleAccent: { color: Colors.primary },
 
   heroLede: {
+    fontFamily: Fonts.body.regular,
     fontSize: 17,
     lineHeight: 27,
     color: Colors.inkMuted,
@@ -98,6 +104,7 @@ export const homeStyles = StyleSheet.create({
     elevation: 2,
   },
   primaryCtaLabel: {
+    fontFamily: Fonts.head.bold,
     color: '#fff',
     fontSize: 17,
     fontWeight: '700',
@@ -118,12 +125,14 @@ export const homeStyles = StyleSheet.create({
     paddingHorizontal: S.xs,
   },
   quietLinkText: {
+    fontFamily: Fonts.body.semibold,
     fontSize: 17,
     fontWeight: '600',
     color: Colors.ink,
   },
 
   heroFineprint: {
+    fontFamily: Fonts.body.regular,
     marginTop: S.xs,
     fontSize: 13,
     lineHeight: 19,
@@ -131,12 +140,17 @@ export const homeStyles = StyleSheet.create({
   },
 
   signInLine: {
+    fontFamily: Fonts.body.regular,
     textAlign: 'center',
     marginTop: S.xl,
     fontSize: 15,
     color: Colors.inkMuted,
   },
-  signInLink: { fontWeight: '800', color: Colors.accentLink },
+  signInLink: {
+    fontFamily: Fonts.body.bold,
+    fontWeight: '800',
+    color: Colors.accentLink,
+  },
 
   // --- Hero card stack -----------------------------------------------------
 
@@ -179,6 +193,7 @@ export const homeStyles = StyleSheet.create({
   },
   heroCardArtImage: { width: '100%', height: '100%' },
   heroCardLabel: {
+    fontFamily: Fonts.body.semibold,
     marginTop: 10,
     minHeight: 18,
     fontSize: 15,
@@ -201,6 +216,7 @@ export const homeStyles = StyleSheet.create({
     marginBottom: S.lg + 4,
   },
   eyebrow: {
+    fontFamily: Fonts.head.bold,
     fontSize: 13,
     fontWeight: '700',
     letterSpacing: 1.5,
@@ -209,6 +225,7 @@ export const homeStyles = StyleSheet.create({
     marginBottom: 10,
   },
   sectionTitle: {
+    fontFamily: Fonts.head.bold,
     fontSize: 26,
     lineHeight: 30,
     fontWeight: '700',
@@ -216,6 +233,7 @@ export const homeStyles = StyleSheet.create({
     color: Colors.ink,
   },
   sectionLink: {
+    fontFamily: Fonts.body.bold,
     marginTop: 12,
     fontSize: 16,
     fontWeight: '700',
@@ -243,12 +261,14 @@ export const homeStyles = StyleSheet.create({
   },
   stepBadgeTeal: { backgroundColor: Colors.tealSoft },
   stepBadgeText: {
+    fontFamily: Fonts.head.bold,
     fontSize: 15,
     fontWeight: '700',
     color: Colors.accentHover,
   },
   stepBadgeTextTeal: { color: Colors.tealDeep },
   stepTitle: {
+    fontFamily: Fonts.head.semibold,
     fontSize: 19,
     lineHeight: 26,
     fontWeight: '600',
@@ -256,6 +276,7 @@ export const homeStyles = StyleSheet.create({
     marginBottom: S.xs,
   },
   stepText: {
+    fontFamily: Fonts.body.regular,
     fontSize: 15,
     lineHeight: 23,
     color: Colors.inkMuted,
@@ -287,6 +308,7 @@ export const homeStyles = StyleSheet.create({
     padding: 28,
   },
   ctaCardTitle: {
+    fontFamily: Fonts.head.bold,
     fontSize: 23,
     lineHeight: 30,
     fontWeight: '700',
@@ -306,6 +328,7 @@ export const homeStyles = StyleSheet.create({
   // then the card names as the only content-weight text in the section. Same
   // kicker shape the Swap screen's SectionHeading already uses.
   carouselTitle: {
+    fontFamily: Fonts.head.bold,
     fontSize: 12,
     lineHeight: 16,
     fontWeight: '700',
@@ -318,6 +341,7 @@ export const homeStyles = StyleSheet.create({
     paddingVertical: S.md,
   },
   carouselError: {
+    fontFamily: Fonts.body.regular,
     fontSize: 15,
     color: Colors.inkMuted,
   },
@@ -348,6 +372,7 @@ export const homeStyles = StyleSheet.create({
     paddingBottom: 14,
   },
   chapterCardTitle: {
+    fontFamily: Fonts.head.bold,
     fontSize: 17,
     lineHeight: 22,
     fontWeight: '700',
@@ -364,6 +389,7 @@ export const homeStyles = StyleSheet.create({
     marginTop: S.md,
   },
   catalogueTitle: {
+    fontFamily: Fonts.head.semibold,
     fontSize: 22,
     lineHeight: 28,
     fontWeight: '600',
@@ -372,6 +398,7 @@ export const homeStyles = StyleSheet.create({
     marginBottom: 10,
   },
   catalogueText: {
+    fontFamily: Fonts.body.regular,
     fontSize: 15,
     lineHeight: 23,
     color: Colors.inkMuted,
@@ -386,6 +413,7 @@ export const homeStyles = StyleSheet.create({
     paddingHorizontal: 22,
   },
   outlineCtaLabel: {
+    fontFamily: Fonts.head.bold,
     fontSize: 15,
     fontWeight: '700',
     color: Colors.ink,
@@ -408,6 +436,7 @@ export const homeStyles = StyleSheet.create({
     gap: 6,
   },
   footerLink: {
+    fontFamily: Fonts.body.semibold,
     fontSize: 13,
     fontWeight: '600',
     color: Colors.inkMuted,
@@ -415,11 +444,13 @@ export const homeStyles = StyleSheet.create({
     paddingHorizontal: 2,
   },
   footerSeparator: {
+    fontFamily: Fonts.body.regular,
     fontSize: 13,
     color: Colors.inkFaint,
     opacity: 0.6,
   },
   footerDisclaimer: {
+    fontFamily: Fonts.body.regular,
     fontSize: 12,
     lineHeight: 18,
     textAlign: 'center',

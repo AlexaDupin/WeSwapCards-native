@@ -21,6 +21,7 @@ import {
 } from '@/src/features/moderation/data/reportReasons';
 import { useReportUser } from '@/src/features/moderation/hooks/useReportUser';
 import type { ReportReason } from '@/src/features/moderation/types/ReportReason';
+import { Fonts } from '@/src/constants/typography';
 
 type Props = {
   visible: boolean;
@@ -172,11 +173,13 @@ const styles = StyleSheet.create({
     maxHeight: '85%',
   },
   title: {
+    fontFamily: Fonts.head.bold,
     fontSize: 16,
     fontWeight: '700',
     marginBottom: 6,
   },
   description: {
+    fontFamily: Fonts.body.regular,
     fontSize: 13,
     color: '#555',
     marginBottom: 12,
@@ -194,10 +197,12 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.06)',
   },
   reasonText: {
+    fontFamily: Fonts.body.regular,
     fontSize: 15,
     color: '#111',
   },
   commentInput: {
+    fontFamily: Fonts.body.regular,
     marginTop: 10,
     minHeight: 70,
     borderWidth: 1,
@@ -208,6 +213,7 @@ const styles = StyleSheet.create({
     textAlignVertical: 'top',
   },
   error: {
+    fontFamily: Fonts.body.regular,
     marginTop: 8,
     color: '#C0392B',
     fontSize: 13,
@@ -223,6 +229,7 @@ const styles = StyleSheet.create({
     opacity: 0.4,
   },
   submitText: {
+    fontFamily: Fonts.body.semibold,
     color: '#fff',
     fontSize: 15,
     fontWeight: '600',
@@ -233,6 +240,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   cancelText: {
+    fontFamily: Fonts.body.semibold,
     fontSize: 15,
     fontWeight: '600',
     opacity: 0.8,

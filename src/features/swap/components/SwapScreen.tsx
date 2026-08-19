@@ -19,6 +19,7 @@ import OpportunityList from '@/src/features/swap/components/OpportunityList';
 import TipBubble from '@/src/features/tips/components/TipBubble';
 import { useSwap } from '@/src/features/swap/hooks/useSwap';
 import type { SwapContactPayload } from '@/src/features/swap/types/SwapTypes';
+import { Fonts } from '@/src/constants/typography';
 
 export default function SwapScreen() {
   const router = useRouter();
@@ -208,6 +209,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   title: {
+    fontFamily: Fonts.head.bold,
     fontSize: 20,
     fontWeight: '700',
   },

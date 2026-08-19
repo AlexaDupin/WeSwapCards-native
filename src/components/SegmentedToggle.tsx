@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 
 import { Colors } from '@/src/constants/Colors';
+import { Fonts } from '@/src/constants/typography';
 
 type Option<T extends string> = { value: T; label: string };
 
@@ -97,6 +98,7 @@ const styles = StyleSheet.create({
     transform: [{ scale: 0.98 }],
   },
   text: {
+    fontFamily: Fonts.body.bold,
     fontSize: 13,
     fontWeight: '700',
   },

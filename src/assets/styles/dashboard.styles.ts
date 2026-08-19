@@ -1,9 +1,11 @@
 import { StyleSheet } from 'react-native';
 
 import { Colors } from '@/src/constants/Colors';
+import { Fonts } from '@/src/constants/typography';
 
 export const styles = StyleSheet.create({
   searchInput: {
+    fontFamily: Fonts.body.regular,
     borderRadius: 12,
     paddingHorizontal: 14,
     paddingVertical: 10,
@@ -60,6 +62,7 @@ export const styles = StyleSheet.create({
     marginRight: 8,
   },
   rowUsername: {
+    fontFamily: Fonts.head.semibold,
     fontSize: 16,
     fontWeight: '600',
     color: Colors.textPrimary,
@@ -68,13 +71,16 @@ export const styles = StyleSheet.create({
   // Unread emphasis (paired with the dot): heavier name, darker secondary line,
   // accent-coloured date — the conventional message/mail-list treatment.
   rowUsernameUnread: {
+    fontFamily: Fonts.head.bold,
     fontWeight: '700',
   },
   rowSecondary: {
+    fontFamily: Fonts.body.regular,
     fontSize: 14,
     color: '#6C757D',
   },
   rowSecondaryUnread: {
+    fontFamily: Fonts.body.medium,
     color: '#344054',
     fontWeight: '500',
   },
@@ -84,10 +90,12 @@ export const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   rowDate: {
+    fontFamily: Fonts.body.regular,
     fontSize: 12,
     color: '#9aa0a6',
   },
   rowDateUnread: {
+    fontFamily: Fonts.body.semibold,
     fontWeight: '600',
   },
   // Full-width white list surface. The screen wraps content in 16px horizontal
@@ -129,6 +137,7 @@ export const styles = StyleSheet.create({
     marginBottom: 15,
   },
   pillText: {
+    fontFamily: Fonts.body.regular,
     fontSize: 14,
     textAlign: 'center',
     color: '#0369A1',
@@ -167,6 +176,7 @@ export const styles = StyleSheet.create({
     marginBottom: 14,
   },
   emptyTitle: {
+    fontFamily: Fonts.head.bold,
     fontSize: 16,
     fontWeight: '700',
     color: 'rgba(0,0,0,0.7)',
@@ -174,6 +184,7 @@ export const styles = StyleSheet.create({
     textAlign: 'center',
   },
   emptySubtitle: {
+    fontFamily: Fonts.body.regular,
     fontSize: 13,
     color: 'rgba(0,0,0,0.5)',
     textAlign: 'center',
@@ -194,6 +205,7 @@ export const styles = StyleSheet.create({
     borderColor: 'rgba(0,0,0,0.1)',
   },
   emptyActionText: {
+    fontFamily: Fonts.head.bold,
     fontSize: 13,
     fontWeight: '700',
     color: Colors.textPrimary,

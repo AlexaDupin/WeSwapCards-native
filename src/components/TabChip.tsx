@@ -2,6 +2,7 @@ import React, { memo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { Colors } from '@/src/constants/Colors';
+import { Fonts } from '@/src/constants/typography';
 
 type Props = {
   label: string;
@@ -61,6 +62,7 @@ const styles = StyleSheet.create({
     opacity: 0.6,
   },
   text: {
+    fontFamily: Fonts.body.semibold,
     fontSize: 15,
     fontWeight: '600',
   },
@@ -68,6 +70,7 @@ const styles = StyleSheet.create({
     color: '#6C757D',
   },
   textActive: {
+    fontFamily: Fonts.body.bold,
     color: '#212529',
     fontWeight: '800',
   },
@@ -81,6 +84,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF3B30',
   },
   badgeText: {
+    fontFamily: Fonts.head.bold,
     color: 'white',
     fontSize: 11,
     fontWeight: '700',

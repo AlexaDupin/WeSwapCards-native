@@ -24,6 +24,7 @@ import { AccountButton } from '@/src/components/AccountButton';
 
 import { useDashboard } from '@/src/features/dashboard/hooks/useDashboard';
 import type { DashboardConversation } from '@/src/features/dashboard/types/DashboardTypes';
+import { Fonts } from '@/src/constants/typography';
 
 // The empty states' art. A line icon rather than an emoji: emoji are drawn by
 // the platform, so they carry another vendor's style and shift between iOS and
@@ -146,7 +147,15 @@ export default function DashboardScreen() {
             marginBottom: 16,
           }}
         >
-          <Text style={{ fontSize: 20, fontWeight: 'bold' }}>Dashboard</Text>
+          <Text
+            style={{
+              fontFamily: Fonts.head.bold,
+              fontSize: 20,
+              fontWeight: 'bold',
+            }}
+          >
+            Dashboard
+          </Text>
           <AccountButton />
         </View>
 

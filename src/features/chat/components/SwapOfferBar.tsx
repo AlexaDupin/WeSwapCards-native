@@ -10,6 +10,7 @@ import {
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 import { Colors } from '@/src/constants/Colors';
+import { Fonts } from '@/src/constants/typography';
 
 type Card = { id: number; name: string };
 
@@ -138,6 +139,7 @@ const styles = StyleSheet.create({
     marginBottom: 6,
   },
   label: {
+    fontFamily: Fonts.body.semibold,
     fontSize: 11,
     fontWeight: '600',
     letterSpacing: 0.4,
@@ -149,6 +151,7 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   empty: {
+    fontFamily: Fonts.body.regular,
     fontSize: 13,
     color: 'rgba(0,0,0,0.45)',
     fontStyle: 'italic',
@@ -174,6 +177,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.06)',
   },
   chipText: {
+    fontFamily: Fonts.body.semibold,
     fontSize: 13,
     fontWeight: '600',
     color: 'rgba(0,0,0,0.7)',
