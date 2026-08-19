@@ -39,8 +39,9 @@ submission today, roughly in the order it has to be dealt with:
 1. ⚠ **No store media exists.** No screenshots, no Play feature graphic. This is
    the largest remaining piece of work. See [Store media](#store-media).
 2. ⚠ **Reviewer accounts in progress.** Android pair being created 2026-08-19 on
-   a production build; iOS pair waits on the Apple Developer Program. Password
-   sign-in against production Clerk is the check that still has to pass.
+   a production build, with password sign-in confirmed working against live
+   Clerk. Still to do: collections with complementary doubles, and a conversation
+   between the pair. The iOS pair waits on the Apple Developer Program.
    See [Reviewer accounts](#reviewer-accounts).
 3. Remaining ⚠ verifications that are answers rather than work: the Sentry DSN
    and log retention questions, the IP-in-server-logs declaration, third-party
@@ -506,12 +507,13 @@ reviewer to find an existing conversation with "the second demo account".
 
 Requirements per pair:
 
-- **Password sign-in must work.** ⚠ `[repo]` The app's sign-in screen
-  (`app/(auth)/sign-in.tsx`) submits email and password only, with no
-  one-time-code path in the UI. Password must therefore be enabled as a sign-in
-  factor on the **production** Clerk instance; if that instance prefers email
-  codes, the reviewer is stuck on a screen that cannot ask for one. Verify by
-  signing in on a real build, not by reading Clerk's settings page.
+- ✅ **Password sign-in works.** `[user]` Verified 2026-08-19 on the installed
+  production-config Android build, against the live Clerk instance: signed out
+  and back in with email and password. This mattered because
+  `app/(auth)/sign-in.tsx` submits email and password only, with no
+  one-time-code path in the UI, so an instance preferring email codes would have
+  stranded the reviewer on a screen that cannot ask for one. Re-check only if the
+  production instance's sign-in factors are changed.
 - Both accounts hold a **card collection with doubles**, so search returns
   results rather than an empty state. Make the doubles complementary, A holding
   spares that B is missing and vice versa, so both directions described in the
