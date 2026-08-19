@@ -11,6 +11,31 @@ verifying against something outside this repo.
 
 ---
 
+## Where this stands (2026-08-19)
+
+Copy is drafted and the questionnaire answers are reasoned through. What stops a
+submission today, roughly in the order it has to be dealt with:
+
+1. ⚠ **No store media exists.** No screenshots, no Play feature graphic. This is
+   the largest remaining piece of work. See [Store media](#store-media).
+2. ⚠ **No reviewer accounts.** Still `PLACEHOLDER`, and email/password sign-in is
+   unverified on the production Clerk instance.
+   See [Reviewer accounts](#reviewer-accounts).
+3. **DECIDE** items: Apple secondary category, and whether the description names
+   the source platform.
+4. Remaining ⚠ verifications that are answers rather than work: the Sentry DSN
+   and log retention questions in [App Privacy](#app-privacy-apple-and-data-safety-play),
+   and the partial-failure window on deletion.
+5. The store records themselves do not exist yet, which is why
+   `submit.production` in `eas.json` is still empty.
+
+Settled since the first draft: the account-deletion cascade is confirmed live in
+production, the legal pages are deployed, `app.config.ts` validates the build
+configuration and predeclares export compliance, and the app carries a
+non-affiliation statement of its own.
+
+---
+
 ## Apple: App Store Connect
 
 | Field | Limit | Value |
@@ -248,9 +273,25 @@ defend line by line. See the checklist below.
 Both stores expect account-associated data to be deleted, including content shared
 with other users, unless retention is legally required *and disclosed*.
 
-The backend and both migrations are deployed to production before submission, so
-the schema in the repo is what production enforces, and the FK actions below are
-the behavior, not a prediction:
+✅ **Verified against o2switch production, 2026-08-19.**
+`account-deletion-cascade.sql` is applied. All four participant FKs report
+`confdeltype = 'c'`, so production cascades rather than nulling, and the schema
+in the repo is what production enforces. The FK actions below are the behavior,
+not a prediction.
+
+This is worth re-running before each submission, since it is the one claim the
+stores and the public deletion page both depend on:
+
+```sql
+SELECT conname, confdeltype FROM pg_constraint
+WHERE conname IN ('conversation_creator_id_fkey','conversation_recipient_id_fkey',
+                  'message_sender_id_fkey','message_recipient_id_fkey');
+-- 'c' = CASCADE, the expected answer. 'n' = SET NULL, the pre-migration state.
+```
+
+With cascade live, the live `/delete-account` page §4 ("your conversations and
+the messages in them" are removed) is accurate, and both store questionnaires can
+repeat it.
 
 | Item | Behavior | Source |
 | --- | --- | --- |
@@ -261,7 +302,7 @@ the behavior, not a prediction:
 | Blocks | `user_block` cascades, both directions | `migrations/moderation.sql` |
 | Reports **you filed** | `user_report.reporter_id` cascades, destroying them with the account | `migrations/moderation.sql:44` |
 | Reports **about you** | `reported_id` set null, `reported_name` snapshot **retained** | `migrations/moderation.sql:45` |
-| Conversations and messages | Cascade, once `account-deletion-cascade.sql` is applied in Stage 2 | `migrations/account-deletion-cascade.sql` |
+| Conversations and messages | Cascade, verified live in prod | `migrations/account-deletion-cascade.sql` |
 
 Still genuinely external, so still worth checking once:
 
@@ -283,11 +324,11 @@ confirm it still reads that way after any edit.
 
 ## Pre-submission link check
 
-⚠ As of the last check, `/delete-account` is **not live**. The deployed bundle
-(`main.9590cce0.js`) contains no reference to it. The page exists only on the
-`native` branch and goes live with the backend deploy.
+✅ Resolved 2026-08-19. The `native` branch is merged into `main` (zero commits
+ahead) and the front end is deployed: the live bundle is now `main.b683065e.js`
+and contains all four routes, `/delete-account` included. All four return 200.
 
-All four pages return the same 967-byte shell to `curl`, because the site is a React
+All four pages return the same small shell to `curl`, because the site is a React
 SPA that renders client-side. That is expected and fine for a reviewer using a
 browser, but it means link checkers and crawlers cannot confirm the content. So,
 immediately before submitting, open each in a **private window on a phone** and
@@ -297,6 +338,33 @@ confirm it renders:
 - `https://weswapcards.com/privacy`
 - `https://weswapcards.com/delete-account`
 - `https://weswapcards.com/contact`
+
+---
+
+## Store media
+
+⚠ **None of this exists yet.** The repo has brand assets under
+`src/assets/images/brand/` (app icon, adaptive icon, splash) which the build
+consumes, but no store screenshots and no feature graphic. Both consoles block on
+these, so they are the largest remaining piece of work after the deletion blocker.
+
+| Asset | Store | Requirement |
+| --- | --- | --- |
+| iPhone 6.9" screenshots | Apple | 1290×2796, at least 1, up to 10 |
+| iPad screenshots | Apple | **Not needed.** `supportsTablet: false` in `app.config.ts` |
+| App icon 1024×1024 | Apple | Taken from the binary, no separate upload |
+| Phone screenshots | Play | 1080×1920 or similar 9:16, **at least 2**, up to 8 |
+| App icon 512×512 | Play | PNG, uploaded to the console |
+| Feature graphic 1024×500 | Play | Required, shown at the top of the listing |
+
+Apple scales the 6.9" set down to the smaller sizes, so one set is enough.
+
+Shoot the same four screens for both stores, matching the review-notes flow:
+My cards, search results for a card, a conversation, and the home or dashboard
+view. Use the reviewer accounts, so the collections look populated rather than
+empty, and check no real user's username is visible in a search result or chat.
+
+`orientation: 'portrait'` means every capture is portrait. No landscape set.
 
 ---
 
@@ -336,11 +404,23 @@ Working decisions, carried into every field above:
   disclaimer does not by itself create permission to use someone's mark. The web
   Terms already carry one (§7, "No Affiliation with Third-Party Platform").
 
-⚠ Open review items, none of which are copy decisions:
+⚠ Open review items, none of which are copy decisions. Re-checked 2026-08-19,
+after the landing page was rebuilt on the web v2 design, which moved these lines
+and added one:
 
-- `src/features/home/components/HeroCard.tsx:23`, user-facing "with WeWard".
+- `src/features/home/components/Hero.tsx:44`, "Not affiliated with the official
+  WeWard app." Names the platform, but in a disclaimer.
+- `src/features/home/components/LandingFooter.tsx:43`, "Not affiliated in any way
+  with the official WeWard app." Same shape.
+- `src/features/home/components/CatalogueCard.tsx:11`, "New chapters are added as
+  they land in WeWard". Descriptive rather than a disclaimer, so this is the one
+  closest to plain referential use.
 - `app/(auth)/register-user.tsx:207`, "Enter your WeWard username". Arguably
-  functionally necessary, unlike the hero copy.
+  functionally necessary, unlike the marketing copy.
+
+The old `HeroCard.tsx` reference this list used to carry no longer exists. Net
+change since the last review: the two most prominent mentions now carry an
+explicit non-affiliation statement in the app itself, matching web Terms §7.
 - `src/assets/images/illustrations/onboarding-*.png` and `LandingPageImage.png`,
   panda mascot artwork. The concern is cumulative rather than any single element.
 - Chapter imagery comes from **Pexels**;
