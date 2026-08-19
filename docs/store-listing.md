@@ -41,20 +41,19 @@ submission today, roughly in the order it has to be dealt with:
 2. ⚠ **No reviewer accounts.** Still `PLACEHOLDER`, and email/password sign-in is
    unverified on the production Clerk instance.
    See [Reviewer accounts](#reviewer-accounts).
-3. ⚠ **Both privacy category mappings are `[model]` guesses.** They have to be
-   walked against the real App Privacy and Data Safety forms before being
-   answered. See [App Privacy](#app-privacy-apple-and-data-safety-play).
-4. ⚠ **`moderation.sql` is unconfirmed in prod.** One query settles it, the same
+3. ⚠ **`moderation.sql` is unconfirmed in prod.** One query settles it, the same
    shape as the cascade check.
    See [Deletion claims](#deletion-claims-to-verify-before-submitting).
-5. Remaining ⚠ verifications that are answers rather than work: the Sentry DSN
-   and log retention questions, and the partial-failure window on deletion.
-6. The store records themselves do not exist yet, which is why
+4. Remaining ⚠ verifications that are answers rather than work: the Sentry DSN
+   and log retention questions, the IP-in-server-logs declaration, third-party
+   SDK disclosures for Clerk and Expo, and the partial-failure window on deletion.
+5. The store records themselves do not exist yet, which is why
    `submit.production` in `eas.json` is still empty.
 
 Settled since the first draft: the account-deletion cascade is confirmed live in
-production, the legal pages are deployed, `app.config.ts` validates the build
-configuration and predeclares export compliance, and the app carries a
+production, the legal pages are deployed, both privacy category mappings are
+checked against the vendors' own published taxonomies, `app.config.ts` validates
+the build configuration and predeclares export compliance, and the app carries a
 non-affiliation statement of its own.
 
 ---
@@ -200,40 +199,61 @@ analytics. The app requests no runtime permission other than notifications.
 
 ### Apple category mapping
 
-⚠ `[model]` **This whole table is unverified.** The left column is `[repo]` fact,
-but every mapping on the right is my reading of Apple's taxonomy, checked against
-no current Apple documentation. Apple has reorganised these categories before.
-Walk the actual App Privacy questionnaire in App Store Connect and correct this
-table against the form's own wording before answering it.
+`[web]` Checked against
+[Apple's published data-type list](https://developer.apple.com/app-store/app-privacy-details/)
+on 2026-08-19. Every category and subtype below exists in Apple's taxonomy as
+written, and no mapping needed changing.
 
 | Our data | Apple category |
 | --- | --- |
 | Email address | Contact Info → Email Address |
 | Username, Clerk id, explorer id | Identifiers → User ID |
-| Chat messages | User Content → **Emails or Text Messages** (Apple counts private in-app messages here) |
+| Chat messages | User Content → **Emails or Text Messages** |
 | Report text, card collection, blocks | User Content → Other User Content |
 | Profile photo | User Content → Photos or Videos |
 | Push token | Identifiers → Device ID |
 | Crash logs, traces | Diagnostics → Crash Data, Performance Data |
 | IP in server logs | ⚠ Declare by **use**. Security/anti-fraud and diagnostics map differently, and if anything derives location from IP it becomes Coarse Location. Settle the actual use before answering. |
 
-**Tracking:** none. No advertising SDK and no cross-app tracking, so App Tracking
-Transparency does not apply.
+Two mappings that look like judgement calls but are settled by Apple's own
+wording:
+
+- **Chat messages.** Apple defines Emails or Text Messages as covering "subject
+  line, sender, recipients, and contents", explicitly including "both SMS and
+  non-SMS messages". Private in-app chat belongs here, not in Other User Content.
+- **Push token.** Apple's Device ID is "the device's advertising identifier or
+  other device-level ID". An Expo push token is device-level, so Device ID is
+  right and User ID is not.
+
+**Tracking:** none. Apple defines tracking as linking app data with third-party
+data for targeted advertising or ad measurement, or sharing with a data broker.
+We do neither, there is no advertising SDK, so App Tracking Transparency does not
+apply.
 
 ### Play category mapping
 
-⚠ `[model]` Same caveat as the Apple table above: the mappings are unverified
-against the current Data Safety form. Correct them against the console.
+`[web]` Checked against
+[Play's Data Safety data-type list](https://support.google.com/googleplay/android-developer/answer/10787469)
+on 2026-08-19. **One row was wrong** and is corrected below.
 
 | Our data | Play category |
 | --- | --- |
 | Email address | Personal info → Email address |
 | Username, ids | Personal info → User IDs |
 | Chat messages | Messages → Other in-app messages |
-| Report text, card collection, blocks | Other user-generated content |
+| Report text, card collection, blocks | **App activity** → Other user-generated content |
 | Profile photo | Photos and videos → Photos |
 | Push token | Device or other IDs |
 | Crash logs, traces | App info and performance → Crash logs, Diagnostics |
+
+The corrected row: "Other user-generated content" is not a top-level category in
+Play's form, which is how this doc previously had it. It sits **under App
+activity**, alongside App interactions and In-app search history. Looking for it
+at the top level of the form will not find it.
+
+`[web]` Play defines **collection** as "transmitting data from your app off a
+user's device". Everything in the table above is transmitted to our backend, so
+all of it is collected. Nothing here is on-device-only.
 
 ⚠ Play requires declaring data collected by **third-party SDKs** as well as our own
 code. Clerk and Expo are the ones in the app; walk their SDK data disclosures before
@@ -246,12 +266,14 @@ Do not collapse these into "we don't share data":
 - **Selling:** no. Nothing is sold, under either store's definition.
 - **Processors:** Clerk (authentication), Expo (push delivery), the SMTP provider
   (report alerts), Sentry (if enabled), o2switch (hosting).
-- **Store-defined "sharing":** `[model]` Play generally excludes qualifying service
-  providers from its "shared" definition, so most of the above likely count as
-  processing rather than sharing. Apple still expects integrated third-party
-  partners to be accounted for in its answers. Answer each store's question in its
-  own terms, and check this against each form's current definition rather than
-  against this paragraph.
+- **Store-defined "sharing":** `[web]` Play defines sharing as "transferring user
+  data collected from your app to a third party", and explicitly exempts
+  **service providers**, meaning entities that "process user data on behalf of
+  the developer and based on the developer's instructions". Clerk, Expo, the SMTP
+  provider, Sentry, and o2switch all fit that description, so on Play they are
+  processing, not sharing, and are not disclosed as shared. Apple frames its
+  questions differently and still expects integrated third-party partners to be
+  accounted for. Answer each store in its own terms.
 
 The processor list itself is `[repo]`: those are the services the code talks to.
 
