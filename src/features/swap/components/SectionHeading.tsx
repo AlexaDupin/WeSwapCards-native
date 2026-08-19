@@ -23,7 +23,7 @@ export default function SectionHeading({ kicker, title }: Props) {
   const standalone = !title;
 
   return (
-    <View style={styles.wrap}>
+    <View style={[styles.wrap, !standalone && styles.wrapTitled]}>
       <Text style={[styles.kicker, standalone && styles.kickerStandalone]}>
         {kicker}
       </Text>
@@ -41,6 +41,9 @@ const styles = StyleSheet.create({
   wrap: {
     paddingTop: 20,
     paddingBottom: 12,
+  },
+  wrapTitled: {
+    paddingBottom: 16,
   },
   // The labelled kicker leads with a result count, so it sits a step up from a
   // pure label: big enough to be read, still under the title it introduces.
