@@ -6,8 +6,9 @@ both stores stay consistent and nothing is improvised into a web form.
 **No credentials in this file.** Reviewer account passwords live in the password
 manager; see [Reviewer accounts](#reviewer-accounts).
 
-Items marked **DECIDE** need your answer before submission. Items marked ⚠ need
-verifying against something outside this repo.
+Items marked ⚠ need verifying against something outside this repo. Decisions that
+were open are now recorded inline with the date they were settled, so the
+reasoning survives rather than just the answer.
 
 ---
 
@@ -21,12 +22,10 @@ submission today, roughly in the order it has to be dealt with:
 2. ⚠ **No reviewer accounts.** Still `PLACEHOLDER`, and email/password sign-in is
    unverified on the production Clerk instance.
    See [Reviewer accounts](#reviewer-accounts).
-3. **DECIDE** items: Apple secondary category, and whether the description names
-   the source platform.
-4. Remaining ⚠ verifications that are answers rather than work: the Sentry DSN
+3. Remaining ⚠ verifications that are answers rather than work: the Sentry DSN
    and log retention questions in [App Privacy](#app-privacy-apple-and-data-safety-play),
    and the partial-failure window on deletion.
-5. The store records themselves do not exist yet, which is why
+4. The store records themselves do not exist yet, which is why
    `submit.production` in `eas.json` is still empty.
 
 Settled since the first draft: the account-deletion cascade is confirmed live in
@@ -48,12 +47,16 @@ non-affiliation statement of its own.
 | Privacy policy URL | n/a | `https://weswapcards.com/privacy` |
 | Copyright | n/a | `2026 WeSwapCards` |
 | Primary category | n/a | `Lifestyle` |
-| Secondary category | n/a | **DECIDE**: `Social Networking`, or leave unset |
+| Secondary category | n/a | Leave unset |
+
+Decided 2026-08-19: `Lifestyle` alone, no secondary. Apple does not allow the
+secondary to repeat the primary, so "Lifestyle only" and "no secondary" are the
+same choice.
 
 Not Entertainment. The app is a collection-management and matching utility, not
-entertainment content. Secondary `Social Networking` is defensible given the
-matching and messaging, but it also invites closer UGC scrutiny; leaving it unset is
-the quieter option.
+entertainment content. Secondary `Social Networking` was considered and dropped:
+it is defensible given the matching and messaging, but it invites closer UGC
+scrutiny for little discovery gain.
 
 ### Keywords (100 characters)
 
@@ -115,11 +118,12 @@ still open. Notifications tell you when someone replies.
 No pricing sentence: the product page already states the price, and a claim in the
 description would go stale the moment that changes.
 
-**DECIDE: factual mention of the source platform.** The description never names it.
-A single factual sentence (that the app is an independent companion for collectors
-of a particular card set, not affiliated with or endorsed by its publisher) would
-help users understand what the app is for, but it is a legal/metadata decision.
-See [Naming and IP](#naming-and-ip).
+Decided 2026-08-19: **the description does not name the source platform.** A
+factual non-affiliation sentence was considered and dropped. The store listing is
+the most public surface and the one most likely to attract a rights complaint,
+and the in-app disclaimers (`Hero.tsx`, `LandingFooter.tsx`) already serve the
+users who matter, the ones who have installed. See
+[Naming and IP](#naming-and-ip).
 
 ---
 
@@ -399,7 +403,7 @@ Working decisions, carried into every field above:
 
 - The third-party platform name is **not** used in the Apple keyword field, the
   Apple subtitle, the Play title, or the Play short description.
-- A factual mention in the full description is a **DECIDE** item, above.
+- The full description does not mention it either, decided 2026-08-19, above.
 - A non-affiliation statement is worth including, while recognizing that a
   disclaimer does not by itself create permission to use someone's mark. The web
   Terms already carry one (§7, "No Affiliation with Third-Party Platform").
