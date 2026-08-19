@@ -1,33 +1,42 @@
-import Chat from '@/src/assets/images/glyphs/chatdeal.svg';
-import Dashboard from '@/src/assets/images/glyphs/dashboard.svg';
-import Report from '@/src/assets/images/glyphs/report.svg';
-import Search from '@/src/assets/images/glyphs/search.svg';
-import Users from '@/src/assets/images/glyphs/users.svg';
+export type StepTone = 'accent' | 'teal';
 
-export const howItWorksSteps = [
+export type HowItWorksStep = {
+  title: string;
+  text: string;
+  /**
+   * Steps 1 to 3 are the solo tracking loop; 4 and 5 are the two-person swap
+   * loop. The colour change marks where another collector enters, so it is not
+   * decoration.
+   */
+  tone: StepTone;
+};
+
+// Copy is kept in step with the web landing page's STEPS array
+// (front/src/components/Home/Home.jsx).
+export const howItWorksSteps: readonly HowItWorksStep[] = [
   {
-    Icon: Report,
-    title: 'Log your cards',
-    subtitle: 'Mark what you own or have duplicates of.',
+    title: 'Log all the cards you have',
+    text: 'Mark owned, missing, and duplicate cards across every chapter in a couple of taps.',
+    tone: 'accent',
   },
   {
-    Icon: Search,
-    title: 'Find what you need',
-    subtitle: 'Browse chapters and spot missing cards.',
+    title: 'Find the card you need',
+    text: 'Search any card and see instantly who has a spare copy sitting in their collection.',
+    tone: 'accent',
   },
   {
-    Icon: Users,
-    title: 'Browse users',
-    subtitle: 'See who has the card you’re looking for.',
+    title: 'Browse users who have it',
+    text: 'Collectors who also need one of your duplicates come first.',
+    tone: 'accent',
   },
   {
-    Icon: Chat,
-    title: 'Chat & trade',
-    subtitle: 'Message users and agree on a swap.',
+    title: 'Chat with them and find a deal',
+    text: 'Negotiate directly in the app until both sides are happy with the swap.',
+    tone: 'teal',
   },
   {
-    Icon: Dashboard,
-    title: 'Track everything',
-    subtitle: 'Keep requests organized in your dashboard.',
+    title: 'Keep track in a dashboard',
+    text: 'Every request, pending trade, and completed swap in one place.',
+    tone: 'teal',
   },
-] as const;
+];

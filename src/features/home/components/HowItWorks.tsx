@@ -1,36 +1,32 @@
-import React from 'react';
 import { Text, View } from 'react-native';
-import { Link } from 'expo-router';
-import StepRow from '@/src/features/home/components/StepRow';
-import { howItWorksSteps } from '@/src/features/home/data/howItWorksSteps';
+
 import { homeStyles } from '@/src/assets/styles/home.styles';
+import StepCard from '@/src/features/home/components/StepCard';
+import StepCtaCard from '@/src/features/home/components/StepCtaCard';
+import { howItWorksSteps } from '@/src/features/home/data/howItWorksSteps';
 
 export default function HowItWorks() {
   return (
-    <View style={homeStyles.sectionBlock}>
-      <View style={homeStyles.sectionHeaderRow}>
-        <Text style={homeStyles.sectionTitle}>How it works</Text>
-
-        <Link href="/sign-up" style={homeStyles.sectionAction}>
-          Get started
-        </Link>
+    <View style={homeStyles.section}>
+      <View style={homeStyles.sectionHead}>
+        <Text style={homeStyles.eyebrow}>How it works</Text>
+        <Text style={homeStyles.sectionTitle}>
+          From a pile of duplicates to a completed collection.
+        </Text>
       </View>
 
-      <View style={homeStyles.stepsCard}>
-        {howItWorksSteps.map((step, index) => {
-          const isLast = index === howItWorksSteps.length - 1;
+      <View style={homeStyles.stepList}>
+        {howItWorksSteps.map((step, index) => (
+          <StepCard
+            key={step.title}
+            step={index + 1}
+            title={step.title}
+            text={step.text}
+            tone={step.tone}
+          />
+        ))}
 
-          return (
-            <React.Fragment key={step.title}>
-              <StepRow
-                Icon={step.Icon}
-                title={step.title}
-                subtitle={step.subtitle}
-              />
-              {!isLast && <View style={homeStyles.stepDivider} />}
-            </React.Fragment>
-          );
-        })}
+        <StepCtaCard />
       </View>
     </View>
   );

@@ -18,6 +18,29 @@ export const Colors = {
   // the iOS system blue (#0A84FF) the chat bubbles use.
   accent: '#2563eb',
 
+  // Landing page, in parity with the web's v2 palette
+  // (WeSwapCards/front/src/styles/index.scss, the --wsc-* custom properties).
+  // The accent orange is `primary` above; it is the same #f07a1a.
+  accentHover: '#c25a05',
+  accentLink: '#e8720c',
+  accentSoft: '#fdeee0',
+  accentBorder: '#f7d9bd',
+  teal: '#29b6aa',
+  tealDeep: '#158a75',
+  tealSoft: '#e7f6f2',
+  ink: '#1e2024',
+  inkMuted: '#55595f',
+  inkFaint: '#8a8e94',
+  landingBg: '#fbf9f7',
+  surface: '#ffffff',
+  // The landing page's one cool surface, behind the closing call-to-action
+  // panel's photo. Blue is orange's complement, so the panel reads as
+  // deliberate contrast against a warm page rather than as another card.
+  deepBlue: '#16304f',
+  border: '#ede7e1',
+  hairline: '#ded6ce',
+  tint: '#f6f2ed',
+
   // Neutral system for the cards screen redesign
   screenBackground: '#F2F2F2',
   textPrimary: '#1c1b19',
