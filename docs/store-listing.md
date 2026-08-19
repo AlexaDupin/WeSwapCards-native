@@ -41,17 +41,15 @@ submission today, roughly in the order it has to be dealt with:
 2. ⚠ **No reviewer accounts.** Still `PLACEHOLDER`, and email/password sign-in is
    unverified on the production Clerk instance.
    See [Reviewer accounts](#reviewer-accounts).
-3. ⚠ **`moderation.sql` is unconfirmed in prod.** One query settles it, the same
-   shape as the cascade check.
-   See [Deletion claims](#deletion-claims-to-verify-before-submitting).
-4. Remaining ⚠ verifications that are answers rather than work: the Sentry DSN
+3. Remaining ⚠ verifications that are answers rather than work: the Sentry DSN
    and log retention questions, the IP-in-server-logs declaration, third-party
    SDK disclosures for Clerk and Expo, and the partial-failure window on deletion.
-5. The store records themselves do not exist yet, which is why
+4. The store records themselves do not exist yet, which is why
    `submit.production` in `eas.json` is still empty.
 
-Settled since the first draft: the account-deletion cascade is confirmed live in
-production, the legal pages are deployed, both privacy category mappings are
+Settled since the first draft: the whole deletion table is verified against the
+production DB (cascade **and** moderation), the legal pages are deployed, both
+privacy category mappings are
 checked against the vendors' own published taxonomies, `app.config.ts` validates
 the build configuration and predeclares export compliance, and the app carries a
 non-affiliation statement of its own.
@@ -335,7 +333,7 @@ defend line by line. See the checklist below.
 
 ---
 
-## Deletion claims to verify before submitting
+## Deletion behavior, verified in production
 
 Both stores expect account-associated data to be deleted, including content shared
 with other users, unless retention is legally required *and disclosed*.
@@ -350,19 +348,9 @@ database, and an earlier draft of this section asserted the opposite state as
 "re-verified" on the strength of a month-old note. The tag records who actually
 looked.
 
-This is worth re-running before each submission, since it is the one claim the
-stores and the public deletion page both depend on:
-
-```sql
-SELECT conname, confdeltype FROM pg_constraint
-WHERE conname IN ('conversation_creator_id_fkey','conversation_recipient_id_fkey',
-                  'message_sender_id_fkey','message_recipient_id_fkey');
--- 'c' = CASCADE, the expected answer. 'n' = SET NULL, the pre-migration state.
-```
-
 With cascade live, the live `/delete-account` page §4 ("your conversations and
 the messages in them" are removed) is accurate, and both store questionnaires can
-repeat it.
+repeat it. The query itself is below, covering all eight constraints at once.
 
 | Item | Behavior | Source |
 | --- | --- | --- |
@@ -370,17 +358,37 @@ repeat it.
 | `explorer` row | `DELETE FROM explorer` | `[repo]` `models/user.js:52` |
 | Card collection | `explorer_has_cards` cascades | `[repo]` schema |
 | Push tokens | `push_token` cascades | `[repo]` `migrations/push-token.sql` |
-| Blocks | `user_block` cascades, both directions | `[repo]` `migrations/moderation.sql` ⚠ |
-| Reports **you filed** | `user_report.reporter_id` cascades, destroying them with the account | `[repo]` `migrations/moderation.sql:44` ⚠ |
-| Reports **about you** | `reported_id` set null, `reported_name` snapshot **retained** | `[repo]` `migrations/moderation.sql:45` ⚠ |
+| Blocks | `user_block` cascades, both directions | `[user]` prod query, 2026-08-19 |
+| Reports **you filed** | `user_report.reporter_id` cascades, destroying them with the account | `[user]` prod query, 2026-08-19 |
+| Reports **about you** | `reported_id` set null, `reported_name` snapshot **retained** | `[user]` prod query, 2026-08-19 |
 | Conversations and messages | Cascade | `[user]` prod query, 2026-08-19 |
 
-⚠ **The three `moderation.sql` rows describe the migration file, not production.**
-Nobody has run the equivalent `pg_constraint` check for `user_block` and
-`user_report`. The report and block features do work in the app, which is decent
-circumstantial evidence the migration went in, but it is not the same as looking.
-Extend the query above to those constraint names and settle it before the Data
-Safety answers lean on these rows.
+✅ `[user]` **`moderation.sql` confirmed applied in production, 2026-08-19.**
+`user_block_blocker_id_fkey`, `user_block_blocked_id_fkey`, and
+`user_report_reporter_id_fkey` report `c`; `user_report_reported_id_fkey` reports
+`n`. That is the intended asymmetry rather than a gap: reports you filed die with
+your account, reports filed *about* you survive it with the username snapshot,
+which is exactly what the deletion page discloses.
+
+Every row in this table is now verified against production rather than read off a
+migration file.
+
+**What would invalidate this:** a migration that drops and recreates any of these
+constraints, or a restore from a pre-migration backup. Nothing else changes an FK
+on-delete action, so this does not need periodic re-checking — only re-checking
+after a schema change. The query is kept below so that check is cheap when it is
+actually warranted.
+
+```sql
+SELECT conname, confdeltype FROM pg_constraint
+WHERE conname IN ('conversation_creator_id_fkey','conversation_recipient_id_fkey',
+                  'message_sender_id_fkey','message_recipient_id_fkey',
+                  'user_block_blocker_id_fkey','user_block_blocked_id_fkey',
+                  'user_report_reporter_id_fkey','user_report_reported_id_fkey');
+-- expect c on all but user_report_reported_id_fkey, which is n.
+-- An 'n' on reporter_id, or a 'c' on reported_id, means the deletion page and
+-- these answers no longer describe what prod does.
+```
 
 Still genuinely external, so still worth checking once:
 
@@ -447,8 +455,10 @@ Apple specs fetched from
 [App Store Connect Help](https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/)
 on 2026-08-19; Play specs from
 [Play Console Help](https://support.google.com/googleplay/android-developer/answer/9866151)
-the same day. Re-fetch before submitting: Apple has changed which display size is
-the required one before, and this table is the kind of thing that silently ages.
+the same day. **This table does need re-fetching before you shoot the media**, and
+unlike the FK checks above that is not ritual: Apple has moved which display size
+is the required one before, and vendor docs change under you with no signal. The
+DB constraints only change when you change them; these change when Apple decides.
 
 **One iPhone set is enough to submit.** 6.5" is required only if 6.9" is absent,
 and Apple scales down the cascade (6.9" → 6.5" → 6.3" → 6.1" → …) for any size
