@@ -40,6 +40,7 @@ export default function SwapScreen() {
     loadingOpportunities,
     loadingMoreOpportunities,
     opportunities,
+    opportunitiesPagination,
     error,
     selectChapter,
     selectCard,
@@ -162,6 +163,7 @@ export default function SwapScreen() {
             selectedCardId={selectedCardId}
             selectedCardName={selectedCardName}
             opportunities={opportunities}
+            totalOpportunities={opportunitiesPagination?.totalItems ?? null}
             loadingOpportunities={loadingOpportunities}
             loadingMoreOpportunities={loadingMoreOpportunities}
             onLoadMore={loadMoreOpportunities}

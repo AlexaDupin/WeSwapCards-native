@@ -4,7 +4,7 @@ import { Colors } from '@/src/constants/Colors';
 import { Fonts } from '@/src/constants/typography';
 
 type Props = {
-  /** The section's label, e.g. "Opportunities for" or "Latest chapters". */
+  /** The section's label, e.g. "12 opportunities for" or "Latest chapters". */
   kicker: string;
   /** The subject the kicker names, when the section has one. */
   title?: string | null;
@@ -42,13 +42,15 @@ const styles = StyleSheet.create({
     paddingTop: 20,
     paddingBottom: 12,
   },
+  // The labelled kicker leads with a result count, so it sits a step up from a
+  // pure label: big enough to be read, still under the title it introduces.
   kicker: {
     fontFamily: Fonts.head.semibold,
-    fontSize: 11,
+    fontSize: 13,
     fontWeight: '600',
     letterSpacing: 0.6,
     textTransform: 'uppercase',
-    color: 'rgba(0,0,0,0.4)',
+    color: 'rgba(0,0,0,0.5)',
     marginBottom: 3,
   },
   kickerStandalone: {

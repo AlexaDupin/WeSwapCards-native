@@ -17,6 +17,8 @@ type Props = {
   selectedCardName: string | null;
 
   opportunities: SwapOpportunityItem[];
+  /** Total matches reported by the backend, across every page. */
+  totalOpportunities: number | null;
   loadingOpportunities: boolean;
   loadingMoreOpportunities: boolean;
 
@@ -29,6 +31,7 @@ export default function OpportunityList({
   selectedCardId,
   selectedCardName,
   opportunities,
+  totalOpportunities,
   loadingOpportunities,
   loadingMoreOpportunities,
   onLoadMore,
@@ -42,9 +45,20 @@ export default function OpportunityList({
     [onContact],
   );
 
+  // The count only leads the kicker once the first page has answered; while the
+  // list is loading there is no total to show yet.
+  // The heading keeps one shape either way, so gaining the count when the page
+  // lands does not shift the list under it.
+  const showCount = !loadingOpportunities && totalOpportunities != null;
+  const kicker = showCount
+    ? `${totalOpportunities} ${
+        totalOpportunities === 1 ? 'opportunity' : 'opportunities'
+      } for`
+    : 'Opportunities for';
+
   const sectionHeader =
     selectedCardId != null ? (
-      <SectionHeading kicker="Opportunities for" title={selectedCardName} />
+      <SectionHeading kicker={kicker} title={selectedCardName} />
     ) : null;
 
   const listHeader = (
