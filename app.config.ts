@@ -11,7 +11,7 @@ type AppEnv = 'development' | 'preview' | 'production';
 // builds can share a host and still differ in the API path that actually works.
 // Set this before the first production build; until then a production build
 // fails the check below rather than accepting whatever it is handed.
-const PRODUCTION_API_URL: string | null = null;
+const PRODUCTION_API_URL: string | null = 'https://api.weswapcards.com/api/v1';
 
 function fail(message: string): never {
   throw new Error(`[app.config] ${message}`);
