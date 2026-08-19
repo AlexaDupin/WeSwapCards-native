@@ -72,13 +72,18 @@ function validateEnvironment(): void {
   const baseUrl = process.env.EXPO_PUBLIC_BASE_URL;
   const clerkKey = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
 
-  // eas-cli resolves this config for commands like `env:list`, with no .env
-  // loaded and only the selected environment's variables injected. Missing
-  // values are not an error there. Only a real build, or a configuration
-  // claiming to be production, has to have them in hand. A local run without
-  // .env is still caught at runtime by src/lib/axiosInstance.ts.
+  // eas-cli resolves this config more than once. The first pass is a bootstrap:
+  // it reads the config to learn the EAS project id, before it can fetch that
+  // project's environment, so it runs with EXPO_NO_DOTENV set and no values at
+  // all. Throwing there kills the bootstrap and eas-cli never reaches the pass
+  // that does inject them, which failed every production build before it
+  // started. So absent values mean "not the pass that can be checked", not
+  // "misconfigured". Enforcement still happens: on the worker EAS_BUILD is set,
+  // and on the injected pass the values are present, so a wrong backend or a
+  // test Clerk key cannot ship either way.
+  const hasValues = Boolean(baseUrl && clerkKey);
   const mustBeComplete =
-    process.env.EAS_BUILD === 'true' || env === 'production';
+    process.env.EAS_BUILD === 'true' || (env === 'production' && hasValues);
   if (!mustBeComplete) return;
 
   if (!baseUrl) fail('EXPO_PUBLIC_BASE_URL is not set.');
