@@ -38,8 +38,9 @@ submission today, roughly in the order it has to be dealt with:
 
 1. ⚠ **No store media exists.** No screenshots, no Play feature graphic. This is
    the largest remaining piece of work. See [Store media](#store-media).
-2. ⚠ **No reviewer accounts.** Still `PLACEHOLDER`, and email/password sign-in is
-   unverified on the production Clerk instance.
+2. ⚠ **Reviewer accounts in progress.** Android pair being created 2026-08-19 on
+   a production build; iOS pair waits on the Apple Developer Program. Password
+   sign-in against production Clerk is the check that still has to pass.
    See [Reviewer accounts](#reviewer-accounts).
 3. Remaining ⚠ verifications that are answers rather than work: the Sentry DSN
    and log retention questions, the IP-in-server-logs declaration, third-party
@@ -47,7 +48,9 @@ submission today, roughly in the order it has to be dealt with:
 4. The store records themselves do not exist yet, which is why
    `submit.production` in `eas.json` is still empty.
 
-Settled since the first draft: the whole deletion table is verified against the
+Settled since the first draft: the production build configuration is proven —
+an Android build on the real `pk_live_` Clerk instance and the o2switch API
+installed and ran (2026-08-19). The whole deletion table is verified against the
 production DB (cascade **and** moderation), the legal pages are deployed, both
 privacy category mappings are
 checked against the vendors' own published taxonomies, `app.config.ts` validates
@@ -481,10 +484,15 @@ Two pairs, one per store. Inboxes created 2026-08-19.
 
 | | A | B |
 | --- | --- | --- |
-| **iOS pair** | `review-ios-a@weswapcards.com` | `review-ios-b@weswapcards.com` |
-| **Android pair** | `review-android-a@weswapcards.com` | `review-android-b@weswapcards.com` |
+| **Android email** | `review-android-a@weswapcards.com` | `review-android-b@weswapcards.com` |
+| **Android username** | `review-android-a` | `review-android-b` |
+| **iOS email** | `review-ios-a@weswapcards.com` | `review-ios-b@weswapcards.com` |
+| **iOS username** | `review-ios-a` (planned) | `review-ios-b` (planned) |
 | Password | password manager | password manager |
-| Username | `PLACEHOLDER` | `PLACEHOLDER` |
+
+Usernames deliberately match the mailbox and read as obvious test accounts. They
+appear in the other account's search results and in the App Review notes, so
+nothing here should be mistakable for a real collector.
 
 **Why one pair per store.** A reviewer may test account deletion, which destroys
 the account for good. Sharing a single pair across both stores means an Apple
