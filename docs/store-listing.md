@@ -375,9 +375,7 @@ migration file.
 
 **What would invalidate this:** a migration that drops and recreates any of these
 constraints, or a restore from a pre-migration backup. Nothing else changes an FK
-on-delete action, so this does not need periodic re-checking — only re-checking
-after a schema change. The query is kept below so that check is cheap when it is
-actually warranted.
+on-delete action, so re-check after a schema change, not on a schedule.
 
 ```sql
 SELECT conname, confdeltype FROM pg_constraint
@@ -455,10 +453,9 @@ Apple specs fetched from
 [App Store Connect Help](https://developer.apple.com/help/app-store-connect/reference/app-information/screenshot-specifications/)
 on 2026-08-19; Play specs from
 [Play Console Help](https://support.google.com/googleplay/android-developer/answer/9866151)
-the same day. **This table does need re-fetching before you shoot the media**, and
-unlike the FK checks above that is not ritual: Apple has moved which display size
-is the required one before, and vendor docs change under you with no signal. The
-DB constraints only change when you change them; these change when Apple decides.
+the same day. **Re-fetch before you shoot the media.** Apple has moved which
+display size is the required one before, and vendor docs change with no signal to
+you.
 
 **One iPhone set is enough to submit.** 6.5" is required only if 6.9" is absent,
 and Apple scales down the cascade (6.9" → 6.5" → 6.3" → 6.1" → …) for any size
@@ -480,26 +477,73 @@ empty, and check no real user's username is visible in a search result or chat.
 
 ## Reviewer accounts
 
-| | Account A | Account B |
+Two pairs, one per store. Inboxes created 2026-08-19.
+
+| | A | B |
 | --- | --- | --- |
-| Email | `PLACEHOLDER` | `PLACEHOLDER` |
-| Password | in password manager | in password manager |
+| **iOS pair** | `review-ios-a@weswapcards.com` | `review-ios-b@weswapcards.com` |
+| **Android pair** | `review-android-a@weswapcards.com` | `review-android-b@weswapcards.com` |
+| Password | password manager | password manager |
 | Username | `PLACEHOLDER` | `PLACEHOLDER` |
 
-Requirements:
+**Why one pair per store.** A reviewer may test account deletion, which destroys
+the account for good. Sharing a single pair across both stores means an Apple
+reviewer can break a Play review running concurrently, and the failure arrives as
+a rejection rather than as a warning. Separate pairs also keep block and report
+state from one review out of the other's way.
 
-- **Email and password sign-in, no one-time codes.** ⚠ Verify on the production
-  Clerk instance, where a default that prefers email codes will block a reviewer.
-- Both accounts hold a **card collection with doubles**, so search returns results
-  rather than an empty state.
-- A **conversation already exists** between them, so report and block can be tried
-  without a reviewer having to arrange a match first.
+Each pair needs its **own** conversation: iOS A ↔ iOS B, and Android A ↔ Android
+B. A conversation across pairs does not satisfy the review notes, which tell the
+reviewer to find an existing conversation with "the second demo account".
+
+Requirements per pair:
+
+- **Password sign-in must work.** ⚠ `[repo]` The app's sign-in screen
+  (`app/(auth)/sign-in.tsx`) submits email and password only, with no
+  one-time-code path in the UI. Password must therefore be enabled as a sign-in
+  factor on the **production** Clerk instance; if that instance prefers email
+  codes, the reviewer is stuck on a screen that cannot ask for one. Verify by
+  signing in on a real build, not by reading Clerk's settings page.
+- Both accounts hold a **card collection with doubles**, so search returns
+  results rather than an empty state. Make the doubles complementary, A holding
+  spares that B is missing and vice versa, so both directions described in the
+  review notes actually demonstrate.
+- A **conversation already exists** in the pair, so report and block can be
+  exercised without the reviewer having to arrange a match first.
 - Do not reuse a real user's account.
-- **Recovery:** a reviewer may test account deletion, which destroys the account.
-  Keep a written recreate procedure and re-check both accounts before each
-  submission.
+- Re-check both accounts of the pair before each submission. A reviewer may have
+  deleted one since last time, and there is no signal when they do.
+
+⚠ **These accounts are visible to real users.** An account holding doubles turns
+up in other collectors' search results, and a real user can start a conversation
+with it. Decide whether that is acceptable before shooting screenshots on these
+accounts, and expect the possibility that a reviewer opens Messages to find an
+unexpected real conversation there.
 
 Credentials go in the console's review-notes fields, never in this repo.
+
+### Recreate procedure
+
+`[repo]` Steps follow the actual flows in the app rather than a guess at them.
+
+**Inbox access is required.** Sign-up sends an email verification code
+(`app/(auth)/sign-up.tsx`), so whoever recreates an account must be able to read
+that mailbox. This is the step that turns a five-minute job into a blocked one if
+the inboxes are ever lost.
+
+1. **Sign up** in the app with the account's email and a password from the
+   password manager.
+2. **Enter the emailed verification code.** Clerk will not create the account
+   without it.
+3. **Set the username** at the "Enter your WeWard username" step
+   (`app/(auth)/register-user.tsx`). The account is not usable until this is
+   done, and the username is what the other account sees in search.
+4. **Build the collection** in *My cards*: mark cards as owned, and mark several
+   as doubles, complementary across the pair.
+5. **Create the conversation** from *Swap*: search a card the partner account
+   holds spare, open that collector, and send a message
+   (`SwapScreen.tsx` routes into `/(modal)/chat/[conversationId]`).
+6. **Update the console** if the username changed, since the review notes name it.
 
 ---
 
