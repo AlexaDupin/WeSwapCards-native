@@ -19,6 +19,17 @@ jest.mock('@expo/vector-icons', () => ({
   MaterialIcons: 'MaterialIcons',
 }));
 
+// Same reason as the icons above: transformIgnorePatterns matches `expo` and
+// `expo-modules-core` but not the hyphenated packages, so expo-image and
+// expo-haptics reach Jest as untranspiled ESM and crash any suite that renders
+// a remote image or a PressableScale. Both are boundaries rather than behavior
+// under test.
+jest.mock('expo-image', () => ({ Image: 'Image' }));
+jest.mock('expo-haptics', () => ({
+  impactAsync: jest.fn().mockResolvedValue(undefined),
+  ImpactFeedbackStyle: { Light: 'light', Medium: 'medium', Heavy: 'heavy' },
+}));
+
 // Same reason as the icons above: expo-secure-store is ESM that
 // transformIgnorePatterns does not transpile, so any screen reaching it (the
 // first-run tips, the onboarding carousel) would crash the suite. Defaulting
