@@ -485,9 +485,9 @@ Two pairs, one per store. Inboxes created 2026-08-19.
 | | A | B |
 | --- | --- | --- |
 | **Android email** | `review-android-a@weswapcards.com` | `review-android-b@weswapcards.com` |
-| **Android username** | `review-android-a` | `review-android-b` |
+| **Android username** | `review_android_a` | `review_android_b` |
 | **iOS email** | `review-ios-a@weswapcards.com` | `review-ios-b@weswapcards.com` |
-| **iOS username** | `review-ios-a` (planned) | `review-ios-b` (planned) |
+| **iOS username** | `review_ios_a` (planned) | `review_ios_b` (planned) |
 | Password | password manager | password manager |
 
 Usernames deliberately match the mailbox and read as obvious test accounts. They
