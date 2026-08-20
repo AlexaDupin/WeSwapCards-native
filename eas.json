@@ -26,7 +26,8 @@
       },
       "android": {
         "buildType": "apk"
-      }
+      },
+      "channel": "preview"
     },
     "production": {
       "node": "22.16.0",
@@ -34,7 +35,8 @@
       "env": {
         "APP_ENV": "production"
       },
-      "autoIncrement": true
+      "autoIncrement": true,
+      "channel": "production"
     },
     "production-test": {
       "node": "22.16.0",
@@ -45,7 +47,8 @@
       "distribution": "internal",
       "android": {
         "buildType": "apk"
-      }
+      },
+      "channel": "production"
     }
   },
   "submit": {

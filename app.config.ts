@@ -13,6 +13,8 @@ type AppEnv = 'development' | 'preview' | 'production';
 // fails the check below rather than accepting whatever it is handed.
 const PRODUCTION_API_URL: string | null = 'https://api.weswapcards.com/api/v1';
 
+const EAS_PROJECT_ID = 'b7e77286-6197-49e0-92f0-05491baf7f5d';
+
 function fail(message: string): never {
   throw new Error(`[app.config] ${message}`);
 }
@@ -127,6 +129,15 @@ const config: ExpoConfig = {
   scheme: 'weswapcardsnative',
   userInterfaceStyle: 'light',
   newArchEnabled: true,
+  updates: {
+    url: `https://u.expo.dev/${EAS_PROJECT_ID}`,
+  },
+  // fingerprint, not eas-cli's appVersion default: `version` stays 1.0.0 across
+  // many builds (autoIncrement moves the build number, not this), so appVersion
+  // would let an update built against new native code reach a build without it.
+  runtimeVersion: {
+    policy: 'fingerprint',
+  },
   ios: {
     bundleIdentifier: 'com.weswapcards.app',
     // The UI is portrait and phone-shaped, and has never been run on iPad.
@@ -183,7 +194,7 @@ const config: ExpoConfig = {
   extra: {
     router: {},
     eas: {
-      projectId: 'b7e77286-6197-49e0-92f0-05491baf7f5d',
+      projectId: EAS_PROJECT_ID,
     },
   },
   owner: 'alexdl7',
