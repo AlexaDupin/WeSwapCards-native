@@ -192,7 +192,7 @@ them. The evidence column is a table or a service, not an inference.
 | Blocks | `user_block` |
 | Expo push token | `push_token` |
 | Profile photo | ⚠ Clerk only. The app renders `user.imageUrl` and has no image picker, so it never uploads one. Confirm how Clerk's profile UI is configured. |
-| Crash logs, traces | ⚠ Backend `@sentry/node`, active only when `SENTRY_DSN` is set. Confirm the dashboard PII setting and retention, and whether the DSN will be set on o2switch. |
+| Crash logs, traces | `[user]` Backend `@sentry/node` v10, **`SENTRY_DSN` is set in production** (confirmed 2026-08-20). `sendDefaultPii` unset, so no IP or user data is attached automatically. ⚠ Dashboard retention still unconfirmed. |
 | Server logs, IP | ⚠ o2switch. Confirm retention and what the logs are used for. |
 
 **Not collected.** Nothing in the code or dependencies supports these: location,
@@ -238,28 +238,75 @@ apply.
 [Play's Data Safety data-type list](https://support.google.com/googleplay/android-developer/answer/10787469)
 on 2026-08-19. **One row was wrong** and is corrected below.
 
-| Our data | Play category |
-| --- | --- |
-| Email address | Personal info → Email address |
-| Username, ids | Personal info → User IDs |
-| Chat messages | Messages → Other in-app messages |
-| Report text, card collection, blocks | **App activity** → Other user-generated content |
-| Profile photo | Photos and videos → Photos |
-| Push token | Device or other IDs |
-| Crash logs, traces | App info and performance → Crash logs, Diagnostics |
+`[user]` Answers below are as submitted on 2026-08-20.
 
-The corrected row: "Other user-generated content" is not a top-level category in
-Play's form, which is how this doc previously had it. It sits **under App
-activity**, alongside App interactions and In-app search history. Looking for it
-at the top level of the form will not find it.
+**Seven data types ticked. Everything else left unticked.**
+
+| Play category | Our data | Collected / Shared | Ephemeral | Req/Opt | Purposes |
+| --- | --- | --- | --- | --- | --- |
+| Personal info → Email address | Clerk account | Collected | No | Required | App functionality, Account management, Developer communications |
+| Personal info → User IDs | username, Clerk id, `explorer.id` | Collected | No | Required | App functionality, Account management |
+| Messages → Other in-app messages | chat | Collected | No | Optional | App functionality |
+| **App activity** → Other user-generated content | card collection, report text, blocks | Collected | No | Optional | App functionality, Fraud prevention security and compliance |
+| App info and performance → Crash logs | backend Sentry | Collected | No | Required | App functionality |
+| App info and performance → Diagnostics | Sentry traces, 20% sample | Collected | No | Required | App functionality |
+| Device or other IDs | Expo push token | Collected | No | Optional | App functionality |
+
+**Nothing is Shared.** Play exempts service providers from its "shared"
+definition, and Clerk's privacy policy confirms it acts as a processor with us as
+controller. Same for Expo, Sentry, the SMTP provider, and o2switch.
+
+The corrected category: "Other user-generated content" is not top-level in Play's
+form, which is how this doc previously had it. It sits **under App activity**,
+alongside App interactions and In-app search history.
+
+Three answers that are less obvious than they look:
+
+- **"Required" means two different things here.** Email and User IDs are required
+  because the app cannot function without them. Crash logs and Diagnostics are
+  required because the user has *no way to turn them off* — Sentry initialises
+  from `SENTRY_DSN` at server start, with no per-user opt-out. Play asks one
+  question and accepts both answers.
+- **Fraud prevention is ticked for user-generated content but not for Messages.**
+  Reports and blocks exist to act on abuse; message content is never analysed.
+  Ticking it on Messages would claim a moderation capability the app
+  deliberately does not have.
+- **Diagnostics is not Analytics.** Sentry traces record how long the server
+  took, not what anyone did. There is no analytics SDK in the app.
+
+### Types deliberately left unticked
+
+Each of these was considered and rejected on evidence, so the reasoning does not
+have to be redone:
+
+| Type | Why not |
+| --- | --- |
+| Approximate / precise location | No permission, no location module. `sendDefaultPii` is unset and [defaults to false](https://docs.sentry.io/platforms/javascript/guides/node/configuration/options/), so Sentry collects no IP to infer from |
+| Name | No `firstName`/`lastName` anywhere. The username is an account identifier, already declared under User IDs |
+| Photos | No image picker and no Clerk `UserProfile` component, so the app has no path to send one. It only renders `user.imageUrl` |
+| Contacts | No `expo-contacts`, no address-book access. In-app conversations are covered by Messages and App activity |
+| App interactions, In-app search history | No analytics of any kind |
+
+Over-declaring is not free: ticking Contacts would tell every visitor to the
+store listing that the app reads their phone's address book, which is false.
 
 `[web]` Play defines **collection** as "transmitting data from your app off a
 user's device". Everything in the table above is transmitted to our backend, so
 all of it is collected. Nothing here is on-device-only.
 
-⚠ Play requires declaring data collected by **third-party SDKs** as well as our own
-code. Clerk and Expo are the ones in the app; walk their SDK data disclosures before
-finalizing.
+✅ `[web]` Third-party SDK disclosures walked 2026-08-20. Neither vendor publishes
+a Play mapping, but both answer the question:
+
+- **Clerk** — its [privacy policy](https://clerk.com/legal/privacy) states end-user
+  data is Customer Data, with us as controller and Clerk as processor. Its
+  [telemetry](https://clerk.com/docs/guides/how-clerk-works/security/clerk-telemetry)
+  is collected from **development instances only** and explicitly excludes
+  information about our users, so a `pk_live_` build is out of scope entirely.
+- **Expo** — per [Expo's privacy explainer](https://expo.dev/privacy-explained),
+  it stores the push token only if push is opted into, deletes the notification
+  payload once handed to FCM/APNs, and does not handle user PII.
+
+Neither adds a data type beyond what is already declared.
 
 ### Selling, sharing, and processors are three different questions
 
@@ -281,14 +328,27 @@ The processor list itself is `[repo]`: those are the services the code talks to.
 
 ### Encryption in transit
 
-⚠ Do not answer "yes" globally on the strength of our own API. `[repo]`
-`app.config.ts` enforces HTTPS for the production base URL, which proves *our*
-endpoint and nothing else. It says nothing about Clerk, Expo push, SMTP, Sentry,
-or any server-to-server hop, none of which have been checked. Confirm each before
-answering.
+✅ **Play answered Yes**, 2026-08-20, and the earlier caution here was
+over-cautious. Play scopes the question to the hop it names on the form: data
+"between a user's device and the app's servers". Server-to-server hops are not
+what it asks about.
 
-⚠ **Keep this section and the published Privacy Policy in step.** If Sentry is
-enabled on o2switch, the Privacy Policy must say so before these forms claim it.
+On that scope we are clean, and verified rather than assumed: `[repo]` no
+`http://` anywhere in `src/` or `app/`, `app.config.ts` rejects a non-HTTPS
+production base URL at build time, and Clerk and Expo push are HTTPS-only.
+
+Apple frames its question differently, so re-read it there rather than copying
+this answer across.
+
+✅ **Privacy Policy brought back into step, 2026-08-20.** With `SENTRY_DSN` set,
+Crash logs and Diagnostics are declared to Play, and §7 of the published policy
+previously covered authentication only. It now names the processor *categories*
+including error monitoring. Categories rather than vendor names is deliberate:
+GDPR Art. 13 accepts "categories of recipients", and a named list is one more
+thing to keep in sync.
+
+⚠ The policy change must be **deployed** to count. Play reviewers read the live
+page, not the repo.
 
 ---
 
