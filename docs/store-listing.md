@@ -192,7 +192,7 @@ them. The evidence column is a table or a service, not an inference.
 | Blocks | `user_block` |
 | Expo push token | `push_token` |
 | Profile photo | ⚠ Clerk only. The app renders `user.imageUrl` and has no image picker, so it never uploads one. Confirm how Clerk's profile UI is configured. |
-| Crash logs, traces | `[user]` Backend `@sentry/node` v10, **`SENTRY_DSN` is set in production** (confirmed 2026-08-20). `sendDefaultPii` unset, so no IP or user data is attached automatically. ⚠ Dashboard retention still unconfirmed. |
+| Crash logs, traces | `[user]` Backend `@sentry/node` v10, **`SENTRY_DSN` is set in production** (confirmed 2026-08-20). `sendDefaultPii` unset, so no IP or user data is attached automatically. Developer (free) plan: **everything ages out at 30 days**. |
 | Server logs, IP | ⚠ o2switch. Confirm retention and what the logs are used for. |
 
 **Not collected.** Nothing in the code or dependencies supports these: location,
@@ -455,7 +455,19 @@ WHERE conname IN ('conversation_creator_id_fkey','conversation_recipient_id_fkey
 Still genuinely external, so still worth checking once:
 
 - **Profile photo.** Held by Clerk, expected to go with the Clerk user.
-- **Sentry and server logs.** Provider retention, and disclose whatever it is.
+- ✅ **Sentry retention: 30 days.** `[web]` Not a dashboard setting —
+  [Sentry fixes retention by plan](https://docs.sentry.io/security-legal-pii/security/data-retention-periods/)
+  and it is not configurable on sentry.io. On the Developer (free) plan errors,
+  spans and logs are all 30 days.
+
+  **Deletion is therefore not instantaneous everywhere.** The database cascade
+  removes a user's data at once, but Sentry can still hold error events for up to
+  30 days afterwards, and those carry request URLs containing that user's
+  `explorer.id`. The `/delete-account` page §5 already covers this — "server and
+  email records may also keep technical information, such as the time of a
+  request, for a limited period" — so the disclosure is in place. Worth knowing
+  that sentence is load-bearing before anyone tightens that page.
+- **Server logs.** o2switch retention, still unconfirmed.
 - **The partial-failure window.** Clerk deletion succeeds, the backend purge
   fails, and the `user.deleted` webhook has to recover it. Test it deliberately
   rather than assuming the backstop works.
