@@ -21,6 +21,17 @@ export const homeStyles = StyleSheet.create({
   topBar: {
     width: '100%',
     paddingVertical: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  topBarSignIn: {
+    fontFamily: Fonts.body.bold,
+    fontWeight: '800',
+    fontSize: 15,
+    color: Colors.accentLink,
+    paddingVertical: 6,
+    paddingHorizontal: 4,
   },
   brandRow: { flexDirection: 'row', alignItems: 'center', gap: 10 },
   brandIcon: { width: 36, height: 36 },

@@ -21,6 +21,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useNotifications } from '@/src/features/notifications/NotificationsProvider';
 import { useDeleteAccount } from '@/src/features/auth/hooks/useDeleteAccount';
+import DeleteAccountDialog from '@/src/features/auth/components/DeleteAccountDialog';
 import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
 import { Fonts } from '@/src/constants/typography';
 
@@ -31,10 +32,11 @@ export function AccountButton() {
   const insets = useSafeAreaInsets();
   const { explorerName } = useExplorer();
   const [visible, setVisible] = useState(false);
+  const [confirmingDelete, setConfirmingDelete] = useState(false);
 
   const { enabled, permission, setEnabled, openSystemSettings } =
     useNotifications();
-  const { deleting, confirmAndDelete } = useDeleteAccount();
+  const { deleting, performDelete } = useDeleteAccount();
 
   const handleSignOut = useCallback(async () => {
     try {
@@ -194,6 +196,19 @@ export function AccountButton() {
                 styles.item,
                 pressed && styles.itemPressed,
               ]}
+              onPress={() => setConfirmingDelete(true)}
+            >
+              <View style={styles.rowContent}>
+                <Ionicons name="trash-outline" size={20} color={NEUTRAL} />
+                <Text style={styles.deleteText}>Delete account</Text>
+              </View>
+            </Pressable>
+
+            <Pressable
+              style={({ pressed }) => [
+                styles.item,
+                pressed && styles.itemPressed,
+              ]}
               onPress={handleSignOut}
             >
               <View style={styles.rowContent}>
@@ -213,29 +228,17 @@ export function AccountButton() {
               <Text style={styles.cancelText}>Cancel</Text>
             </Pressable>
           </Pressable>
-
-          <Pressable style={[styles.sheet, styles.deleteCard]}>
-            <Pressable
-              style={({ pressed }) => [
-                styles.item,
-                styles.deleteRow,
-                pressed && styles.itemPressed,
-              ]}
-              onPress={confirmAndDelete}
-              disabled={deleting}
-            >
-              <View
-                style={[styles.rowContent, deleting && styles.itemDisabled]}
-              >
-                <Ionicons name="trash-outline" size={20} color={DANGER} />
-                <Text style={styles.deleteText}>
-                  {deleting ? 'Deleting…' : 'Delete account'}
-                </Text>
-              </View>
-            </Pressable>
-          </Pressable>
         </Pressable>
       </Modal>
+
+      <DeleteAccountDialog
+        visible={confirmingDelete}
+        deleting={deleting}
+        onCancel={() => setConfirmingDelete(false)}
+        onConfirm={() => {
+          void performDelete();
+        }}
+      />
     </>
   );
 }
@@ -248,7 +251,6 @@ const TERMS_URL = 'https://weswapcards.com/terms';
 const PRIVACY_URL = 'https://weswapcards.com/privacy';
 
 const NEUTRAL = '#111';
-const DANGER = '#B5544B';
 
 const styles = StyleSheet.create({
   avatarButton: {
@@ -316,16 +318,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: 10,
   },
-  deleteCard: {
-    marginTop: 12,
-  },
-  deleteRow: {
-    borderBottomWidth: 0,
-  },
   deleteText: {
     fontFamily: Fonts.body.regular,
     fontSize: 16,
-    color: DANGER,
+    color: NEUTRAL,
   },
   toggleRow: {
     flexDirection: 'row',
@@ -357,9 +353,6 @@ const styles = StyleSheet.create({
     marginTop: 2,
     fontSize: 13,
     color: '#666',
-  },
-  itemDisabled: {
-    opacity: 0.5,
   },
   cancelText: {
     fontFamily: Fonts.body.semibold,

@@ -1,4 +1,5 @@
 import { Text, View, Image } from 'react-native';
+import { Link } from 'expo-router';
 import { homeStyles } from '@/src/assets/styles/home.styles';
 
 export default function TopBar() {
@@ -12,6 +13,10 @@ export default function TopBar() {
         />
         <Text style={homeStyles.brandName}>WeSwapCards</Text>
       </View>
+
+      <Link href="/sign-in" style={homeStyles.topBarSignIn}>
+        Sign in
+      </Link>
     </View>
   );
 }

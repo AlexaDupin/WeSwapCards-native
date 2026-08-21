@@ -6,8 +6,12 @@ import { useRouter } from 'expo-router';
 import { deleteAccount } from '@/src/features/auth/api/userApi';
 import { useNotifications } from '@/src/features/notifications/NotificationsProvider';
 
-// Owns the account-deletion flow so AccountButton stays presentational:
-// confirm -> delete server-side -> drop local state -> sign out -> navigate.
+// Owns the account-deletion flow so the UI stays presentational:
+// delete server-side -> drop local state -> sign out -> navigate.
+//
+// Confirmation lives in DeleteAccountDialog rather than here: it needs an
+// acknowledgement tick box, which Alert.alert cannot render. Alert is still
+// used below for the failure case, where a plain message is enough.
 export function useDeleteAccount() {
   const { getToken } = useAuth();
   const { signOut } = useClerk();
@@ -41,22 +45,5 @@ export function useDeleteAccount() {
     }
   }, [getToken, clearLocal, signOut, router]);
 
-  const confirmAndDelete = useCallback(() => {
-    Alert.alert(
-      'Delete account',
-      'This permanently deletes your account, card collection, duplicate statuses, conversations, and messages. This cannot be undone.',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Delete',
-          style: 'destructive',
-          onPress: () => {
-            void performDelete();
-          },
-        },
-      ],
-    );
-  }, [performDelete]);
-
-  return { deleting, confirmAndDelete };
+  return { deleting, performDelete };
 }
