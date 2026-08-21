@@ -105,7 +105,7 @@ launch, so treat it as a first iteration.
 
 ```
 More than 1,000 collectors have joined WeSwapCards and completed over 16,000 swaps.
-Log your cards and doubles, find who has what you are missing, and agree a swap.
+Add your cards and doubles, find who has what you need, and arrange a swap.
 ```
 
 `[user]` Both figures are confirmed by Alexa and describe the WeSwapCards community as a whole, not
@@ -178,7 +178,7 @@ users who matter, the ones who have installed. See
 | Field | Limit | Value |
 | --- | --- | --- |
 | App name | 30 | `WeSwapCards: Card Swaps` |
-| Short description | 80 | `Log your cards, find collectors who have what you need, and swap.` |
+| Short description | 80 | `Add your cards, find collectors who have what you need, and swap.` |
 | Full description | 4000 | reuse the Apple description above |
 | Category | n/a | `Social` |
 | Contact email | n/a | `contact@weswapcards.com` |
@@ -428,7 +428,7 @@ page, not the repo.
 
 ```
 WeSwapCards helps people who collect digital cards in another app keep track of
-which cards they own and which they have spare, and find other collectors to swap
+which cards they own and which they have extra, and find other collectors to swap
 with. Nothing is bought or sold here and no digital goods change hands in the app:
 the swap itself happens on the platform where the cards live. WeSwapCards is where
 collectors find each other and agree on the details.
@@ -660,8 +660,9 @@ Requirements per pair:
   production instance's sign-in factors are changed.
 - Both accounts hold a **card collection with doubles**, so search returns
   results rather than an empty state. Make the doubles complementary, A holding
-  spares that B is missing and vice versa, so both directions described in the
-  review notes actually demonstrate.
+  extras that B is missing and vice versa, so a reviewer signed into either
+  account finds results. Search is one-directional (card → collectors holding
+  it), so each account needs its own reason to find the other.
 - A **conversation already exists** in the pair, so report and block can be
   exercised without the reviewer having to arrange a match first.
 - Do not reuse a real user's account.
@@ -695,7 +696,7 @@ the inboxes are ever lost.
 4. **Build the collection** in *My cards*: mark cards as owned, and mark several
    as doubles, complementary across the pair.
 5. **Create the conversation** from *Swap*: search a card the partner account
-   holds spare, open that collector, and send a message
+   holds as a double, open that collector, and send a message
    (`SwapScreen.tsx` routes into `/(modal)/chat/[conversationId]`).
 6. **Update the console** if the username changed, since the review notes name it.
 
