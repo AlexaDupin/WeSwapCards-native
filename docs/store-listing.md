@@ -36,12 +36,14 @@ Untagged prose is reasoning and drafted copy rather than a factual claim.
 Copy is drafted and the questionnaire answers are reasoned through. What stops a
 submission today, roughly in the order it has to be dealt with:
 
-1. ⚠ **No store media exists.** No screenshots, no Play feature graphic. This is
-   the largest remaining piece of work. See [Store media](#store-media).
-2. ⚠ **Reviewer accounts in progress.** Android pair being created 2026-08-19 on
-   a production build, with password sign-in confirmed working against live
-   Clerk. Still to do: collections with complementary doubles, and a conversation
-   between the pair. The iOS pair waits on the Apple Developer Program.
+1. ⚠ **The closed test is the long pole.** 12 testers opted in continuously for
+   14 days, then up to 7 more for production access. Nothing else on this list
+   takes as long, and the clock starts on tester opt-in.
+   See [Closed testing](#closed-testing-play-production-access-requirement).
+2. ✅ **Android reviewer pair is complete.** `review_android_a` / `_b`, created on
+   a production build, password sign-in confirmed against live Clerk,
+   complementary doubles (Bangkok1 / Belgium1) and a conversation in place. The
+   iOS pair waits on the Apple Developer Program.
    See [Reviewer accounts](#reviewer-accounts).
 3. ⚠ **The web Terms state no minimum age**, while Play will carry an 18+ target
    audience declaration. Needs a clause on the web side.
@@ -50,7 +52,7 @@ submission today, roughly in the order it has to be dealt with:
 5. The Play app record exists; Apple's does not, and `submit.production` in
    `eas.json` stays empty until a Play service account key is in place.
 
-Settled since the first draft: the production build configuration is proven —
+Settled since the first draft: the production build configuration is proven:
 an Android build on the real `pk_live_` Clerk instance and the o2switch API
 installed and ran (2026-08-19). The whole deletion table is verified against the
 production DB (cascade **and** moderation), the legal pages are deployed, Play's
@@ -150,10 +152,10 @@ The App Review notes were always correct on this; only the description was wrong
 
 Two lines were dropped on purpose, both of which had been doing compliance work:
 
-- "Conversations are private and one to one" — now just "a private message".
+- "Conversations are private and one to one" became just "a private message".
   The one-to-one framing still appears in the Play App access instructions and
   the Apple App Review notes, where reviewers actually read it.
-- "The swap itself happens in the app where your cards live" — ambiguous to a
+- "The swap itself happens in the app where your cards live", ambiguous to a
   user, who may read "the app" as WeSwapCards. Both reviewer-facing texts state
   it plainly, which is where it heads off the assumption that the app brokers
   transactions.
@@ -218,7 +220,7 @@ category chosen above.
 | Interactions limited to invited friends | No | Any collector is reachable via search |
 
 ⚠ **"Chat moderation: No" is deliberate and must stay No.** The question means
-proactive review — filtering, automated scanning, or moderators reading
+proactive review: filtering, automated scanning, or moderators reading
 conversations. We do none of that by design: the compliance position is report,
 block, Terms and human enforcement, with **no content filtering**
 ([[ugc-moderation-compliance]] reasoning). The reactive side is already captured
@@ -336,7 +338,7 @@ Three answers that are less obvious than they look:
 
 - **"Required" means two different things here.** Email and User IDs are required
   because the app cannot function without them. Crash logs and Diagnostics are
-  required because the user has *no way to turn them off* — Sentry initialises
+  required because the user has *no way to turn them off*. Sentry initialises
   from `SENTRY_DSN` at server start, with no per-user opt-out. Play asks one
   question and accepts both answers.
 - **Fraud prevention is ticked for user-generated content but not for Messages.**
@@ -369,12 +371,12 @@ all of it is collected. Nothing here is on-device-only.
 ✅ `[web]` Third-party SDK disclosures walked 2026-08-20. Neither vendor publishes
 a Play mapping, but both answer the question:
 
-- **Clerk** — its [privacy policy](https://clerk.com/legal/privacy) states end-user
+- **Clerk**: its [privacy policy](https://clerk.com/legal/privacy) states end-user
   data is Customer Data, with us as controller and Clerk as processor. Its
   [telemetry](https://clerk.com/docs/guides/how-clerk-works/security/clerk-telemetry)
   is collected from **development instances only** and explicitly excludes
   information about our users, so a `pk_live_` build is out of scope entirely.
-- **Expo** — per [Expo's privacy explainer](https://expo.dev/privacy-explained),
+- **Expo**: per [Expo's privacy explainer](https://expo.dev/privacy-explained),
   it stores the push token only if push is opted into, deletes the notification
   payload once handed to FCM/APNs, and does not handle user PII.
 
@@ -527,7 +529,7 @@ WHERE conname IN ('conversation_creator_id_fkey','conversation_recipient_id_fkey
 Still genuinely external, so still worth checking once:
 
 - **Profile photo.** Held by Clerk, expected to go with the Clerk user.
-- ✅ **Sentry retention: 30 days.** `[web]` Not a dashboard setting —
+- ✅ **Sentry retention: 30 days.** `[web]` Not a dashboard setting.
   [Sentry fixes retention by plan](https://docs.sentry.io/security-legal-pii/security/data-retention-periods/)
   and it is not configurable on sentry.io. On the Developer (free) plan errors,
   spans and logs are all 30 days.
@@ -535,9 +537,9 @@ Still genuinely external, so still worth checking once:
   **Deletion is therefore not instantaneous everywhere.** The database cascade
   removes a user's data at once, but Sentry can still hold error events for up to
   30 days afterwards, and those carry request URLs containing that user's
-  `explorer.id`. The `/delete-account` page §5 already covers this — "server and
+  `explorer.id`. The `/delete-account` page §5 already covers this: "server and
   email records may also keep technical information, such as the time of a
-  request, for a limited period" — so the disclosure is in place. Worth knowing
+  request, for a limited period", so the disclosure is in place. Worth knowing
   that sentence is load-bearing before anyone tightens that page.
 - **Server logs.** o2switch retention, still unconfirmed.
 - **The partial-failure window.** Clerk deletion succeeds, the backend purge
@@ -580,10 +582,29 @@ confirm it renders:
 
 ## Store media
 
-⚠ **None of this exists yet.** The repo has brand assets under
-`src/assets/images/brand/` (app icon, adaptive icon, splash) which the build
-consumes, but no store screenshots and no feature graphic. Both consoles block on
-these, so they are the largest remaining piece of work.
+✅ **Play assets are done**, in `store-assets/` (2026-08-21):
+
+| File | Spec |
+| --- | --- |
+| `play-icon-512.png` | 512×512, 210 KB. Resized from `icon-dark.png`, the full-bleed variant, alpha flattened onto the brand navy. The adaptive icon was rejected for this: its Android safe-zone padding would leave the mark small in a store tile |
+| `play-feature-1024x500.png` | Mark plus wordmark on navy. Mark trimmed of safe-zone padding first, text kept well clear of the right edge since Play crops this on some surfaces |
+| `play-screenshots/01..05` | Five at 1080×1920, above the four-at-1080px threshold for promotion eligibility |
+
+Screenshot order: chapters, my cards, find a card, conversation, dashboard.
+Chapters leads because it is the only one with photography, and Play shows the
+first few in previews.
+
+⚠ A sixth capture of the signed-out landing page was **discarded**, for two
+reasons worth remembering if anyone reshoots: it displayed "WeWard" and
+"WeCards", which the listing deliberately does not name, and its fineprint
+rendered *behind* the system navigation bar, which is a live `edgeToEdgeEnabled`
+bug rather than a bad capture.
+
+All five were shot on `review_android_a`, so no real collector's username appears
+on a public store page. Worth re-checking on any reshoot: search results show
+real usernames.
+
+Apple assets are still outstanding. The iPhone specs are below.
 
 | Asset | Store | Requirement | Source |
 | --- | --- | --- | --- |
@@ -620,6 +641,104 @@ view. Use the reviewer accounts, so the collections look populated rather than
 empty, and check no real user's username is visible in a search result or chat.
 
 `orientation: 'portrait'` means every capture is portrait. No landscape set.
+
+---
+
+## Closed testing (Play production-access requirement)
+
+Google requires personal developer accounts created after 13 November 2023 to
+run a **closed** test with at least **12 testers opted in continuously for 14
+days** before production access can be applied for, and that application then
+takes up to 7 days. Internal testing does not count toward it. This is the long
+pole in the whole submission: three weeks minimum from rollout, and the clock
+starts when testers **opt in**, not when the release is uploaded or reviewed.
+
+Track set up with build 7 (`9f1a05b`), all 177 countries selected. Countries are
+opened wide on purpose: access is gated by the tester list anyway, so the only
+thing country targeting could do here is silently block a tester who happens to
+live outside the selection.
+
+**Testers by email list, not Google Group.** The cohort is fixed for a fixed
+fortnight and churn is actively harmful, since anyone who leaves and rejoins
+resets their own 14 days. A list set once has fewer moving parts.
+
+⚠ The address collected must be the **Google account signed into Play on the
+tester's phone**, not merely an address they use. A work address paired with a
+personal Google account on the device is the common failure: the opt-in link
+appears to work and the app never becomes installable.
+
+### Recruitment email
+
+Sent to the web community, which is where a dozen willing Android collectors
+already exist. Framed as recruitment rather than a launch announcement: "the app
+is on the way" to 1,000 people starts a three-week wait nobody controls.
+
+⚠ **Do not send this through the app's SMTP.** Bulk mail from o2switch shared
+hosting risks the sending reputation of `weswapcards.com`, which also carries
+Clerk verification emails and moderation report alerts. Sign-up codes landing in
+spam would break the exact flow testers are about to use. Use a sending service,
+or mail a smaller active segment.
+
+⚠ **The unsubscribe link must resolve to something real.** Privacy Policy §2
+promises opt-out from non-essential communications, and this is a bulk mail to EU
+recipients.
+
+Subject: `Help us test the WeSwapCards app (Android)`
+
+```
+Hi,
+
+We are close to releasing the WeSwapCards mobile app, and we are looking for
+a small group of collectors to try it before everyone else.
+
+You will be able to manage your collection and your swaps from your phone,
+with two things the website cannot do:
+
+- Notifications, so you know as soon as someone replies about a swap
+- A redesigned dashboard, so you can see at once which swaps are still open
+
+We need about 15 testers. If you would like to be one of them, reply to this
+email with the Google account address you use on your Android phone. That is
+the address Google Play needs in order to give you access.
+
+Being a tester is easy. Install the app, and open it now and then over the
+next two weeks. There is no minimum time to spend on it, and no report to
+write. If you notice something wrong you can tell us, and that is very
+welcome, but it is not required.
+
+Three things to know before you say yes:
+
+- Android only for now. The iPhone version is being worked on and we will
+  write again when it is ready.
+- Google asks testers to stay in the test for at least 14 days. Please join
+  only if you can keep it until [DATE].
+- You sign in with the account you already have. Nothing changes on the
+  website.
+
+Thank you,
+Alexa
+WeSwapCards
+
+---
+You are receiving this because you have a WeSwapCards account.
+Unsubscribe: [LINK]
+```
+
+`[DATE]` should be roughly 16 days after review is expected to clear, leaving
+margin. Recruit 15 to 20 against a floor of 12, since people drop out.
+
+The low-effort paragraph sits **before** the conditions deliberately: people
+decide whether they are willing before they read the fine print, so "14 days"
+lands as a fortnight of the app being installed rather than a fortnight of work.
+
+This is the first of two emails. The opt-in link does not exist until the release
+clears review, so the second one is short: here is the link, here is how to join,
+please stay in until [DATE].
+
+Worth knowing: "open it now and then" is accurate, because the count is based on
+continuous opt-in rather than activity. Testers who install and never open it
+still qualify, and give no signal. A nudge partway through the fortnight works
+better than asking more of them upfront.
 
 ---
 
@@ -745,7 +864,7 @@ confusingly, and placeholders invite committing real identifiers later.
 
 `[model]` `submit.production.ios` needs `appleId`, `ascAppId`, `appleTeamId`.
 `submit.production.android` needs `serviceAccountKeyPath` and `track`. Unverified
-against the current EAS submit schema — check `eas submit --help` or the Expo docs
+against the current EAS submit schema. Check `eas submit --help` or the Expo docs
 when you fill it in, rather than trusting this line.
 
 `[repo]` The Play service-account JSON is already covered by `.gitignore` and
