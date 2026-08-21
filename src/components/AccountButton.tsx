@@ -22,6 +22,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNotifications } from '@/src/features/notifications/NotificationsProvider';
 import { useDeleteAccount } from '@/src/features/auth/hooks/useDeleteAccount';
 import DeleteAccountDialog from '@/src/features/auth/components/DeleteAccountDialog';
+import { appVersionLabel } from '@/src/lib/appVersion';
 import { useExplorer } from '@/src/features/auth/context/ExplorerContext';
 import { Fonts } from '@/src/constants/typography';
 
@@ -227,6 +228,10 @@ export function AccountButton() {
             >
               <Text style={styles.cancelText}>Cancel</Text>
             </Pressable>
+
+            <Text style={styles.versionText} selectable>
+              {appVersionLabel()}
+            </Text>
           </Pressable>
         </Pressable>
       </Modal>
@@ -353,6 +358,13 @@ const styles = StyleSheet.create({
     marginTop: 2,
     fontSize: 13,
     color: '#666',
+  },
+  versionText: {
+    fontFamily: Fonts.body.regular,
+    textAlign: 'center',
+    paddingBottom: 14,
+    fontSize: 12,
+    color: '#9a9a9a',
   },
   cancelText: {
     fontFamily: Fonts.body.semibold,
