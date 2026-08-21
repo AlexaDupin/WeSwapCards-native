@@ -12,6 +12,8 @@
     "format:check": "prettier --check .",
     "test": "jest",
     "bench:cards": "node scripts/bench-card-rerenders.js",
+    "update:production": "eas update --branch production --environment production",
+    "update:preview": "eas update --branch preview --environment preview",
     "typecheck": "tsc --noEmit",
     "prepare": "husky"
   },

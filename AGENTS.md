@@ -180,6 +180,31 @@ The backend API lives in a **separate repository** at `html/weswapcards/back`
 
 ---
 
+## Publishing OTA updates
+
+Use the npm scripts, never a bare `eas update`:
+
+```bash
+npm run update:production
+npm run update:preview
+```
+
+**Why this matters.** `eas update` loads the local `.env`, which points at the
+test stack and sets `APP_ENV=development`. `EXPO_PUBLIC_*` values are inlined
+into the JS bundle at build time, so a bare `eas update --branch production`
+publishes a bundle aimed at the **test backend and test Clerk instance** onto the
+production branch, where the runtime version matches real builds and it is
+eligible to be applied.
+
+The `app.config.ts` validation does **not** catch this: `.env` sets
+`APP_ENV=development`, so `mustBeComplete` is false and every production check is
+skipped. It fails silently and looks like a successful publish.
+
+`--environment production` makes eas-cli inject the server-side EAS environment
+instead, which is what the scripts encode.
+
+---
+
 ## Testing
 
 Testing stack:
