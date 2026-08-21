@@ -104,6 +104,8 @@ export default function DeleteAccountDialog({
   );
 }
 
+const DANGER = '#B5544B';
+
 const styles = StyleSheet.create({
   overlay: {
     flex: 1,
@@ -167,7 +169,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     paddingVertical: 14,
     borderRadius: 12,
-    backgroundColor: Colors.ink,
+    backgroundColor: DANGER,
   },
   confirmButtonDisabled: {
     opacity: 0.35,
