@@ -234,16 +234,16 @@ export function AccountButton() {
             </Text>
           </Pressable>
         </Pressable>
-      </Modal>
 
-      <DeleteAccountDialog
-        visible={confirmingDelete}
-        deleting={deleting}
-        onCancel={() => setConfirmingDelete(false)}
-        onConfirm={() => {
-          void performDelete();
-        }}
-      />
+        <DeleteAccountDialog
+          visible={confirmingDelete}
+          deleting={deleting}
+          onCancel={() => setConfirmingDelete(false)}
+          onConfirm={() => {
+            void performDelete();
+          }}
+        />
+      </Modal>
     </>
   );
 }

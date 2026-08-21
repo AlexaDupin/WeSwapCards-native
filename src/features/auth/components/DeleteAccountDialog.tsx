@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import { Colors } from '@/src/constants/Colors';
@@ -15,6 +15,10 @@ type Props = {
 // A custom dialog rather than Alert.alert: the acknowledgement tick box is the
 // point, and a native alert cannot hold one. Deleting is irreversible, so the
 // confirm button stays disabled until the box is ticked.
+//
+// An overlay rather than its own Modal. This renders inside the account sheet's
+// Modal, because presenting a second native modal over a live one on iOS comes
+// up invisible and swallows every touch, locking the screen.
 export default function DeleteAccountDialog({
   visible,
   deleting,
@@ -30,77 +34,79 @@ export default function DeleteAccountDialog({
 
   const canDelete = acknowledged && !deleting;
 
+  if (!visible) return null;
+
   return (
-    <Modal
-      visible={visible}
-      transparent
-      animationType="fade"
-      onRequestClose={onCancel}
+    // Pressable, not View: the backdrop has to capture taps, otherwise they fall
+    // through to the account sheet's own dismiss handler underneath.
+    <Pressable
+      style={styles.overlay}
+      onPress={deleting ? undefined : onCancel}
+      accessibilityRole="button"
+      accessibilityLabel="Dismiss"
     >
-      <View style={styles.overlay}>
-        <View style={styles.card}>
-          <View style={styles.iconCircle}>
-            <Ionicons name="trash-outline" size={24} color={Colors.ink} />
-          </View>
-
-          <Text style={styles.title}>Delete account?</Text>
-
-          <Text style={styles.body}>
-            This permanently deletes your account, card collection, duplicate
-            statuses, conversations, and messages.
-          </Text>
-
-          <Pressable
-            style={({ pressed }) => [
-              styles.checkRow,
-              pressed && styles.checkRowPressed,
-            ]}
-            onPress={() => setAcknowledged((v) => !v)}
-            accessibilityRole="checkbox"
-            accessibilityState={{ checked: acknowledged }}
-            accessibilityLabel="I understand that this cannot be undone"
-            hitSlop={6}
-          >
-            <Ionicons
-              name={acknowledged ? 'checkbox' : 'square-outline'}
-              size={22}
-              color={acknowledged ? Colors.accent : Colors.inkMuted}
-            />
-            <Text style={styles.checkText}>
-              I understand that this cannot be undone
-            </Text>
-          </Pressable>
-
-          <Pressable
-            style={({ pressed }) => [
-              styles.confirmButton,
-              !canDelete && styles.confirmButtonDisabled,
-              pressed && canDelete && styles.confirmButtonPressed,
-            ]}
-            onPress={onConfirm}
-            disabled={!canDelete}
-            accessibilityRole="button"
-          >
-            <Ionicons name="trash-outline" size={18} color="#fff" />
-            <Text style={styles.confirmText}>
-              {deleting ? 'Deleting…' : 'Delete my account'}
-            </Text>
-          </Pressable>
-
-          <Pressable
-            style={({ pressed }) => [
-              styles.cancelButton,
-              pressed && styles.cancelButtonPressed,
-            ]}
-            onPress={onCancel}
-            disabled={deleting}
-            accessibilityRole="button"
-          >
-            <Text style={styles.cancelText}>Cancel</Text>
-          </Pressable>
+      <Pressable style={styles.card}>
+        <View style={styles.iconCircle}>
+          <Ionicons name="trash-outline" size={24} color={Colors.ink} />
         </View>
-      </View>
-    </Modal>
+
+        <Text style={styles.title}>Delete account?</Text>
+
+        <Text style={styles.body}>
+          This permanently deletes your account, card collection, duplicate
+          statuses, conversations, and messages.
+        </Text>
+
+        <Pressable
+          style={({ pressed }) => [
+            styles.checkRow,
+            pressed && styles.checkRowPressed,
+          ]}
+          onPress={() => setAcknowledged((v) => !v)}
+          accessibilityRole="checkbox"
+          accessibilityState={{ checked: acknowledged }}
+          accessibilityLabel="I understand that this cannot be undone"
+          hitSlop={6}
+        >
+          <Ionicons
+            name={acknowledged ? 'checkbox' : 'square-outline'}
+            size={22}
+            color={acknowledged ? Colors.accent : Colors.inkMuted}
+          />
+          <Text style={styles.checkText}>
+            I understand that this cannot be undone
+          </Text>
+        </Pressable>
+
+        <Pressable
+          style={({ pressed }) => [
+            styles.confirmButton,
+            !canDelete && styles.confirmButtonDisabled,
+            pressed && canDelete && styles.confirmButtonPressed,
+          ]}
+          onPress={onConfirm}
+          disabled={!canDelete}
+          accessibilityRole="button"
+        >
+          <Ionicons name="trash-outline" size={18} color="#fff" />
+          <Text style={styles.confirmText}>
+            {deleting ? 'Deleting…' : 'Delete my account'}
+          </Text>
+        </Pressable>
+
+        <Pressable
+          style={({ pressed }) => [
+            styles.cancelButton,
+            pressed && styles.cancelButtonPressed,
+          ]}
+          onPress={onCancel}
+          disabled={deleting}
+          accessibilityRole="button"
+        >
+          <Text style={styles.cancelText}>Cancel</Text>
+        </Pressable>
+      </Pressable>
+    </Pressable>
   );
 }
 
@@ -108,7 +114,7 @@ const DANGER = '#B5544B';
 
 const styles = StyleSheet.create({
   overlay: {
-    flex: 1,
+    ...StyleSheet.absoluteFillObject,
     backgroundColor: 'rgba(0,0,0,0.45)',
     justifyContent: 'center',
     padding: 24,

@@ -43,6 +43,12 @@ describe('DeleteAccountDialog', () => {
     expect(onConfirm).toHaveBeenCalledTimes(1);
   });
 
+  it('renders nothing when not visible', () => {
+    setup({ visible: false });
+
+    expect(screen.queryByText('Delete my account')).toBeNull();
+  });
+
   it('cancels without deleting', () => {
     const { onCancel, onConfirm } = setup();
 
