@@ -120,26 +120,46 @@ ever refreshed, update it in both places.
 ```
 WeSwapCards helps card collectors complete their collections.
 
-Log what you own and what you have spare, then find the people who can fill your
-gaps, and who need the doubles sitting in yours.
+Add the cards you own and mark cards you have more than once as doubles. Then, find other collectors who have the cards you still need.
 
-LOG YOUR CARDS
-Mark the cards you own and the ones you have doubles of. Browse by chapter to see
-at a glance what is still missing.
+YOUR CARDS
+Mark each card as owned or as a double if you have more than one. Keep your collection up to date as you collect new cards or get new doubles.
 
-FIND WHAT YOU NEED
-Pick a card and see which collectors have it spare. Search works the other way
-too: find the people who need the doubles you are holding.
+FIND A SWAP
+Choose a card you need, and WeSwapCards shows you collectors who have an extra one. Have doubles to swap? Other collectors can find you too when they are looking for those cards.
 
-CHAT AND SWAP
-Message another collector directly and agree on a swap. Conversations are private
-and one to one. The swap itself happens in the app where your cards live.
-WeSwapCards is where collectors find each other and settle the details.
+SEND A MESSAGE
+Found someone with a card you need? Send them a private message and arrange a swap.
 
-KEEP TRACK
-Your messages stay organized in one place, so you always know which swaps are
-still open. Notifications tell you when someone replies.
+YOUR MESSAGES
+Keep all your conversations in one place, so you can easily see which swaps are still open. Get a notification when someone replies, so you never miss a swap.
 ```
+
+Rewritten 2026-08-21 for readers who are not native English speakers. The first
+draft leaned on idiom that does not translate: "the doubles sitting in yours",
+"fill your gaps", "at a glance", "settle the details". Plain verbs and literal
+phrasing throughout, with the questions carrying the warmth so the register stays
+friendly without getting wordy.
+
+⚠ **The first draft overclaimed search, and this corrects it.** It said "Search
+works the other way too: find the people who need the doubles you are holding."
+There is no reverse lookup: `useSwap.ts` goes chapter → card → collectors holding
+that card as a double, one direction only. What is true, and what the copy now
+says, is that your own doubles make *you* findable by other people's searches.
+The App Review notes were always correct on this; only the description was wrong.
+
+Two lines were dropped on purpose, both of which had been doing compliance work:
+
+- "Conversations are private and one to one" — now just "a private message".
+  The one-to-one framing still appears in the Play App access instructions and
+  the Apple App Review notes, where reviewers actually read it.
+- "The swap itself happens in the app where your cards live" — ambiguous to a
+  user, who may read "the app" as WeSwapCards. Both reviewer-facing texts state
+  it plainly, which is where it heads off the assumption that the app brokers
+  transactions.
+
+"Chapter" no longer appears, consistent with dropping it from the Apple keyword
+field: meaningful inside the app, weak as discovery copy.
 
 No pricing sentence: the product page already states the price, and a claim in the
 description would go stale the moment that changes.
