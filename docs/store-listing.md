@@ -43,18 +43,19 @@ submission today, roughly in the order it has to be dealt with:
    Clerk. Still to do: collections with complementary doubles, and a conversation
    between the pair. The iOS pair waits on the Apple Developer Program.
    See [Reviewer accounts](#reviewer-accounts).
-3. Remaining ⚠ verifications that are answers rather than work: the Sentry DSN
-   and log retention questions, the IP-in-server-logs declaration, third-party
-   SDK disclosures for Clerk and Expo, and the partial-failure window on deletion.
-4. The store records themselves do not exist yet, which is why
-   `submit.production` in `eas.json` is still empty.
+3. ⚠ **The web Terms state no minimum age**, while Play will carry an 18+ target
+   audience declaration. Needs a clause on the web side.
+4. ⚠ Still open: o2switch server log retention, and the partial-failure window on
+   deletion, which needs testing on a throwaway account rather than answering.
+5. The Play app record exists; Apple's does not, and `submit.production` in
+   `eas.json` stays empty until a Play service account key is in place.
 
 Settled since the first draft: the production build configuration is proven —
 an Android build on the real `pk_live_` Clerk instance and the o2switch API
 installed and ran (2026-08-19). The whole deletion table is verified against the
-production DB (cascade **and** moderation), the legal pages are deployed, both
-privacy category mappings are
-checked against the vendors' own published taxonomies, `app.config.ts` validates
+production DB (cascade **and** moderation), the legal pages are deployed, Play's
+Data Safety and IARC content rating are submitted, both privacy category mappings
+are checked against the vendors' own published taxonomies, `app.config.ts` validates
 the build configuration and predeclares export compliance, and the app carries a
 non-affiliation statement of its own.
 
@@ -171,6 +172,57 @@ app whose core loop is finding and messaging other people.
 
 Play has no keyword field. It indexes the title and both descriptions, so the terms
 have to read naturally in the prose rather than being listed.
+
+---
+
+## Content rating (IARC, via Play)
+
+`[user]` Submitted 2026-08-21. Contact address `contact@weswapcards.com`, which
+IARC shares with rating authorities, so it must stay monitored.
+
+**Category: Social or Communication → Social.**
+
+Not "Communication", despite conversations being 1:1: that option is scoped to
+"people **already known** to the user", and ours are strangers found through card
+search. Note IARC lists Tinder under Social, so the discriminator is meeting new
+people rather than conversation size. Consistent with the `Social` Play store
+category chosen above.
+
+| Question | Answer | Why |
+| --- | --- | --- |
+| Shares precise location with other users | No | No permission, no location module |
+| Users can purchase digital goods | No | No IAP; the swap happens off-platform |
+| Can block users or content | **Yes** | Blocks stop messages and hide the user from search |
+| Can report users or content | **Yes** | Stored, and emailed for human review |
+| **Chat moderation** | **No** | See below |
+| Interactions limited to invited friends | No | Any collector is reachable via search |
+
+⚠ **"Chat moderation: No" is deliberate and must stay No.** The question means
+proactive review — filtering, automated scanning, or moderators reading
+conversations. We do none of that by design: the compliance position is report,
+block, Terms and human enforcement, with **no content filtering**
+([[ugc-moderation-compliance]] reasoning). The reactive side is already captured
+by the block and report answers. Answering Yes would claim a checkable
+capability we do not have.
+
+**Resulting ratings:** ESRB Teen, PEGI Parental Guidance, USK 12+, ClassInd 12+,
+IARC Generic 12+. All driven by the *Users Interact* interactive element rather
+than by content.
+
+Brazil additionally applies an **Inappropriate Language** descriptor. That is not
+a claim about our content, which was declared clean: ClassInd adds it to social
+apps carrying unmoderated user messages, inferring language it cannot vet. No
+action needed.
+
+**A 12+ rating does not oblige a 12+ target audience.** The rating describes
+suitability; the target-audience declaration describes who the app aims at, and
+may be narrower. The 18+ plan stands, and the reasoning is unchanged: unmoderated
+1:1 chat with minors is a compliance surface to avoid on a first release, and
+including under-13 triggers the Families policy outright.
+
+⚠ Still inconsistent with the web Terms, which state **no minimum age at all**.
+Declaring 18+ to Play while the Terms are silent is a gap worth closing with a
+clause on the web side.
 
 ---
 
