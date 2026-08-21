@@ -182,12 +182,17 @@ The backend API lives in a **separate repository** at `html/weswapcards/back`
 
 ## Publishing OTA updates
 
-Use the npm scripts, never a bare `eas update`:
+Use the script, never a bare `eas update`:
 
 ```bash
-npm run update:production
-npm run update:preview
+./scripts/publish-update.sh production -m "what changed"
+./scripts/publish-update.sh preview    -m "what changed"
 ```
+
+**Not an npm script.** `package.json` `scripts` is part of the EAS Update
+fingerprint, so adding one changes the runtime version and cuts every existing
+install off from updates. Confirmed with `eas fingerprint:compare`: adding two
+script lines moved the hash and orphaned the AAB already in Play.
 
 **Why this matters.** `eas update` loads the local `.env`, which points at the
 test stack and sets `APP_ENV=development`. `EXPO_PUBLIC_*` values are inlined
