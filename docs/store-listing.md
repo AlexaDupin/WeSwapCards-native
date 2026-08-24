@@ -685,60 +685,149 @@ recipients.
 
 Subject: `Help us test the WeSwapCards app (Android)`
 
+Final version, three languages in one email. One email rather than three
+campaigns because the Clerk export carries **no language field**, so the list
+cannot be segmented. Bold markers below are markdown for readability; they must
+be applied as real formatting in Brevo's editor or recipients see literal
+asterisks.
+
 ```
 Hi,
 
-We are close to releasing the WeSwapCards mobile app, and we are looking for
-a small group of collectors to try it before everyone else.
+**French and Spanish translations are at the end of this email.**
 
-You will be able to manage your collection and your swaps from your phone,
-with two things the website cannot do:
+We're getting close to releasing the WeSwapCards mobile app, and we're looking
+for a small group of collectors to try it before everyone else.
 
-- Notifications, so you know as soon as someone replies about a swap
-- A redesigned dashboard, so you can see at once which swaps are still open
+The app lets you manage your collection and swaps from your phone, with two new
+features:
 
-We need about 15 testers. If you would like to be one of them, reply to this
-email with the Google account address you use on your Android phone. That is
-the address Google Play needs in order to give you access.
+* **Notifications** so you instantly know when someone replies about a swap
+* **A redesigned dashboard** for a clearer view of your open swaps
 
-Being a tester is easy. Install the app, and open it now and then over the
-next two weeks. There is no minimum time to spend on it, and no report to
-write. If you notice something wrong you can tell us, and that is very
-welcome, but it is not required.
+We're looking for about 15 testers. If you'd like to join, just reply to this
+email with the **email address of the Google account you use on your Android
+phone**. Google Play needs it to give you access to the test.
 
-Three things to know before you say yes:
+Testing is easy: install the app and use it from time to time over the **next
+two weeks**. There's no minimum amount of time to spend on it, and you don't
+need to write a report. If you notice anything wrong, we'd love to hear about
+it, but it's not required.
 
-- Android only for now. The iPhone version is being worked on and we will
-  write again when it is ready.
-- Google asks testers to stay in the test for at least 14 days. Please join
-  only if you can keep it until [DATE].
-- You sign in with the account you already have. Nothing changes on the
-  website.
+A few things to know:
 
-Thank you,
-Alexa
+* **Android only for now.** The iPhone version is in progress, and we'll let you
+  know when it's ready.
+* **Please stay in the test for 14 days.**
+* **Use your existing WeSwapCards account.** Nothing changes on the website.
+
+Thank you for helping us get the app ready!
+
 WeSwapCards
 
 ---
-You are receiving this because you have a WeSwapCards account.
-Unsubscribe: [LINK]
+
+## 🇫🇷 Français
+
+Bonjour,
+
+Nous sommes sur le point de lancer l'application mobile WeSwapCards et nous
+cherchons un petit groupe d'utilisateurs pour la tester avant sa sortie
+officielle.
+
+L'application vous permet de gérer vos cartes et vos échanges depuis votre
+téléphone, avec deux nouvelles fonctionnalités :
+
+* **Des notifications** pour savoir immédiatement quand vous recevez une réponse
+* **Un tableau de bord repensé** offrant une vue plus claire de vos échanges en
+  cours
+
+Nous recherchons environ 15 testeurs. Si vous souhaitez participer, répondez
+simplement à cet e-mail avec **l'adresse e-mail du compte Google que vous
+utilisez sur votre téléphone Android**. Google Play en a besoin pour vous donner
+accès au test.
+
+Le test est très simple : installez l'application et utilisez-la de temps en
+temps pendant les **deux prochaines semaines**. Il n'y a pas de durée minimale
+d'utilisation et vous n'avez pas besoin de rédiger de rapport à la fin. Si vous
+remarquez un problème, nous apprécierions votre retour, mais ce n'est pas
+obligatoire.
+
+Quelques points à savoir :
+
+* **Android uniquement pour le moment.** La version iPhone est en cours de
+  développement et nous vous informerons lorsqu'elle sera disponible.
+* **Merci de rester dans le test pendant 14 jours.**
+* **Utilisez votre compte WeSwapCards habituel.** Rien ne change sur le site.
+
+Merci de votre contribution au développement de l'application !
+
+WeSwapCards
+
+---
+
+## 🇪🇸 Español
+
+Hola,
+
+Estamos cerca de lanzar la aplicación móvil de WeSwapCards y buscamos un pequeño
+grupo de usuarios para probarla antes de su lanzamiento oficial.
+
+La aplicación te permite gestionar tus cartas y tus intercambios desde tu
+teléfono, con dos nuevas funciones:
+
+* **Notificaciones** para saber inmediatamente cuando alguien te responde sobre
+  un intercambio
+* **Un panel rediseñado** para ver más claramente tus intercambios en curso
+
+Buscamos unos 15 testers. Si quieres participar, solo tienes que responder a
+este correo con **la dirección de correo electrónico de la cuenta de Google que
+utilizas en tu teléfono Android**. Google Play la necesita para darte acceso a
+la prueba.
+
+Es muy sencillo: instala la aplicación y úsala de vez en cuando durante las
+**próximas dos semanas**. No hay un tiempo mínimo de uso y no tienes que
+escribir ningún informe al final. Si encuentras algún problema, agradeceremos
+que nos lo comuniques, pero no es obligatorio.
+
+Algunas cosas que debes saber:
+
+* **Solo Android por ahora.** La versión para iPhone está en desarrollo y te
+  avisaremos cuando esté disponible.
+* **Te pedimos que permanezcas en la prueba durante 14 días.**
+* **Usa tu cuenta habitual de WeSwapCards.** Nada cambia en la web.
+
+¡Gracias por contribuir al desarrollo de la aplicación!
+
+WeSwapCards
 ```
 
-`[DATE]` should be roughly 16 days after review is expected to clear, leaving
-margin. Recruit 15 to 20 against a floor of 12, since people drop out.
+Two wording choices that look like inconsistencies and are not: French uses
+**vous**, Spanish uses **tú**. That is conventional register in each language.
+"tu" in a French mass email to strangers reads as over-familiar; "usted" in
+Spanish for a consumer app reads as stiff.
 
-The low-effort paragraph sits **before** the conditions deliberately: people
-decide whether they are willing before they read the fine print, so "14 days"
-lands as a fortnight of the app being installed rather than a fortnight of work.
+**No fixed end date, deliberately.** An earlier draft named one. The 14 days runs
+from each tester's *own* opt-in, so a shared deadline misleads anyone who joins
+late. "Stay in the test for 14 days" is the accurate instruction.
+
+The low-effort paragraph sits **before** the conditions on purpose: people decide
+whether they are willing before reading the fine print, so "14 days" lands as a
+fortnight of the app being installed rather than a fortnight of work.
+
+⚠ Before sending, confirm in Brevo: bold survived the editor, reply-to is
+`contact@weswapcards.com` (the entire call to action is "reply to this email"),
+the unsubscribe link resolves, and a **physical postal address** is in the footer
+as CAN-SPAM requires of a US sender.
 
 This is the first of two emails. The opt-in link does not exist until the release
-clears review, so the second one is short: here is the link, here is how to join,
-please stay in until [DATE].
+clears review, so the second is short: here is the link, here is how to join,
+please stay in for 14 days.
 
-Worth knowing: "open it now and then" is accurate, because the count is based on
-continuous opt-in rather than activity. Testers who install and never open it
-still qualify, and give no signal. A nudge partway through the fortnight works
-better than asking more of them upfront.
+Worth knowing: "use it from time to time" is accurate, because the count is based
+on continuous opt-in rather than activity. Testers who install and never open the
+app still qualify, and give no signal. A nudge partway through the fortnight
+works better than asking more of them upfront.
 
 ---
 
