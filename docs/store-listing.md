@@ -829,6 +829,182 @@ on continuous opt-in rather than activity. Testers who install and never open th
 app still qualify, and give no signal. A nudge partway through the fortnight
 works better than asking more of them upfront.
 
+### Invitation email (the test link)
+
+Sent only to the people who replied to the recruitment email with a Google
+account address, so this is a short list rather than a bulk mail to the
+community. Same three languages, for the same reason: replies do not reliably
+reveal which language someone reads, and one email is fewer moving parts than
+sorting them.
+
+**Send this only once all three are true**, or testers hit a dead link and stop
+trying:
+
+1. Every address collected is **already on the email list** in the Play Console
+   closed track. The opt-in page rejects anyone not on the list, and it looks to
+   the tester like the link is broken.
+2. The release is **live on the closed track**, not still in review.
+3. You have opened the opt-in link yourself on a phone.
+
+`[user]` The Console offers **two** links under Closed testing > Manage track >
+Testers > "How testers join your test": *Join on Android*, which is the store
+listing, and *Join on the web*, which is
+`https://play.google.com/apps/testing/com.weswapcards.app` (`package` from
+`app.config.ts:157`). Both are real routes into the test.
+
+**We send the web one**, because its opt-in page spells the steps out and shows
+the tester what they are agreeing to. The copy below is written to that page:
+steps 2 and 3 name buttons that exist there and nowhere else, so switching to
+the Android link means rewriting them, not just swapping the URL.
+
+Subject: `Your WeSwapCards test link (Android)`
+
+The version that actually gets sent is the HTML one in the web repo,
+`email-assets/tester-invitation.html`, next to `tester-recruitment.html`. It
+carries this copy with the link already in place, and goes out from Thunderbird
+against the o2switch mailbox: fifteen people who each replied personally do not
+need a campaign, and reply-to is then right by construction.
+
+```
+Hi,
+
+**French and Spanish translations are at the end of this email.**
+
+Thank you for volunteering! Here is how to install the WeSwapCards app.
+
+Do this on your Android phone, and make sure the phone is signed in with the
+Google account address you sent us. It will not work with a different account.
+
+1. Open this link: [TEST LINK]
+2. Tap **"Become a tester"**.
+3. On the same page, tap the **Google Play** link to install the app.
+
+If Google Play says the app is not available, wait a few minutes and open the
+link again. It can take a little while after you join.
+
+Once the app is installed:
+
+* **Sign in with your usual WeSwapCards account**, the same one you use on the
+  website.
+* When the app asks permission to send **notifications**, please tap Allow.
+  Notifications are one of the main things we would like to test.
+
+Two things to remember:
+
+* **Please stay a tester for 14 days.** Google requires this before the app can
+  be released publicly. There is no minimum amount of time to spend in the app,
+  but please do not leave the test.
+* **If something goes wrong, just reply to this email.** Tell us which phone you
+  have and what you were doing. Screenshots are welcome.
+
+Thank you again for your help!
+
+WeSwapCards
+
+---
+
+## 🇫🇷 Français
+
+Bonjour,
+
+Merci de votre participation ! Voici comment installer l'application
+WeSwapCards.
+
+Effectuez ces étapes sur votre téléphone Android, et assurez-vous d'être connecté
+avec l'adresse du compte Google que vous nous avez envoyée. Cela ne fonctionnera
+pas avec un autre compte.
+
+1. Ouvrez ce lien : [TEST LINK]
+2. Appuyez sur **« Devenir testeur »**.
+3. Sur la même page, appuyez sur le lien **Google Play** pour installer
+   l'application.
+
+Si Google Play indique que l'application n'est pas disponible, patientez
+quelques minutes et rouvrez le lien. Cela peut prendre un peu de temps après
+votre inscription.
+
+Une fois l'application installée :
+
+* **Connectez-vous avec votre compte WeSwapCards habituel**, celui que vous
+  utilisez sur le site.
+* Lorsque l'application vous demande l'autorisation d'envoyer des
+  **notifications**, appuyez sur Autoriser. Les notifications font partie des
+  éléments que nous souhaitons tester en priorité.
+
+Deux choses à retenir :
+
+* **Merci de rester dans le test pendant 14 jours.** Google l'exige avant que
+  l'application puisse être publiée. Il n'y a pas de durée d'utilisation
+  minimale.
+* **Si quelque chose ne fonctionne pas, répondez simplement à cet e-mail.**
+  Indiquez-nous quel téléphone vous utilisez et ce que vous étiez en train de
+  faire. Les captures d'écran sont les bienvenues.
+
+Merci encore pour votre aide !
+
+WeSwapCards
+
+---
+
+## 🇪🇸 Español
+
+Hola,
+
+¡Gracias por participar! Así puedes instalar la aplicación WeSwapCards.
+
+Haz estos pasos en tu teléfono Android y asegúrate de que esté conectado con la
+dirección de la cuenta de Google que nos enviaste. No funcionará con otra cuenta.
+
+1. Abre este enlace: [TEST LINK]
+2. Pulsa **«Quiero ser tester»**.
+3. En la misma página, pulsa el enlace de **Google Play** para instalar la
+   aplicación.
+
+Si Google Play dice que la aplicación no está disponible, espera unos minutos y
+vuelve a abrir el enlace. Puede tardar un poco después de apuntarte.
+
+Cuando tengas la aplicación instalada:
+
+* **Inicia sesión con tu cuenta habitual de WeSwapCards**, la misma que usas en
+  la web.
+* Cuando la aplicación te pida permiso para enviar **notificaciones**, pulsa
+  Permitir. Las notificaciones son una de las cosas que más nos interesa probar.
+
+Dos cosas que recordar:
+
+* **Te pedimos que sigas siendo tester durante 14 días.** Google lo exige antes
+  de que la aplicación pueda publicarse. No hay un tiempo mínimo de uso, pero por
+  favor no salgas de la prueba.
+* **Si algo no funciona, responde a este correo.** Cuéntanos qué teléfono tienes
+  y qué estabas haciendo. Las capturas de pantalla son bienvenidas.
+
+¡Gracias de nuevo por tu ayuda!
+
+WeSwapCards
+```
+
+Why the three steps are spelled out rather than just pasting a link: the opt-in
+page is not an install page. A tester who taps through to Play without pressing
+"Become a tester" gets "item not available in your country", which reads as a
+broken app rather than a missed step. The propagation sentence is there for the
+same reason, since the gap between joining and the listing appearing is the
+second thing that looks like a failure.
+
+`[repo]` The notification line is accurate: `src/features/notifications/device.ts`
+calls `requestPermissionsAsync`, so testers do see a system prompt.
+
+The 14-day instruction repeats the recruitment email on purpose. It is the one
+thing a tester can silently undo, and leaving the test resets that tester's own
+clock rather than pausing it.
+
+Reply-to still has to be `contact@weswapcards.com`: as with the first email, the
+entire support route is "reply to this email". If it goes through Brevo, keep the
+unsubscribe and postal footer rather than treating this as transactional mail.
+
+⚠ Wording of the Play button labels is quoted from the Console's tester-facing
+page in each language. Check them on the live opt-in page before sending; a
+quoted label that does not match what the tester sees is worse than no label.
+
 ---
 
 ## Reviewer accounts
