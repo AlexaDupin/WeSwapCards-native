@@ -859,129 +859,16 @@ the Android link means rewriting them, not just swapping the URL.
 
 Subject: `Your WeSwapCards test link (Android)`
 
-The version that actually gets sent is the HTML one in the web repo,
-`email-assets/tester-invitation.html`, next to `tester-recruitment.html`. It
-carries this copy with the link already in place, and goes out from Thunderbird
-against the o2switch mailbox: fifteen people who each replied personally do not
-need a campaign, and reply-to is then right by construction.
+**The copy lives in the web repo**, at `email-assets/tester-invitation.html`,
+next to `tester-recruitment.html`. That is the version that gets sent, link
+already in place, so it is the only copy: a second one here would drift the
+moment either is edited, and the wrong one would get pasted into a send. This
+section keeps the reasoning and the sending conditions; the words live with the
+template.
 
-```
-Hi,
-
-**French and Spanish translations are at the end of this email.**
-
-Thank you for volunteering! Here is how to install the WeSwapCards app.
-
-Do this on your Android phone, and make sure the phone is signed in with the
-Google account address you sent us. It will not work with a different account.
-
-1. Open this link: [TEST LINK]
-2. Tap **"Become a tester"**.
-3. On the same page, tap the **Google Play** link to install the app.
-
-If Google Play says the app is not available, wait a few minutes and open the
-link again. It can take a little while after you join.
-
-Once the app is installed:
-
-* **Sign in with your usual WeSwapCards account**, the same one you use on the
-  website.
-* When the app asks permission to send **notifications**, please tap Allow.
-  Notifications are one of the main things we would like to test.
-
-Two things to remember:
-
-* **Please stay a tester for 14 days.** Google requires this before the app can
-  be released publicly. There is no minimum amount of time to spend in the app,
-  but please do not leave the test.
-* **If something goes wrong, just reply to this email.** Tell us which phone you
-  have and what you were doing. Screenshots are welcome.
-
-Thank you again for your help!
-
-WeSwapCards
-
----
-
-## 🇫🇷 Français
-
-Bonjour,
-
-Merci de votre participation ! Voici comment installer l'application
-WeSwapCards.
-
-Effectuez ces étapes sur votre téléphone Android, et assurez-vous d'être connecté
-avec l'adresse du compte Google que vous nous avez envoyée. Cela ne fonctionnera
-pas avec un autre compte.
-
-1. Ouvrez ce lien : [TEST LINK]
-2. Appuyez sur **« Devenir testeur »**.
-3. Sur la même page, appuyez sur le lien **Google Play** pour installer
-   l'application.
-
-Si Google Play indique que l'application n'est pas disponible, patientez
-quelques minutes et rouvrez le lien. Cela peut prendre un peu de temps après
-votre inscription.
-
-Une fois l'application installée :
-
-* **Connectez-vous avec votre compte WeSwapCards habituel**, celui que vous
-  utilisez sur le site.
-* Lorsque l'application vous demande l'autorisation d'envoyer des
-  **notifications**, appuyez sur Autoriser. Les notifications font partie des
-  éléments que nous souhaitons tester en priorité.
-
-Deux choses à retenir :
-
-* **Merci de rester dans le test pendant 14 jours.** Google l'exige avant que
-  l'application puisse être publiée. Il n'y a pas de durée d'utilisation
-  minimale.
-* **Si quelque chose ne fonctionne pas, répondez simplement à cet e-mail.**
-  Indiquez-nous quel téléphone vous utilisez et ce que vous étiez en train de
-  faire. Les captures d'écran sont les bienvenues.
-
-Merci encore pour votre aide !
-
-WeSwapCards
-
----
-
-## 🇪🇸 Español
-
-Hola,
-
-¡Gracias por participar! Así puedes instalar la aplicación WeSwapCards.
-
-Haz estos pasos en tu teléfono Android y asegúrate de que esté conectado con la
-dirección de la cuenta de Google que nos enviaste. No funcionará con otra cuenta.
-
-1. Abre este enlace: [TEST LINK]
-2. Pulsa **«Quiero ser tester»**.
-3. En la misma página, pulsa el enlace de **Google Play** para instalar la
-   aplicación.
-
-Si Google Play dice que la aplicación no está disponible, espera unos minutos y
-vuelve a abrir el enlace. Puede tardar un poco después de apuntarte.
-
-Cuando tengas la aplicación instalada:
-
-* **Inicia sesión con tu cuenta habitual de WeSwapCards**, la misma que usas en
-  la web.
-* Cuando la aplicación te pida permiso para enviar **notificaciones**, pulsa
-  Permitir. Las notificaciones son una de las cosas que más nos interesa probar.
-
-Dos cosas que recordar:
-
-* **Te pedimos que sigas siendo tester durante 14 días.** Google lo exige antes
-  de que la aplicación pueda publicarse. No hay un tiempo mínimo de uso, pero por
-  favor no salgas de la prueba.
-* **Si algo no funciona, responde a este correo.** Cuéntanos qué teléfono tienes
-  y qué estabas haciendo. Las capturas de pantalla son bienvenidas.
-
-¡Gracias de nuevo por tu ayuda!
-
-WeSwapCards
-```
+It goes out from Thunderbird against the o2switch mailbox rather than Brevo:
+fifteen people who each replied personally do not need a campaign, and reply-to
+is then right by construction.
 
 Why the three steps are spelled out rather than just pasting a link: the opt-in
 page is not an install page. A tester who taps through to Play without pressing
