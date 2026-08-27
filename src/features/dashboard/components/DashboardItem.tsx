@@ -1,12 +1,15 @@
 import React, { useCallback, useRef } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
-// Touchable from gesture-handler, not react-native: the swipe actions live
-// inside the Swipeable's native gesture tree, and RN's core TouchableOpacity
-// (JS responder system) never receives the tap there on Android — the action
-// icons looked dead. gesture-handler's touchable wins the native touch instead.
-import { TouchableOpacity } from 'react-native-gesture-handler';
+// Swipe-action buttons use gesture-handler's RectButton, not react-native's
+// TouchableOpacity: the actions live inside the Swipeable's native gesture
+// tree, and RN's core touchable (JS responder system) never receives the tap
+// there on Android — the icons looked dead. RectButton wins the native touch
+// on both platforms and takes `style` directly, so it stretches to full row
+// height. The row itself stays on RN's TouchableOpacity (it sits above the
+// gesture layer and has always worked).
+import { RectButton } from 'react-native-gesture-handler';
 
 import { styles } from '@/src/assets/styles/dashboard.styles';
 
@@ -72,31 +75,31 @@ const DashboardItem = ({
 
   const renderLeftActions = useCallback(() => {
     return (
-      <TouchableOpacity
+      <RectButton
         style={styles.renderLeftUnread}
         onPress={() => runAndClose(onMarkUnread)}
       >
         <Ionicons name="mail-unread-outline" size={24} color="white" />
-      </TouchableOpacity>
+      </RectButton>
     );
   }, [onMarkUnread, runAndClose]);
 
   const renderRightActions = useCallback(() => {
     return (
       <View style={styles.rightActions}>
-        <TouchableOpacity
+        <RectButton
           style={styles.renderRightDecline}
           onPress={() => runAndClose(onMarkDeclined)}
         >
           <Ionicons name="close-circle" size={24} color="white" />
-        </TouchableOpacity>
+        </RectButton>
 
-        <TouchableOpacity
+        <RectButton
           style={styles.renderRightAccept}
           onPress={() => runAndClose(onMarkCompleted)}
         >
           <Ionicons name="checkmark-circle" size={24} color="white" />
-        </TouchableOpacity>
+        </RectButton>
       </View>
     );
   }, [onMarkCompleted, onMarkDeclined, runAndClose]);
