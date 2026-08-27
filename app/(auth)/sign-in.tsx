@@ -98,6 +98,20 @@ export default function SignInScreen() {
             compact={layout.compact}
           />
 
+          <Link href="/forgot-password" asChild>
+            <TouchableOpacity style={{ alignSelf: 'flex-end', marginBottom: 8 }}>
+              <Text
+                style={{
+                  fontFamily: Fonts.body.semibold,
+                  fontWeight: '600',
+                  fontSize: 14,
+                }}
+              >
+                Forgot password?
+              </Text>
+            </TouchableOpacity>
+          </Link>
+
           <TouchableOpacity
             style={[layout.button, isSubmitting && { opacity: 0.6 }]}
             onPress={onSignInPress}

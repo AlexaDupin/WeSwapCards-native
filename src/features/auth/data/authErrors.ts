@@ -36,6 +36,32 @@ export function getSignUpErrorMessage(code?: string, fallback?: string) {
   }
 }
 
+export function getResetPasswordRequestErrorMessage(code?: string) {
+  switch (code) {
+    case 'form_identifier_not_found':
+      return 'No account found for this email.';
+    case 'form_param_format_invalid':
+      return 'Please enter a valid email address.';
+    default:
+      return 'An error occurred. Please try again.';
+  }
+}
+
+export function getResetPasswordErrorMessage(code?: string, fallback?: string) {
+  switch (code) {
+    case 'form_code_incorrect':
+      return 'That code is incorrect. Please try again.';
+    case 'form_code_expired':
+      return 'That code has expired. Request a new one.';
+    case 'form_password_pwned':
+      return 'This password is too common. Please choose a stronger one.';
+    case 'form_password_length_too_short':
+      return 'Your password is too short. Please choose a longer one.';
+    default:
+      return fallback || 'An error occurred. Please try again.';
+  }
+}
+
 export function getVerifyEmailErrorMessage(code?: string, fallback?: string) {
   switch (code) {
     case 'form_code_incorrect':
