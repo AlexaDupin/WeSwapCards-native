@@ -1,7 +1,12 @@
 import React, { useCallback, useRef } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
+import { View, Text } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import Swipeable from 'react-native-gesture-handler/ReanimatedSwipeable';
+// Touchable from gesture-handler, not react-native: the swipe actions live
+// inside the Swipeable's native gesture tree, and RN's core TouchableOpacity
+// (JS responder system) never receives the tap there on Android — the action
+// icons looked dead. gesture-handler's touchable wins the native touch instead.
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 import { styles } from '@/src/assets/styles/dashboard.styles';
 
