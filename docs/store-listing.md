@@ -63,6 +63,71 @@ non-affiliation statement of its own.
 
 ---
 
+## Apple: remaining before first submit (2026-09-10)
+
+The Apple Developer Program is now active, so the App Store path is open. Most of
+the compliance work is already done and **shared** with Android: the o2switch
+backend (`api.weswapcards.com`, the live web/native prod backend), the legal
+pages, the production-verified deletion cascade, the data-privacy *substance*
+(the Apple mapping is drafted in [App Privacy](#app-privacy-apple-and-data-safety-play)),
+the store copy, export compliance (predeclared in `app.config.ts`), and the
+"Chat moderation: No" posture. None of that is redone here.
+
+What is genuinely Apple-only and still open, roughly in dependency order:
+
+- [ ] ⚠ **App Store Connect app record.** Does not exist yet (Android's does).
+  Create it for bundle `com.weswapcards.app` with an SKU. Nothing downstream —
+  build upload, `submit.production.ios`, TestFlight — can happen until it does.
+- [ ] ⚠ **Apple agreements.** Accept the Free Apps agreement (Agreements, Tax &
+  Banking). A build cannot reach TestFlight until this is active.
+- [ ] **Signing credentials.** Let EAS generate and manage the Distribution
+  certificate, provisioning profile, and **APNs key** at build time. No manual
+  Apple portal work; do not pin these. `[model]` confirm the APNs key is created
+  during the credential step, since push is used (`src/features/notifications`).
+- [ ] ⚠ **iOS reviewer pair `review_ios_a` / `review_ios_b`.** Planned but **not
+  created** (see [Reviewer accounts](#reviewer-accounts)). Follow the
+  [Recreate procedure](#recreate-procedure): sign up (needs inbox access for the
+  verification code), set the WeWard username, build complementary collections,
+  and create an **iOS-A ↔ iOS-B** conversation. A cross-pair conversation does
+  not satisfy the review notes. Password sign-in must work, since
+  `app/(auth)/sign-in.tsx` offers no OTP path.
+- [ ] ⚠ **iPhone screenshots.** Outstanding (see [Store media](#store-media)).
+  One set, **6.9" or 6.5"**, 1–10, `.png`/`.jpg`, **no alpha channel**. Shoot the
+  same four screens as Android (My cards, search results, a conversation, home),
+  on the iOS reviewer accounts so collections look populated — and check no real
+  username shows in a search result or chat. No iPad set (`supportsTablet: false`).
+- [ ] **App Privacy questionnaire.** Enter the answers from the drafted
+  [Apple category mapping](#apple-category-mapping). Tracking: none, so ATT does
+  not apply. Settle the one ⚠ open row there (IP-in-server-logs, declared by use).
+- [ ] **Age rating questionnaire.** Expect ~17+, driven by unmoderated 1:1 UGC —
+  the Apple analog of Play's 18+ target-audience declaration. See the ⚠ web-Terms
+  age gap below.
+- [ ] **`submit.production.ios`.** Leave `{}` until the app record exists. When
+  filling it, prefer the App Store Connect **API key** (EAS creates/stores it on
+  an interactive first `eas submit`); verify the exact fields against
+  `eas submit --help` rather than the `[model]` line under
+  [Submit configuration](#submit-configuration).
+- [ ] **Pre-submit link render check.** Re-run the phone private-window check on
+  the four legal pages (see [Pre-submission link check](#pre-submission-link-check));
+  it is platform-independent but must pass before the Apple submission too.
+
+Cross-cutting ⚠ items that also touch the Apple submission:
+
+- **Web Terms state no minimum age** while the stores gate age (Play 18+; Apple
+  ~17+). The gap noted under [Content rating](#content-rating-iarc-via-play)
+  applies here too — worth a clause on the web side.
+- **Reviewer accounts are visible to real users** (doubles surface them in
+  search). Decide acceptability before shooting iOS screenshots on them.
+
+`[repo]` Build config is unblocked: `eas.json` `production` pins no old Xcode
+image (SDK 54 defaults to the current image), and the EAS `production` environment
+resolves to `api.weswapcards.com` + a `pk_live_` Clerk key (`eas env:list
+--environment production`, 2026-09-10), which the `app.config.ts` guard requires.
+So the first `eas build --platform ios --profile production` can run as soon as
+the app record and agreements above exist — build and submit stay separate steps.
+
+---
+
 ## Apple: App Store Connect
 
 | Field | Limit | Value |
