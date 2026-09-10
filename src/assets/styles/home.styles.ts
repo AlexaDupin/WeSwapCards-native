@@ -202,10 +202,7 @@ export const homeStyles = StyleSheet.create({
     backgroundColor: Colors.tint,
     overflow: 'hidden',
   },
-  // borderRadius on the image itself: Android does not reliably clip a child
-  // image to the parent's rounded corners via overflow:'hidden', so the square
-  // corners bleed past the frame. expo-image self-clips, matching heroCardArt.
-  heroCardArtImage: { width: '100%', height: '100%', borderRadius: 10 },
+  heroCardArtImage: { width: '100%', height: '100%' },
   heroCardLabel: {
     fontFamily: Fonts.body.semibold,
     marginTop: 10,
