@@ -152,31 +152,24 @@ Never hardcode credentials or secrets.
 
 ---
 
-## API Contract Safety
-
-The backend API is maintained in a separate repository.
-
-Do not:
-
-- invent API fields
-- change request shapes
-- assume backend behavior
-
-If a change requires backend support, state the assumption clearly.
-
----
-
-## Backend (shared with production web)
+## Backend
 
 The backend API lives in a **separate repository** at `html/weswapcards/back`
-(`/var/www/html/WeSwapCards/back`).
+(`/var/www/html/WeSwapCards/back`), shared with the live production web app.
 
-- **Always check the current branch before pushing.** Backend changes needed for
-  the native app must be pushed to the backend's **`native`** branch, not `main`.
-- **The backend is shared with the live production web app.** Any change made for
-  the native app must **not** affect the web version. Before editing, confirm the
-  web uses a different code path (e.g. a different endpoint/mode or function), and
-  keep behavior identical for existing callers.
+Contract:
+
+- Do not invent API fields, change request shapes, or assume backend behavior.
+- If a change requires backend support, state the assumption clearly.
+
+When editing the backend for the native app:
+
+- **Always check the current branch before pushing.** Native-app backend changes
+  go to the backend's **`native`** branch, not `main`.
+- **Don't break web.** Because the backend serves the live production web app, a
+  native change must **not** affect it. Confirm the web uses a different code path
+  (e.g. a different endpoint/mode or function) and keep behavior identical for
+  existing callers.
 
 ---
 
@@ -207,6 +200,32 @@ skipped. It fails silently and looks like a successful publish.
 
 `--environment production` makes eas-cli inject the server-side EAS environment
 instead, which is what the scripts encode.
+
+---
+
+## Releases & store
+
+**`docs/store-listing.md` is the source of truth** for everything typed into
+App Store Connect and the Play Console: submission checklists, reviewer
+accounts, store copy/media, data-privacy mappings, and what still blocks each
+store. Read and update it there; don't improvise store metadata elsewhere.
+
+Environments (see also the `native-environments` note):
+
+- **Test stack** — Render + Supabase, `pk_test_` Clerk. Used by `development`
+  and `preview` builds/updates.
+- **Real prod** — o2switch backend (`api.weswapcards.com`) + prod DB, `pk_live_`
+  Clerk. This is the store ship target.
+
+Store-bound builds and updates:
+
+- Build: `eas build --platform ios|android --profile production`.
+- OTA: use `./scripts/publish-update.sh production` (see **Publishing OTA
+  updates** above) — add `--platform ios` to reach TestFlight without touching
+  the Android closed-testing build. Both ride the `production` channel, which
+  points at the `production` branch.
+- `submit.production.ios` stays `{}` until the App Store Connect record exists
+  (per `docs/store-listing.md`).
 
 ---
 
