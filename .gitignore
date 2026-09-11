@@ -50,3 +50,6 @@ GoogleService-Info.plist
 
 # Play Console service account used by `eas submit` — never commit
 play-service-account*.json
+
+# Local-only notes
+docs/store-listing.md
