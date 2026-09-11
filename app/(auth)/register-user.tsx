@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useRouter } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth, useUser } from '@clerk/clerk-expo';
@@ -203,49 +204,60 @@ export default function RegisterUserScreen() {
         </TouchableOpacity>
       </View>
 
-      <View style={layout.container}>
-        <Text style={layout.title}>Enter your WeWard username</Text>
+      <KeyboardAwareScrollView
+        style={{ flex: 1 }}
+        // Content is centered so it normally clears the bottom edge, but when
+        // it overflows (keyboard open, large font scale) the scrolled end must
+        // clear the edge-to-edge Android nav/gesture bar.
+        contentContainerStyle={{ flexGrow: 1, paddingBottom: insets.bottom }}
+        enableOnAndroid={true}
+        enableAutomaticScroll={true}
+        extraScrollHeight={30}
+      >
+        <View style={layout.container}>
+          <Text style={layout.title}>Enter your WeWard username</Text>
 
-        <View style={layout.subtitle}>
-          <Text style={layout.subtitleText}>
-            One last step to finish creating your account.
-          </Text>
-        </View>
-
-        {error ? (
-          <View style={authStyles.errorBox}>
-            <Ionicons name="alert-circle" size={20} color={'#E74C3C'} />
-            <Text style={authStyles.errorText}>{error}</Text>
-            <TouchableOpacity onPress={() => setError('')}>
-              <Ionicons name="close" size={20} color={'#9A8478'} />
-            </TouchableOpacity>
+          <View style={layout.subtitle}>
+            <Text style={layout.subtitleText}>
+              One last step to finish creating your account.
+            </Text>
           </View>
-        ) : null}
 
-        <TextInput
-          style={layout.input}
-          placeholder="Enter a username"
-          autoCapitalize="none"
-          autoCorrect={false}
-          value={username}
-          onChangeText={(value: string) => {
-            setUsername(value);
-            if (error) setError('');
-          }}
-          returnKeyType="done"
-          onSubmitEditing={handleCreateUser}
-        />
+          {error ? (
+            <View style={authStyles.errorBox}>
+              <Ionicons name="alert-circle" size={20} color={'#E74C3C'} />
+              <Text style={authStyles.errorText}>{error}</Text>
+              <TouchableOpacity onPress={() => setError('')}>
+                <Ionicons name="close" size={20} color={'#9A8478'} />
+              </TouchableOpacity>
+            </View>
+          ) : null}
 
-        <TouchableOpacity
-          style={[layout.button, submitting && { opacity: 0.6 }]}
-          onPress={handleCreateUser}
-          disabled={submitting}
-        >
-          <Text style={styles.buttonText}>
-            {submitting ? 'Creating...' : 'Create account'}
-          </Text>
-        </TouchableOpacity>
-      </View>
+          <TextInput
+            style={layout.input}
+            placeholder="Enter a username"
+            autoCapitalize="none"
+            autoCorrect={false}
+            value={username}
+            onChangeText={(value: string) => {
+              setUsername(value);
+              if (error) setError('');
+            }}
+            returnKeyType="done"
+            onSubmitEditing={handleCreateUser}
+          />
+
+          <TouchableOpacity
+            style={[layout.button, submitting && { opacity: 0.6 }]}
+            onPress={handleCreateUser}
+            disabled={submitting}
+          >
+            <Text style={styles.buttonText}>
+              {submitting ? 'Creating...' : 'Create account'}
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </KeyboardAwareScrollView>
     </>
   );
 }
