@@ -143,10 +143,10 @@ const config: ExpoConfig = {
     // The UI is portrait and phone-shaped, and has never been run on iPad.
     // Supporting iPad would also require a 13" iPad screenshot set.
     supportsTablet: false,
-    icon: {
-      light: './src/assets/images/brand/icon-light.png',
-      dark: './src/assets/images/brand/icon-dark.png',
-    },
+    // Always the navy (dark) icon, in every appearance. The appearance-aware
+    // pair put the white variant on light-mode home screens, which is not the
+    // brand mark we want to ship.
+    icon: './src/assets/images/brand/icon-dark.png',
     config: {
       // Predeclares that the app uses no non-exempt encryption, so the export
       // compliance question doesn't have to be answered for each upload.
