@@ -18,6 +18,7 @@ import LatestChaptersMiniTiles from '@/src/features/swap/components/LatestChapte
 import OpportunityList from '@/src/features/swap/components/OpportunityList';
 import TipBubble from '@/src/features/tips/components/TipBubble';
 import { useSwap } from '@/src/features/swap/hooks/useSwap';
+import { useMissingCards } from '@/src/features/swap/hooks/useMissingCards';
 import type { SwapContactPayload } from '@/src/features/swap/types/SwapTypes';
 import { Fonts } from '@/src/constants/typography';
 
@@ -74,6 +75,8 @@ export default function SwapScreen() {
       [router],
     ),
   });
+
+  const missingCardIds = useMissingCards(cards);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -172,6 +175,7 @@ export default function SwapScreen() {
               <CardGrid
                 cards={cards}
                 selectedCardId={selectedCardId}
+                missingCardIds={missingCardIds}
                 onSelectCard={selectCard}
                 variant="static"
               />

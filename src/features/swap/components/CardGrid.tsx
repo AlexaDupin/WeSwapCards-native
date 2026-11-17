@@ -1,5 +1,6 @@
 import React from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 import { Colors } from '@/src/constants/Colors';
 
@@ -10,6 +11,8 @@ type Props = {
   cards: SwapCard[];
   selectedCardId: number | null;
   onSelectCard: (cardId: number) => void;
+  /** Cards the explorer does not own yet; each gets a small lock icon. */
+  missingCardIds?: ReadonlySet<number>;
   /**
    * Kept for API compatibility. Both variants now render the same compact selector
    * because this is a lightweight filter, not a scrollable card grid.
@@ -25,6 +28,7 @@ export default function CardGrid({
   cards,
   selectedCardId,
   onSelectCard,
+  missingCardIds,
 }: Props) {
   if (cards.length === 0) {
     return (
@@ -41,6 +45,7 @@ export default function CardGrid({
           const selected = item.id === selectedCardId;
           const label = getCardNumberLabel(item);
           const isLast = index === cards.length - 1;
+          const missing = missingCardIds?.has(item.id) ?? false;
 
           return (
             <Pressable
@@ -53,9 +58,18 @@ export default function CardGrid({
                 pressed && styles.selectorPressed,
               ]}
               accessibilityRole="button"
-              accessibilityLabel={`Select card ${label}`}
+              accessibilityLabel={`Select card ${label}${missing ? ', missing' : ''}`}
               accessibilityState={{ selected }}
             >
+              {missing ? (
+                <Ionicons
+                  testID={`card-lock-${item.id}`}
+                  name="lock-closed"
+                  size={9}
+                  color={selected ? '#fff' : 'rgba(0,0,0,0.35)'}
+                  style={styles.lock}
+                />
+              ) : null}
               <Text
                 numberOfLines={1}
                 style={[
@@ -99,6 +113,13 @@ const styles = StyleSheet.create({
   selectorSelected: {
     borderColor: Colors.primary,
     backgroundColor: Colors.primary,
+  },
+  // Pinned to the top-right corner so the number stays centred and every
+  // tile keeps the same layout whether or not the card is missing.
+  lock: {
+    position: 'absolute',
+    top: 3,
+    right: 2,
   },
   selectorPressed: {
     opacity: 0.9,

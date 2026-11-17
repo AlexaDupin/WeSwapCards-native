@@ -51,6 +51,10 @@ jest.mock('@/src/features/chat/api/chatApi', () => ({
   getConversation: jest.fn(),
 }));
 
+jest.mock('@/src/features/cards/api/cardsApi', () => ({
+  fetchCardStatuses: jest.fn(),
+}));
+
 jest.mock('@clerk/clerk-expo', () => ({
   useAuth: jest.fn(() => ({
     getToken: jest.fn().mockResolvedValue('test-token'),
@@ -70,6 +74,14 @@ const swapApi = jest.requireMock(
 const chatApi = jest.requireMock(
   '@/src/features/chat/api/chatApi',
 ) as jest.Mocked<typeof import('@/src/features/chat/api/chatApi')>;
+
+const cardsApi = jest.requireMock(
+  '@/src/features/cards/api/cardsApi',
+) as jest.Mocked<typeof import('@/src/features/cards/api/cardsApi')>;
+
+const explorerContext = jest.requireMock(
+  '@/src/features/auth/context/ExplorerContext',
+) as { useExplorer: jest.Mock };
 
 // ---- Helpers ----
 
@@ -117,6 +129,8 @@ beforeEach(() => {
     ),
   );
   chatApi.getConversation.mockResolvedValue(null);
+  // Card 5 (the one the helper selects) is owned by default.
+  cardsApi.fetchCardStatuses.mockResolvedValue({ '5': 'owned' });
 });
 
 // ---- Tests ----
@@ -193,5 +207,64 @@ describe('SwapScreen', () => {
 
     expect(screen.getByText('Bob')).toBeTruthy();
     expect(screen.queryByText('Latest chapters')).toBeNull();
+  });
+
+  describe('missing cards', () => {
+    async function openChapter() {
+      render(<SwapScreen />);
+      await screen.findByText('Select a chapter');
+      fireEvent.press(screen.getByLabelText('Select a chapter'));
+      fireEvent.press(await screen.findByText('Chapter 1'));
+    }
+
+    beforeEach(() => {
+      swapApi.fetchCardsForChapter.mockResolvedValue([
+        createCard({ id: 5, number: 5 }),
+        createCard({ id: 6, number: 6 }),
+        createCard({ id: 7, number: 7 }),
+      ]);
+      cardsApi.fetchCardStatuses.mockResolvedValue({
+        '5': 'owned',
+        '6': 'duplicated',
+      });
+    });
+
+    it('shows a lock only on the cards the explorer does not own', async () => {
+      await openChapter();
+
+      expect(
+        await screen.findByLabelText('Select card 7, missing'),
+      ).toBeTruthy();
+      expect(screen.getByTestId('card-lock-7')).toBeTruthy();
+      expect(screen.getByLabelText('Select card 5')).toBeTruthy();
+      expect(screen.getByLabelText('Select card 6')).toBeTruthy();
+      expect(screen.queryByTestId('card-lock-5')).toBeNull();
+      expect(screen.queryByTestId('card-lock-6')).toBeNull();
+      expect(cardsApi.fetchCardStatuses).toHaveBeenCalledWith({
+        explorerId: 123,
+        headers: { Authorization: 'Bearer test-token' },
+      });
+    });
+
+    it('shows no locks when the statuses cannot be loaded', async () => {
+      cardsApi.fetchCardStatuses.mockRejectedValue(new Error('network'));
+      await openChapter();
+
+      expect(await screen.findByLabelText('Select card 7')).toBeTruthy();
+      expect(screen.queryByTestId('card-lock-7')).toBeNull();
+    });
+
+    it('shows no locks and skips the request when signed out', async () => {
+      explorerContext.useExplorer.mockReturnValue({ explorerId: null });
+      try {
+        await openChapter();
+
+        expect(await screen.findByLabelText('Select card 7')).toBeTruthy();
+        expect(screen.queryByTestId('card-lock-7')).toBeNull();
+        expect(cardsApi.fetchCardStatuses).not.toHaveBeenCalled();
+      } finally {
+        explorerContext.useExplorer.mockReturnValue({ explorerId: 123 });
+      }
+    });
   });
 });
