@@ -198,4 +198,46 @@ describe('chaptersData', () => {
     const ch1 = result.current.chaptersData.find((c) => c.chapterId === 1)!;
     expect(ch1.cards.map((c) => c.number)).toEqual([1, 2, 3]);
   });
+
+  describe('mark all cards as owned', () => {
+    it('flags an explorer with no logged card as new', async () => {
+      const { result } = await setupLoaded({
+        '10': 'default',
+        '11': 'default',
+        '20': 'default',
+      });
+
+      expect(result.current.hasNoCards).toBe(true);
+      expect(result.current.totalCards).toBe(3);
+    });
+
+    it('does not flag an explorer who logged a card', async () => {
+      const { result } = await setupLoaded({
+        '10': 'owned',
+        '11': 'default',
+        '20': 'default',
+      });
+
+      expect(result.current.hasNoCards).toBe(false);
+    });
+
+    it('marks every missing card owned and keeps duplicates', async () => {
+      const { result } = await setupLoaded({
+        '10': 'duplicated',
+        '11': 'default',
+        '20': 'default',
+      });
+
+      act(() => {
+        result.current.markAllOwnedLocally();
+      });
+
+      expect(result.current.cardStatuses).toEqual({
+        '10': 'duplicated',
+        '11': 'owned',
+        '20': 'owned',
+      });
+      expect(result.current.hasNoCards).toBe(false);
+    });
+  });
 });

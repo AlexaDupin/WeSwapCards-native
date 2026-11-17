@@ -1,4 +1,11 @@
-import { render, screen, waitFor } from '@testing-library/react-native';
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from '@testing-library/react-native';
+import { Alert, type AlertButton } from 'react-native';
 import {
   fireGestureHandler,
   getByGestureTestId,
@@ -36,7 +43,15 @@ jest.mock('@/src/features/cards/api/cardsApi', () => ({
   ),
   deleteExplorerCard: jest.fn().mockResolvedValue({ status: 200 }),
   setChapterCardsStatus: jest.fn().mockResolvedValue({ status: 200 }),
+  markAllCardsOwned: jest
+    .fn()
+    .mockResolvedValue({ status: 200, data: { ok: true, added: 1 } }),
 }));
+
+const cardsApi = jest.requireMock('@/src/features/cards/api/cardsApi') as {
+  fetchCardStatuses: jest.Mock;
+  markAllCardsOwned: jest.Mock;
+};
 
 // The card shows its state via the background of the `card-<id>` view:
 // default (missing) is a recessed grey, owned/duplicated are a raised white.
@@ -114,5 +129,55 @@ describe('Cards', () => {
         backgroundColor: DEFAULT_BG,
       }),
     );
+  });
+
+  describe('mark all cards as owned', () => {
+    // Presses the named button of the most recent confirmation alert.
+    const confirmAlert = (alertSpy: jest.SpyInstance, text: string) => {
+      const buttons = alertSpy.mock.calls.at(-1)?.[2] as
+        | AlertButton[]
+        | undefined;
+      buttons?.find((b) => b.text === text)?.onPress?.();
+    };
+
+    it('offers new explorers the banner and marks their cards owned', async () => {
+      cardsApi.fetchCardStatuses.mockResolvedValueOnce({ '5': 'default' });
+      const alertSpy = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
+
+      render(<Cards />);
+      await screen.findByTestId('new-collector-banner');
+
+      fireEvent.press(screen.getByLabelText('Mark all as owned'));
+      expect(alertSpy).toHaveBeenCalledTimes(1);
+
+      await act(async () => {
+        confirmAlert(alertSpy, 'Mark all as owned');
+      });
+
+      await waitFor(() =>
+        expect(screen.getByTestId('card-5')).toHaveStyle({
+          backgroundColor: OWNED_BG,
+        }),
+      );
+      expect(cardsApi.markAllCardsOwned).toHaveBeenCalledWith({
+        explorerId: 1,
+        headers: { Authorization: 'Bearer test-token' },
+      });
+      expect(screen.queryByTestId('new-collector-banner')).toBeNull();
+
+      alertSpy.mockRestore();
+    });
+
+    it('hides the banner once a card is logged but keeps the menu', async () => {
+      cardsApi.fetchCardStatuses.mockResolvedValueOnce({ '5': 'owned' });
+
+      render(<Cards />);
+      await screen.findByTestId('card-5');
+
+      expect(screen.queryByTestId('new-collector-banner')).toBeNull();
+
+      fireEvent.press(screen.getByLabelText('Collection actions'));
+      expect(await screen.findByText('Mark all cards as owned')).toBeTruthy();
+    });
   });
 });

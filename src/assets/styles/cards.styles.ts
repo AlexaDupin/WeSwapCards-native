@@ -228,4 +228,42 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
   },
+
+  // New collector banner (shown while no card is logged yet)
+  newCollectorBanner: {
+    marginHorizontal: 16,
+    marginBottom: 10,
+    padding: 12,
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: Colors.accentBorder,
+    backgroundColor: Colors.accentSoft,
+    gap: 10,
+  },
+
+  newCollectorText: {
+    fontFamily: Fonts.body.regular,
+    fontSize: 14,
+    lineHeight: 20,
+    color: Colors.textPrimary,
+  },
+
+  newCollectorButton: {
+    alignSelf: 'flex-start',
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    borderRadius: 999,
+    backgroundColor: Colors.primary,
+  },
+
+  newCollectorButtonPressed: {
+    backgroundColor: Colors.darkerPrimary,
+  },
+
+  newCollectorButtonText: {
+    fontFamily: Fonts.body.bold,
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#fff',
+  },
 });

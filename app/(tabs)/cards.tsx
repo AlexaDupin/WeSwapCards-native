@@ -10,10 +10,13 @@ import SegmentedToggle from '@/src/components/SegmentedToggle';
 import ChaptersList from '@/src/features/chapters/components/ChaptersList';
 import AZNav from '@/src/features/chapters/components/AZNav';
 import CardsHelpModal from '@/src/features/cards/components/CardsHelpModal';
+import CardsPageMenu from '@/src/features/cards/components/CardsPageMenu';
+import NewCollectorBanner from '@/src/features/cards/components/NewCollectorBanner';
 import TipBubble from '@/src/features/tips/components/TipBubble';
 import { styles } from '@/src/assets/styles/cards.styles';
 
 import { useCardsScreen } from '@/src/features/cards/hooks/useCardsScreen';
+import { useMarkAllCardsOwned } from '@/src/features/cards/hooks/useMarkAllCardsOwned';
 
 export default function Cards() {
   const { explorerId } = useExplorer();
@@ -38,10 +41,20 @@ function CardsScreen({ explorerId }: { explorerId: number }) {
     onMarkAllOwned,
     onMarkAllDuplicated,
     isChapterPending,
+    isLoading,
+    totalCards,
+    hasNoCards,
+    markAllOwnedLocally,
     lettersWithChapters,
     scrollToLetter,
     listRef,
   } = cards;
+
+  const { requestMarkAllCardsOwned, isMarkingAllOwned } = useMarkAllCardsOwned({
+    explorerId,
+    totalCards,
+    onMarked: markAllOwnedLocally,
+  });
 
   return (
     <View style={[styles.cardsScreen, { paddingTop: 16 + insets.top }]}>
@@ -64,6 +77,11 @@ function CardsScreen({ explorerId }: { explorerId: number }) {
               color="rgba(0,0,0,0.45)"
             />
           </Pressable>
+
+          <CardsPageMenu
+            disabled={isLoading || isMarkingAllOwned}
+            onMarkAllCardsOwned={requestMarkAllCardsOwned}
+          />
         </View>
 
         <SegmentedToggle
@@ -75,6 +93,13 @@ function CardsScreen({ explorerId }: { explorerId: number }) {
           onChange={(v) => setSortLatest(v === 'latest')}
         />
       </View>
+
+      {hasNoCards ? (
+        <NewCollectorBanner
+          disabled={isMarkingAllOwned}
+          onMarkAllCardsOwned={requestMarkAllCardsOwned}
+        />
+      ) : null}
 
       <View>
         <AZNav

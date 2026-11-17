@@ -72,6 +72,24 @@ export async function deleteExplorerCard(args: {
   });
 }
 
+/**
+ * POST /explorercards/:explorerId/status
+ *
+ * Marks every card in every chapter as owned. Cards already logged, duplicates
+ * included, are left untouched by the backend.
+ */
+export async function markAllCardsOwned(args: {
+  explorerId: number;
+  headers: AuthHeaders;
+}) {
+  const { explorerId, headers } = args;
+  return axiosInstance.post<{ ok: boolean; added: number }>(
+    `/explorercards/${explorerId}/status`,
+    { status: 'owned' },
+    { headers },
+  );
+}
+
 export async function setChapterCardsStatus(args: {
   explorerId: number;
   chapterId: number;

@@ -303,6 +303,26 @@ export function useCardsScreen({ explorerId }: Params) {
     [pendingChapters],
   );
 
+  // Mirrors the backend's "mark all owned": every card not logged yet becomes
+  // owned, and logged cards (duplicates included) keep their status.
+  const markAllOwnedLocally = useCallback(() => {
+    setCardStatuses((prev) => {
+      const next = { ...prev };
+      for (const c of cards) {
+        const key = String(c.id);
+        const current = next[key] ?? 'default';
+        if (current === 'default') next[key] = 'owned';
+      }
+      return next;
+    });
+  }, [cards]);
+
+  // A new explorer: statuses are loaded and not a single card is logged.
+  const hasNoCards = useMemo(() => {
+    const values = Object.values(cardStatuses);
+    return values.length > 0 && values.every((s) => s === 'default');
+  }, [cardStatuses]);
+
   return {
     isLoading,
     sortLatest,
@@ -316,6 +336,10 @@ export function useCardsScreen({ explorerId }: Params) {
     onMarkAllOwned,
     onMarkAllDuplicated,
     isChapterPending,
+
+    totalCards: cards.length,
+    hasNoCards,
+    markAllOwnedLocally,
 
     lettersWithChapters,
     scrollToLetter,
