@@ -123,7 +123,7 @@ validateEnvironment();
 const config: ExpoConfig = {
   name: 'WeSwapCards',
   slug: 'weswapcards-native',
-  version: '1.0.0',
+  version: '1.0.1',
   orientation: 'portrait',
   icon: './src/assets/images/brand/icon-dark.png',
   scheme: 'weswapcardsnative',
@@ -132,7 +132,7 @@ const config: ExpoConfig = {
   updates: {
     url: `https://u.expo.dev/${EAS_PROJECT_ID}`,
   },
-  // fingerprint, not eas-cli's appVersion default: `version` stays 1.0.0 across
+  // fingerprint, not eas-cli's appVersion default: `version` stays the same across
   // many builds (autoIncrement moves the build number, not this), so appVersion
   // would let an update built against new native code reach a build without it.
   runtimeVersion: {
