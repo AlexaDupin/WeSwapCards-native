@@ -230,6 +230,12 @@ Store-bound builds and updates:
   Android has no Play service account: upload the `.aab` by hand.
 - `fingerprint.config.js` skips `ExpoConfigVersions`, so bumping `version` for a
   new App Store upload does not change the runtime of the other platform.
+- **Any other `app.config.ts`, plugin or package change moves BOTH runtimes**,
+  even an Android-only setting. Run `./scripts/check-runtime.sh` before such a
+  commit and before every build or OTA: it compares the local runtimes with the
+  live store builds listed in `scripts/store-builds.json`. On a MISMATCH, build
+  and release both platforms together. Update `scripts/store-builds.json` when a
+  new build goes live in a store.
 - Full release checklist: "New store release: step by step" in
   `docs/store-listing.md`.
 

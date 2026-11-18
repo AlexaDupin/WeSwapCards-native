@@ -1,0 +1,10 @@
+{
+  "android": {
+    "buildId": "928cca30-9d46-449b-b26a-c2f25d1e1ca5",
+    "label": "Play build 8 (1.0.0)"
+  },
+  "ios": {
+    "buildId": "bf7d8a7d-53cf-420c-88aa-41e1f53ab853",
+    "label": "App Store build 2 (1.0.0)"
+  }
+}
