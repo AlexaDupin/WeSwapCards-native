@@ -187,6 +187,7 @@ const config: ExpoConfig = {
         color: '#F07A1A',
       },
     ],
+    './plugins/withOptionalPortraitFeature',
   ],
   experiments: {
     typedRoutes: true,
