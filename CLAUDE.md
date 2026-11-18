@@ -219,13 +219,19 @@ Environments (see also the `native-environments` note):
 
 Store-bound builds and updates:
 
-- Build: `eas build --platform ios|android --profile production`.
+- Build: `EXPO_NO_DOTENV=1 APP_ENV=production npx eas-cli build --platform ios|android --profile production`.
 - OTA: use `./scripts/publish-update.sh production` (see **Publishing OTA
   updates** above) — add `--platform ios` to reach TestFlight without touching
   the Android closed-testing build. Both ride the `production` channel, which
   points at the `production` branch.
-- `submit.production.ios` stays `{}` until the App Store Connect record exists
-  (per `docs/store-listing.md`).
+- iOS upload to App Store Connect (TestFlight only, no review):
+  `EXPO_NO_DOTENV=1 npx eas-cli submit --platform ios --id <build id> --profile production --non-interactive`.
+  `submit.production.ios.ascAppId` in `eas.json` makes it non-interactive.
+  Android has no Play service account: upload the `.aab` by hand.
+- `fingerprint.config.js` skips `ExpoConfigVersions`, so bumping `version` for a
+  new App Store upload does not change the runtime of the other platform.
+- Full release checklist: "New store release: step by step" in
+  `docs/store-listing.md`.
 
 ---
 
