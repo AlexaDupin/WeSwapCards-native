@@ -6,31 +6,36 @@ import { markAllCardsOwned } from '@/src/features/cards/api/cardsApi';
 
 type Params = {
   explorerId: number;
-  totalCards: number;
   /** Applies the result locally once the backend has saved it. */
   onMarked: () => void;
 };
 
 /**
- * Confirms, then marks every card in every chapter as owned. There is no
- * undo, so the confirmation spells out what changes, what is kept (logged
- * cards and duplicates) and what is left to do.
+ * Drives the "mark all cards as owned" flow: open the confirmation dialog,
+ * then save and apply the result. The dialog itself is MarkAllOwnedDialog.
  */
-export function useMarkAllCardsOwned({
-  explorerId,
-  totalCards,
-  onMarked,
-}: Params) {
+export function useMarkAllCardsOwned({ explorerId, onMarked }: Params) {
   const { getToken } = useAuth();
   const getTokenRef = useRef(getToken);
   useEffect(() => {
     getTokenRef.current = getToken;
   }, [getToken]);
 
+  const [confirmVisible, setConfirmVisible] = useState(false);
   const [isMarkingAllOwned, setIsMarkingAllOwned] = useState(false);
   const busyRef = useRef(false);
 
-  const perform = useCallback(async () => {
+  const requestMarkAllCardsOwned = useCallback(() => {
+    if (busyRef.current) return;
+    setConfirmVisible(true);
+  }, []);
+
+  const cancelMarkAllCardsOwned = useCallback(() => {
+    if (busyRef.current) return;
+    setConfirmVisible(false);
+  }, []);
+
+  const confirmMarkAllCardsOwned = useCallback(async () => {
     if (busyRef.current) return;
     busyRef.current = true;
     setIsMarkingAllOwned(true);
@@ -51,29 +56,15 @@ export function useMarkAllCardsOwned({
     } finally {
       busyRef.current = false;
       setIsMarkingAllOwned(false);
+      setConfirmVisible(false);
     }
   }, [explorerId, onMarked]);
 
-  const requestMarkAllCardsOwned = useCallback(() => {
-    if (busyRef.current) return;
-
-    Alert.alert(
-      'Mark all cards as owned?',
-      `All ${totalCards} cards in every chapter will be marked as owned. ` +
-        'Cards you already logged, including your duplicates, stay as they are.\n\n' +
-        'Then press and hold the cards you’re missing to remove them, ' +
-        'and tap your duplicates again to mark them as duplicated.',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'Mark all as owned',
-          onPress: () => {
-            void perform();
-          },
-        },
-      ],
-    );
-  }, [perform, totalCards]);
-
-  return { requestMarkAllCardsOwned, isMarkingAllOwned };
+  return {
+    confirmVisible,
+    isMarkingAllOwned,
+    requestMarkAllCardsOwned,
+    cancelMarkAllCardsOwned,
+    confirmMarkAllCardsOwned,
+  };
 }

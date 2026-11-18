@@ -10,7 +10,8 @@ import SegmentedToggle from '@/src/components/SegmentedToggle';
 import ChaptersList from '@/src/features/chapters/components/ChaptersList';
 import AZNav from '@/src/features/chapters/components/AZNav';
 import CardsHelpModal from '@/src/features/cards/components/CardsHelpModal';
-import CardsPageMenu from '@/src/features/cards/components/CardsPageMenu';
+import MarkAllOwnedButton from '@/src/features/cards/components/MarkAllOwnedButton';
+import MarkAllOwnedDialog from '@/src/features/cards/components/MarkAllOwnedDialog';
 import NewCollectorBanner from '@/src/features/cards/components/NewCollectorBanner';
 import TipBubble from '@/src/features/tips/components/TipBubble';
 import { styles } from '@/src/assets/styles/cards.styles';
@@ -50,9 +51,14 @@ function CardsScreen({ explorerId }: { explorerId: number }) {
     listRef,
   } = cards;
 
-  const { requestMarkAllCardsOwned, isMarkingAllOwned } = useMarkAllCardsOwned({
+  const {
+    confirmVisible,
+    isMarkingAllOwned,
+    requestMarkAllCardsOwned,
+    cancelMarkAllCardsOwned,
+    confirmMarkAllCardsOwned,
+  } = useMarkAllCardsOwned({
     explorerId,
-    totalCards,
     onMarked: markAllOwnedLocally,
   });
 
@@ -73,14 +79,14 @@ function CardsScreen({ explorerId }: { explorerId: number }) {
           >
             <Ionicons
               name="help-circle-outline"
-              size={20}
+              size={26}
               color="rgba(0,0,0,0.45)"
             />
           </Pressable>
 
-          <CardsPageMenu
+          <MarkAllOwnedButton
             disabled={isLoading || isMarkingAllOwned}
-            onMarkAllCardsOwned={requestMarkAllCardsOwned}
+            onPress={requestMarkAllCardsOwned}
           />
         </View>
 
@@ -123,6 +129,16 @@ function CardsScreen({ explorerId }: { explorerId: number }) {
       <CardsHelpModal
         visible={helpVisible}
         onClose={() => setHelpVisible(false)}
+      />
+
+      <MarkAllOwnedDialog
+        visible={confirmVisible}
+        totalCards={totalCards}
+        pending={isMarkingAllOwned}
+        onCancel={cancelMarkAllCardsOwned}
+        onConfirm={() => {
+          void confirmMarkAllCardsOwned();
+        }}
       />
 
       <TipBubble tipKey="cards" />

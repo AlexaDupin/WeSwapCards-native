@@ -5,7 +5,6 @@ import {
   screen,
   waitFor,
 } from '@testing-library/react-native';
-import { Alert, type AlertButton } from 'react-native';
 import {
   fireGestureHandler,
   getByGestureTestId,
@@ -132,26 +131,21 @@ describe('Cards', () => {
   });
 
   describe('mark all cards as owned', () => {
-    // Presses the named button of the most recent confirmation alert.
-    const confirmAlert = (alertSpy: jest.SpyInstance, text: string) => {
-      const buttons = alertSpy.mock.calls.at(-1)?.[2] as
-        | AlertButton[]
-        | undefined;
-      buttons?.find((b) => b.text === text)?.onPress?.();
-    };
-
     it('offers new explorers the banner and marks their cards owned', async () => {
       cardsApi.fetchCardStatuses.mockResolvedValueOnce({ '5': 'default' });
-      const alertSpy = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
 
       render(<Cards />);
       await screen.findByTestId('new-collector-banner');
 
       fireEvent.press(screen.getByLabelText('Mark all as owned'));
-      expect(alertSpy).toHaveBeenCalledTimes(1);
+      expect(await screen.findByTestId('mark-all-owned-dialog')).toBeTruthy();
+      expect(screen.getByText(/1 cards/)).toBeTruthy();
+      expect(
+        screen.getByText('• Tap your duplicates again to mark them'),
+      ).toBeTruthy();
 
       await act(async () => {
-        confirmAlert(alertSpy, 'Mark all as owned');
+        fireEvent.press(screen.getByLabelText('Confirm mark all as owned'));
       });
 
       await waitFor(() =>
@@ -164,20 +158,29 @@ describe('Cards', () => {
         headers: { Authorization: 'Bearer test-token' },
       });
       expect(screen.queryByTestId('new-collector-banner')).toBeNull();
-
-      alertSpy.mockRestore();
+      expect(screen.queryByTestId('mark-all-owned-dialog')).toBeNull();
     });
 
-    it('hides the banner once a card is logged but keeps the menu', async () => {
+    it('hides the banner once a card is logged but keeps the header button', async () => {
       cardsApi.fetchCardStatuses.mockResolvedValueOnce({ '5': 'owned' });
+      // This file does not clear mocks between tests; drop the call made by
+      // the previous test so "not called" checks this test only.
+      cardsApi.markAllCardsOwned.mockClear();
 
       render(<Cards />);
       await screen.findByTestId('card-5');
 
       expect(screen.queryByTestId('new-collector-banner')).toBeNull();
 
-      fireEvent.press(screen.getByLabelText('Collection actions'));
-      expect(await screen.findByText('Mark all cards as owned')).toBeTruthy();
+      // The header button opens the confirmation directly, with no menu.
+      fireEvent.press(screen.getByLabelText('Mark all cards as owned'));
+      expect(await screen.findByTestId('mark-all-owned-dialog')).toBeTruthy();
+
+      fireEvent.press(screen.getByText('Cancel'));
+      await waitFor(() =>
+        expect(screen.queryByTestId('mark-all-owned-dialog')).toBeNull(),
+      );
+      expect(cardsApi.markAllCardsOwned).not.toHaveBeenCalled();
     });
   });
 });

@@ -170,6 +170,12 @@ export const styles = StyleSheet.create({
     opacity: 0.35,
   },
 
+  // The header "mark all owned" button keeps its blue at full strength,
+  // where the other icon buttons are softened by kebabButton's opacity.
+  markAllButton: {
+    opacity: 1,
+  },
+
   // Modal menu
   modalOverlay: {
     flex: 1,

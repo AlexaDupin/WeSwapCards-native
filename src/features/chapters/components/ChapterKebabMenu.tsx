@@ -31,7 +31,13 @@ export default function ChapterKebabMenu({
           disabled && styles.kebabDisabled,
         ]}
       >
-        <Ionicons name="ellipsis-vertical" size={18} color="rgba(0,0,0,0.35)" />
+        {/* Same + as the header "mark all owned" button, in grey: both add
+            cards in bulk, at page and chapter level. */}
+        <Ionicons
+          name="add-circle-outline"
+          size={20}
+          color="rgba(0,0,0,0.35)"
+        />
       </Pressable>
 
       <Modal
