@@ -170,10 +170,20 @@ export const styles = StyleSheet.create({
     opacity: 0.35,
   },
 
-  // The header "mark all owned" button keeps its blue at full strength,
-  // where the other icon buttons are softened by kebabButton's opacity.
+  // The header "mark all owned" button: a blue outlined circle. Its width and
+  // height come from the measured A–Z / Latest toggle beside it, and the row
+  // centres both, so they line up exactly.
   markAllButton: {
-    opacity: 1,
+    borderRadius: 999,
+    borderWidth: 1.5,
+    borderColor: Colors.accent,
+    backgroundColor: '#fff',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  markAllButtonPressed: {
+    backgroundColor: 'rgba(37,99,235,0.08)',
   },
 
   // Modal menu
@@ -233,6 +243,13 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+  },
+
+  // Right side of the header: the blue + then the A–Z / Latest toggle.
+  controlsRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
   },
 
   // New collector banner (shown while no card is logged yet)

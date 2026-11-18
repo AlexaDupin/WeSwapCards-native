@@ -30,6 +30,9 @@ export default function Cards() {
 function CardsScreen({ explorerId }: { explorerId: number }) {
   const cards = useCardsScreen({ explorerId });
   const [helpVisible, setHelpVisible] = useState(false);
+  // Measured height of the A–Z / Latest toggle, so the + beside it is the
+  // exact same size. Undefined until the first layout pass.
+  const [toggleHeight, setToggleHeight] = useState<number | undefined>();
   const insets = useSafeAreaInsets();
 
   const {
@@ -83,21 +86,32 @@ function CardsScreen({ explorerId }: { explorerId: number }) {
               color="rgba(0,0,0,0.45)"
             />
           </Pressable>
+        </View>
 
+        {/* The + sits right before the sort toggle, as on the web. */}
+        <View style={styles.controlsRight}>
           <MarkAllOwnedButton
+            size={toggleHeight}
             disabled={isLoading || isMarkingAllOwned}
             onPress={requestMarkAllCardsOwned}
           />
-        </View>
 
-        <SegmentedToggle
-          options={[
-            { value: 'az', label: 'A–Z' },
-            { value: 'latest', label: 'Latest' },
-          ]}
-          value={sortLatest ? 'latest' : 'az'}
-          onChange={(v) => setSortLatest(v === 'latest')}
-        />
+          <View
+            onLayout={(e) => {
+              const h = Math.round(e.nativeEvent.layout.height);
+              setToggleHeight((prev) => (prev === h ? prev : h));
+            }}
+          >
+            <SegmentedToggle
+              options={[
+                { value: 'az', label: 'A–Z' },
+                { value: 'latest', label: 'Latest' },
+              ]}
+              value={sortLatest ? 'latest' : 'az'}
+              onChange={(v) => setSortLatest(v === 'latest')}
+            />
+          </View>
+        </View>
       </View>
 
       {hasNoCards ? (
